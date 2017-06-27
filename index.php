@@ -1,116 +1,118 @@
 <?php
 include_once('../../connectFiles/connect_sr.php');
+if(isset($_GET['passage_id'])) {
+  $current_passage = $_GET['passage_id'];
+  $passage_query = "Select * from Passages where passage_id='$current_passage'";
+  if(!$passage_results = $db->query($passage_query)){
+    die('There was an error running the query [' . $db->error . ']');
+  }
+  while($passage_results_row = $passage_results->fetch_assoc()){
+    $title = $passage_results_row['title'];
+    $passage = $passage_results_row['passage_text'];
 
-if(isset($_GET['passage_id'])) {$current_passage = $_GET['passage_id'];}
+  }
+  $passage_results->free(); //free results
+}
+
 ?>
-
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SoftRead</title>
-    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Martel+Sans:400,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
 
-    <link href="style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="style.css">
 
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/jquery-ui.js"></script>
-      <script type="text/javascript" src="js/js.js"></script>
-  </head>
-  <body>
-    <header>SoftRead 3</header>
-      <main>
-        <nav>Nav</nav>
-    <article id="passage_list">
-      <div id="passages">
-      <h3 class='reading_menu'>Lexile: 10L-400L</h3>
-        <div>
-        <?php
-        $query = "Select * from Passages where lexile <'401' order by lexile ASC";
-        if(!$results = $db->query($query)){
-      		die('There was an error running the query [' . $db->error . ']');
-      	}
-      	while($results_row = $results->fetch_assoc()){
-      		echo "<a  class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="js/js.js"></script>
+</head>
+<body>
 
-      	}
-      	$results->free(); //free results
-         ?>
-       </div>
-      <h3 class='reading_menu'>Lexile: 400L-600L</h3>
-        <div>
-        <?php
-        $query = "Select * from Passages where lexile <'601' AND lexile > '399' order by lexile ASC";
-        if(!$results = $db->query($query)){
-      		die('There was an error running the query [' . $db->error . ']');
-      	}
-      	while($results_row = $results->fetch_assoc()){
-      		echo "<a  class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']." - ".$results_row['lexile']."L </a>";
+<div data-role="page" class="ui-responsive-panel" data-theme="a" id="reading">
 
-      	}
-      	$results->free(); //free results
-         ?>
-       </div>
-      <h3 class='reading_menu'>Lexile: 600L-700L</h3>
-        <div>
-        <?php
-        $query = "Select * from Passages where lexile <'701' AND lexile > '599' order by lexile ASC";
-        if(!$results = $db->query($query)){
-          die('There was an error running the query [' . $db->error . ']');
-        }
-        while($results_row = $results->fetch_assoc()){
-          echo "<a  class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']." - ".$results_row['lexile']."L </a>";
 
-        }
-        $results->free(); //free results
-         ?>
-       </div>
-      <h3 class='reading_menu'>Lexile: 700L-850L</h3>
-        <div>
-        <?php
-        $query = "Select * from Passages where lexile <'851' AND lexile > '699' order by lexile ASC";
-        if(!$results = $db->query($query)){
-          die('There was an error running the query [' . $db->error . ']');
-        }
-        while($results_row = $results->fetch_assoc()){
-          echo "<a  class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']." - ".$results_row['lexile']."L </a>";
 
-        }
-        $results->free(); //free results
-         ?>
-       </div>
-      <h3 class='reading_menu'>Lexile: 850L-1000L</h3>
-        <div>
-        <?php
-        $query = "Select * from Passages where lexile <'1001' AND lexile > '849' order by lexile ASC";
-        if(!$results = $db->query($query)){
-          die('There was an error running the query [' . $db->error . ']');
-        }
-        while($results_row = $results->fetch_assoc()){
-          echo "<a  class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']." - ".$results_row['lexile']."L </a>";
+  <div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel">
+    <?php include("list.php"); ?>
 
-        }
-        $results->free(); //free results
-         ?>
-       </div>
-      <h3 class='reading_menu'>Lexile: 1000L-1200L</h3>
-        <div>
-        <?php
-        $query = "Select * from Passages where lexile > '999' order by lexile ASC";
-        if(!$results = $db->query($query)){
-          die('There was an error running the query [' . $db->error . ']');
-        }
-        while($results_row = $results->fetch_assoc()){
-          echo "<a  class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']." - ".$results_row['lexile']."L </a>";
+  </div> <!-- end panel -->
+  <div class="header" data-role="header" data-position="fixed" data-id="main-header">
+    <?php
+      if (isset($title)) { echo "<h1>".$title."</h1>";} else {echo "<h1>SoftRead 3</h1>";}
+     ?>
+    <a href="#nav-panel" data-icon="bars" data-iconpos="notext">Menu</a>
 
-        }
-        $results->free(); //free results
-         ?>
-       </div>
+    <div data-role="navbar">
+          <ul>
+            <li><a href="#reading">Reading</a></li>
+            <li><a href="#scroll">Scrolled Reading</a></li>
+            <li><a href="#timer">Timed Reading</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#vocab">Vocabulary</a></li>
+          </ul>
+        </div>
+
+  </div><!-- end header -->
+
+
+
+  <div data-role="main" class="ui-content">
+    <?php
+      if(isset($current_passage)) {
+        echo "<h3>".$title."</h3>";
+        echo $passage;
+      }
+      else {
+        echo "Instructions";
+      }
+     ?>
+
+  </div><!-- end main -->
+
+  <div class="footer" data-role="footer" id="footer" data-id="main-footer">
+    <h1>Copyright &copy; <span id="year">year</span>. English Language Center</h1>
+  </div> <!-- end footer -->
+</div><!-- end page -->
+
+<div id="scroll" data-role="page"  data-theme="a">
+<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
+  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
+  <div data-role="main" class="ui-content">
+    <h1> Scroll </h1>
+  </div>
+  <div class="footer" data-role="footer" data-id="main-footer"></div>
 </div>
-    </article>
 
-  </main>
-  </body>
+<div id="timer" data-role="page"  data-theme="a">
+<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
+  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
+  <div data-role="main" class="ui-content">
+    <h1> Timer </h1>
+  </div>
+  <div class="footer" data-role="footer" data-id="main-footer"></div>
+</div>
+
+<div id="quiz" data-role="page"  data-theme="a">
+<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
+  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
+  <div data-role="main" class="ui-content">
+    <h1> quiz </h1>
+  </div>
+  <div class="footer" data-role="footer" data-id="main-footer"></div>
+</div>
+
+<div id="vocab" data-role="page"  data-theme="a">
+<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
+  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
+  <div data-role="main" class="ui-content">
+    <h1> Vocab </h1>
+  </div>
+  <div class="footer" data-role="footer" data-id="main-footer"></div>
+</div>
+
+</body>
 </html>
