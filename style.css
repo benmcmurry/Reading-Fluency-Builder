@@ -32,6 +32,28 @@ body, html {
 #nav-panel{
   display: none;
 }
+#nav-panel h3 {
+  padding: 5px;
+  margin: 0px;
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 1em;
+  padding: 1em;
+  border-bottom: 2px solid grey;
+  cursor: pointer;
+}
+
+a.reading_menu_options {
+  text-decoration: none;
+  color: white;
+  background-color: rgb(92, 93, 89);
+  display: block;
+  font-family: sans-serif;
+  font-size: 1em;
+  padding: 1em;
+  border-bottom: 2px solid white;
+}
+span.lexile {font-size: 0.7em;}
 
 #content {}
 
