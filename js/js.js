@@ -5,8 +5,14 @@ $(document).ready(function() {
 	var n = d.getFullYear();
 	$("span#year").text(n);
   // End Gets Copyright Year
+console.log ("working");
+  $("#nav-panel").accordion({
+    collapsible: true,
+    heightStyle: "content",
+    active: false,
+  });
 
-  uiContentHeight = $("#nav-panel").height();
+
 
 });
 

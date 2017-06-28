@@ -25,7 +25,9 @@ if(isset($_GET['passage_id'])) {
 
 <link rel="stylesheet" href="style.css">
 
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <script src="js/js.js"></script>
 </head>
 <body>
@@ -35,12 +37,19 @@ if(isset($_GET['passage_id'])) {
       else { echo 'SoftRead 3.0';}
       ?>
   </div>
-  <div id="navbar"></div>
+
   <div id="main">
     <div id="nav-panel">
       <?php include_once('list.php'); ?>
     </div>
     <div id="content">
+      <div id="navbar">
+        <a class="nav-btn">Reading</a>
+        <a class="nav-btn">Scrolled Reading</a>
+        <a class="nav-btn">Timed Reading</a>
+        <a class="nav-btn">Quiz</a>
+        <a class="nav-btn">Vocabulary</a>
+      </div>
       <?php if(isset($current_passage)) {
         echo $passage; }
         else { echo 'SoftRead 3.0';}
