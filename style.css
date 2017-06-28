@@ -1,8 +1,39 @@
-.left-block {
+body, html {
+  margin: 0em;
+  padding: 0em;
+}
+#header {
+  width: 100%;
+  height: 2em;
+  background-color: #efefef;
+  border-bottom: gray solid 1px;
+  line-height: 2em;
+  font-size: 1.17em;
+  text-align: center;
+  font-family: "Martel Sans";
+  font-weight: "700";
+  padding: 0em;
+  margin: 0em;
+}
+
+#footer {
+  width: 100%;
+  height: 2em;
+  background-color: #efefef;
+  border-bottom: gray solid 1px;
+  line-height: 2em;
+  font-size: 1.17em;
+  text-align: center;
+  font-family: "Martel Sans";
+  font-weight: "700";
+  padding: 0em;
+  margin: 0em;
+}
+#nav-panel{
   display: none;
 }
 
-.right-block {}
+#content {}
 
 .block {
   width: 18em;
@@ -23,7 +54,7 @@ h3 {
   margin-top: 0em;
 }
 
-.ui-content {
+#main {
   max-width: 1024px;
   margin-left: auto;
   margin-right: auto;
@@ -31,11 +62,10 @@ h3 {
 
 @media ( min-width: 40em ) {
 
-.ui-link.ui-btn-left.ui-btn.ui-icon-bars.ui-btn-icon-notext.ui-shadow.ui-corner-all {display: none;}
-.left-block { width: 17em;
+#nav-panel{ width: 17em;
 float: left; display:block;
 height: 100%; }
-.right-block {margin-left: 19em;}
+#content {margin-left: 19em;}
 .nav-panel {display: auto;}
 }
 
@@ -43,21 +73,11 @@ height: 100%; }
   clear: both;
 }
 
-.ui-panel-inner {padding: 0em 1em 0em 1em; }
 
-
-.ui-btn {
-  font-family: 'Martel', sans-serif;
-  font-weight: 300 !important;
-  font-size: 1em;
-}
-
-
-
+/* Scroller styles */
 #window {
 	width: 17em;
 	height: 200px;
-
 	overflow:hidden;
 	padding: .5em;
 	border: 1px solid #000;
@@ -68,3 +88,4 @@ height: 100%; }
 	position:relative;
 	top:198px;
 }
+/* Scroller styles */
