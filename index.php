@@ -9,7 +9,7 @@ if(isset($_GET['passage_id'])) {
   while($passage_results_row = $passage_results->fetch_assoc()){
     $title = $passage_results_row['title'];
     $passage = $passage_results_row['passage_text'];
-
+    $wordcount=$passage_results_row['length'];
   }
   $passage_results->free(); //free results
 }
@@ -32,15 +32,16 @@ if(isset($_GET['passage_id'])) {
 </head>
 <body>
 
-<div data-role="page" class="ui-responsive-panel" data-theme="a" id="reading">
+<!-- Main Page -->
+<div data-role="page" class="ui-responsive-panel" data-theme="a" id="main">
 
 
 
-  <div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel">
     <?php include("list.php"); ?>
 
   </div> <!-- end panel -->
-  <div class="header" data-role="header" data-position="fixed" data-id="main-header">
+  <div data-role="header" data-position="fixed" data-id="main-header">
     <?php
       if (isset($title)) { echo "<h1>".$title."</h1>";} else {echo "<h1>SoftRead 3</h1>";}
      ?>
@@ -61,7 +62,47 @@ if(isset($_GET['passage_id'])) {
 
 
   <div data-role="main" class="ui-content">
+    <h1> Instructions </h1>
+
+  </div><!-- end main -->
+
+  <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
+    <h1>Copyright &copy; <span id="year">year</span>. English Language Center</h1>
+  </div> <!-- end footer -->
+</div>
+<!-- end main page -->
+
+<!-- reading page -->
+<div data-role="page" class="ui-responsive-panel" data-theme="a" id="reading">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel2">
+    <?php include("list.php"); ?>
+
+  </div> <!-- end panel -->
+  <div data-role="header" data-position="fixed" data-id="main-header">
     <?php
+      if (isset($title)) { echo "<h1>".$title."</h1>";} else {echo "<h1>SoftRead 3</h1>";}
+     ?>
+    <a href="#nav-panel2" data-icon="bars" data-iconpos="notext">Menu</a>
+
+    <div data-role="navbar">
+          <ul>
+            <li><a href="#reading">Reading</a></li>
+            <li><a href="#scroll">Scrolled Reading</a></li>
+            <li><a href="#timer">Timed Reading</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#vocab">Vocabulary</a></li>
+          </ul>
+        </div>
+
+  </div><!-- end header -->
+  <div data-role="main" class="ui-content">
+    <div class='left-block'>
+      <?php include("list.php"); ?>
+    </div>
+    <div class='right-block'>
+
+    <?php
+
       if(isset($current_passage)) {
         echo "<h3>".$title."</h3>";
         echo $passage;
@@ -70,49 +111,175 @@ if(isset($_GET['passage_id'])) {
         echo "Instructions";
       }
      ?>
+   </div>
+   </div><!-- end main -->
+
+  <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
+    <h1>Copyright &copy; <span id="year">year</span>. English Language Center</h1>
+  </div> <!-- end footer -->
+</div>
+<!-- end reading page -->
+
+<!-- scroller page -->
+<div data-role="page" class="ui-responsive-panel" data-theme="a" id="scroll">
+    <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel3">
+      <?php include("list.php"); ?>
+
+    </div> <!-- end panel -->
+    <div data-role="header" data-position="fixed" data-id="main-header">
+      <?php
+        if (isset($title)) { echo "<h1>".$title."</h1>";} else {echo "<h1>SoftRead 3</h1>";}
+       ?>
+      <a href="#nav-panel3" data-icon="bars" data-iconpos="notext">Menu</a>
+
+      <div data-role="navbar">
+            <ul>
+              <li><a href="#reading">Reading</a></li>
+              <li><a href="#scroll">Scrolled Reading</a></li>
+              <li><a href="#timer">Timed Reading</a></li>
+              <li><a href="#quiz">Quiz</a></li>
+              <li><a href="#vocab">Vocabulary</a></li>
+            </ul>
+          </div>
+
+    </div><!-- end header -->
+    <div data-role="main" class="ui-content">
+      <div id='window'>
+        <div id='scrollPassage'>
+          <?php echo $passage; ?>
+        </div>
+      </div>
+      <div id='instruction'>" + "
+        <p> Select how fast you want to read. You'll be asked if you are ready. When you push ok the text will begin scrolling on the left in the box. When you are finished, you can click on 'Quiz' above and take a quiz.</p>
+        <input id='userSpeed' type='text' />
+        <input type='button' id='' value='Go!' onclick='scrollThePassage("<?php echo $wordcount; ?>")' />
+        <input id='reset' type='button' value='Reset' onclick='resetit()' />
+      </div>
+
+    </div><!-- end main -->
+
+    <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
+      <h1>Copyright &copy; <span id="year">year</span>. English Language Center</h1>
+    </div> <!-- end footer -->
+</div>
+<!-- end scroller page -->
+
+
+<!-- timer page -->
+<div data-role="page" class="ui-responsive-panel" data-theme="a" id="timer">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel4">
+    <?php include("list.php"); ?>
+
+  </div> <!-- end panel -->
+  <div data-role="header" data-position="fixed" data-id="main-header">
+    <?php
+      if (isset($title)) { echo "<h1>".$title."</h1>";} else {echo "<h1>SoftRead 3</h1>";}
+     ?>
+    <a href="#nav-panel4" data-icon="bars" data-iconpos="notext">Menu</a>
+
+    <div data-role="navbar">
+          <ul>
+            <li><a href="#reading">Reading</a></li>
+            <li><a href="#scroll">Scrolled Reading</a></li>
+            <li><a href="#timer">Timed Reading</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#vocab">Vocabulary</a></li>
+          </ul>
+        </div>
+
+  </div><!-- end header -->
+  <div data-role="main" class="ui-content">
+    <?php
+      echo "Timer";
+     ?>
 
   </div><!-- end main -->
 
-  <div class="footer" data-role="footer" id="footer" data-id="main-footer">
+  <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
     <h1>Copyright &copy; <span id="year">year</span>. English Language Center</h1>
   </div> <!-- end footer -->
-</div><!-- end page -->
-
-<div id="scroll" data-role="page"  data-theme="a">
-<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
-  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
-  <div data-role="main" class="ui-content">
-    <h1> Scroll </h1>
-  </div>
-  <div class="footer" data-role="footer" data-id="main-footer"></div>
 </div>
+<!-- end timer page -->
 
-<div id="timer" data-role="page"  data-theme="a">
-<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
-  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
-  <div data-role="main" class="ui-content">
-    <h1> Timer </h1>
-  </div>
-  <div class="footer" data-role="footer" data-id="main-footer"></div>
-</div>
+<!-- quiz page -->
+<div data-role="page" class="ui-responsive-panel" data-theme="a" id="quiz">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel5">
+    <?php include("list.php"); ?>
 
-<div id="quiz" data-role="page"  data-theme="a">
-<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
-  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
-  <div data-role="main" class="ui-content">
-    <h1> quiz </h1>
-  </div>
-  <div class="footer" data-role="footer" data-id="main-footer"></div>
-</div>
+  </div> <!-- end panel -->
+  <div data-role="header" data-position="fixed" data-id="main-header">
+    <?php
+      if (isset($title)) { echo "<h1>".$title."</h1>";} else {echo "<h1>SoftRead 3</h1>";}
+     ?>
+    <a href="#nav-panel5" data-icon="bars" data-iconpos="notext">Menu</a>
 
-<div id="vocab" data-role="page"  data-theme="a">
-<div class="panel" data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel"></div>
-  <div class="header" data-role="header" data-id="main-header" data-position="fixed"></div>
+    <div data-role="navbar">
+          <ul>
+            <li><a href="#reading">Reading</a></li>
+            <li><a href="#scroll">Scrolled Reading</a></li>
+            <li><a href="#timer">Timed Reading</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#vocab">Vocabulary</a></li>
+          </ul>
+        </div>
+
+  </div><!-- end header -->
   <div data-role="main" class="ui-content">
-    <h1> Vocab </h1>
-  </div>
-  <div class="footer" data-role="footer" data-id="main-footer"></div>
+    <?php
+      echo "Quiz";
+     ?>
+
+  </div><!-- end main -->
+
+  <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
+    <h1>Copyright &copy; <span id="year">year</span>. English Language Center</h1>
+  </div> <!-- end footer -->
 </div>
+<!-- end quiz page -->
+
+<!-- vocab page -->
+<div data-role="page" class="ui-responsive-panel" data-theme="a" id="vocab">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel6">
+    <?php include("list.php"); ?>
+
+  </div> <!-- end panel -->
+  <div data-role="header" data-position="fixed" data-id="main-header">
+    <?php
+      if (isset($title)) { echo "<h1>".$title."</h1>";} else {echo "<h1>SoftRead 3</h1>";}
+     ?>
+    <a href="#nav-panel6" data-icon="bars" data-iconpos="notext">Menu</a>
+
+    <div data-role="navbar">
+          <ul>
+            <li><a href="#reading">Reading</a></li>
+            <li><a href="#scroll">Scrolled Reading</a></li>
+            <li><a href="#timer">Timed Reading</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#vocab">Vocabulary</a></li>
+          </ul>
+        </div>
+
+  </div><!-- end header -->
+  <div data-role="main" class="ui-content">
+    <?php
+    echo "Vocab";
+     ?>
+
+  </div><!-- end main -->
+
+  <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
+    <h1>Copyright &copy; <span id="year">year</span>. English Language Center</h1>
+  </div> <!-- end footer -->
+</div>
+<!-- end vocab page -->
+
+
+
+
+
+
+
+
 
 </body>
 </html>

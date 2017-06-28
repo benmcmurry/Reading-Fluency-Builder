@@ -1,3 +1,15 @@
+.left-block {
+  width: 17em;
+  float: left;
+  height: 100%;
+}
+
+.right-block {
+  margin-left: 5em;
+  float:right;
+
+}
+
 #footer {
   clear: both;
 }
@@ -19,4 +31,21 @@
   font-family: 'Martel', sans-serif;
   font-weight: 300 !important;
   font-size: 1em;
+}
+
+
+
+#window {
+	width: 350px;
+	height: 200px;
+	float:left;
+	overflow:hidden;
+	padding: 10px;
+	border: 1px solid #000;
+	margin-top: 10px;
+}
+
+#scrollPassage {
+	position:relative;
+	top:198px;
 }
