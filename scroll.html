@@ -1,10 +1,11 @@
-<div class='columnTitle'>Scrolled Reading</div>
-<div id='window'>
-  <div id='scrollPassage'></div>
-</div>
-<div id='instruction'>" + "
-  <p> Select how fast you want to read. You'll be asked if you are ready. When you push ok the text will begin scrolling on the left in the box. When you are finished, you can click on 'Quiz' above and take a quiz.</p>
-  <input id='userSpeed' type='text' />
-  <input type='button' id='' value='Go!' onclick='scrollThePassage()' />
-  <input id='reset' type='button' value='Reset' onclick='resetit()' />";
-</div>
+<div class='columnTitle'>
+  Timed Reading</div>
+<div id='timerPassage'></div>
+<div id='instruction'>
+  <p>Click on 'Start' to start the timer. When you are finished reading, click 'Stop.'</p>
+  <p>Go at your own pace. When you click stop, your words per minute will be displayed on the screen.<br /><br />
+    <input type='button' id='start' value='Start' onclick='startTheTimer()' />
+    <input id='stop' type='button' value='Stop' onclick='stopTheTimer()'/>
+    <input type='button' id='resettimer' value='Reset' onclick='resetTheTimer()' /><br /><br />
+    <div id='FieldWpm'></div>
+</div>";

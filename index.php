@@ -37,7 +37,7 @@ if(isset($_GET['passage_id'])) {
 
 
 
-  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" class='nav-panel' data-position-fixed="true"  id="nav-panel">
     <?php include("list.php"); ?>
 
   </div> <!-- end panel -->
@@ -49,7 +49,7 @@ if(isset($_GET['passage_id'])) {
 
     <div data-role="navbar">
           <ul>
-            <li><a href="#reading">Reading</a></li>
+            <li><a href="#" class="ui-btn-active ui-state-persist">Reading</a></li>
             <li><a href="#scroll">Scrolled Reading</a></li>
             <li><a href="#timer">Timed Reading</a></li>
             <li><a href="#quiz">Quiz</a></li>
@@ -74,7 +74,7 @@ if(isset($_GET['passage_id'])) {
 
 <!-- reading page -->
 <div data-role="page" class="ui-responsive-panel" data-theme="a" id="reading">
-  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel2">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" class='nav-panel' data-position-fixed="true"  id="nav-panel2">
     <?php include("list.php"); ?>
 
   </div> <!-- end panel -->
@@ -86,7 +86,7 @@ if(isset($_GET['passage_id'])) {
 
     <div data-role="navbar">
           <ul>
-            <li><a href="#reading">Reading</a></li>
+            <li><a href="#" class="ui-btn-active ui-state-persist">Reading</a></li>
             <li><a href="#scroll">Scrolled Reading</a></li>
             <li><a href="#timer">Timed Reading</a></li>
             <li><a href="#quiz">Quiz</a></li>
@@ -122,7 +122,7 @@ if(isset($_GET['passage_id'])) {
 
 <!-- scroller page -->
 <div data-role="page" class="ui-responsive-panel" data-theme="a" id="scroll">
-    <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel3">
+    <div data-role="panel" data-theme="b" data-position="left" data-display="push" class='nav-panel' data-position-fixed="true"  id="nav-panel3">
       <?php include("list.php"); ?>
 
     </div> <!-- end panel -->
@@ -135,7 +135,7 @@ if(isset($_GET['passage_id'])) {
       <div data-role="navbar">
             <ul>
               <li><a href="#reading">Reading</a></li>
-              <li><a href="#scroll">Scrolled Reading</a></li>
+              <li><a href="#" class="ui-btn-active ui-state-persist">Scrolled Reading</a></li>
               <li><a href="#timer">Timed Reading</a></li>
               <li><a href="#quiz">Quiz</a></li>
               <li><a href="#vocab">Vocabulary</a></li>
@@ -144,18 +144,26 @@ if(isset($_GET['passage_id'])) {
 
     </div><!-- end header -->
     <div data-role="main" class="ui-content">
-      <div id='window'>
-        <div id='scrollPassage'>
-          <?php echo $passage; ?>
+      <div class='left-block'>
+        <?php include("list.php"); ?>
+      </div>
+      <div class='right-block'>
+        <div class='block'>
+          <div id='window'>
+            <div id='scrollPassage'>
+              <?php echo $passage; ?>
+            </div>
+          </div>
+
+
+        <div id='instruction'>
+          <p class='instructions'> Select how fast you want to read. When you push ok, the text above will begin scrolling. When you are finished, you can click on 'Quiz' above and take a quiz.</p>
+          <input id='userSpeed' type='text' />
+          <input type='button' id='' value='Go!' onclick='scrollThePassage("<?php echo $wordcount; ?>")' />
+          <input id='reset' type='button' value='Reset' onclick='resetit()' />
         </div>
       </div>
-      <div id='instruction'>" + "
-        <p> Select how fast you want to read. You'll be asked if you are ready. When you push ok the text will begin scrolling on the left in the box. When you are finished, you can click on 'Quiz' above and take a quiz.</p>
-        <input id='userSpeed' type='text' />
-        <input type='button' id='' value='Go!' onclick='scrollThePassage("<?php echo $wordcount; ?>")' />
-        <input id='reset' type='button' value='Reset' onclick='resetit()' />
-      </div>
-
+    </div>
     </div><!-- end main -->
 
     <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
@@ -167,7 +175,7 @@ if(isset($_GET['passage_id'])) {
 
 <!-- timer page -->
 <div data-role="page" class="ui-responsive-panel" data-theme="a" id="timer">
-  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel4">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" class='nav-panel' data-position-fixed="true"  id="nav-panel4">
     <?php include("list.php"); ?>
 
   </div> <!-- end panel -->
@@ -181,7 +189,7 @@ if(isset($_GET['passage_id'])) {
           <ul>
             <li><a href="#reading">Reading</a></li>
             <li><a href="#scroll">Scrolled Reading</a></li>
-            <li><a href="#timer">Timed Reading</a></li>
+            <li><a href="#" class="ui-btn-active ui-state-persist">Timed Reading</a></li>
             <li><a href="#quiz">Quiz</a></li>
             <li><a href="#vocab">Vocabulary</a></li>
           </ul>
@@ -189,10 +197,25 @@ if(isset($_GET['passage_id'])) {
 
   </div><!-- end header -->
   <div data-role="main" class="ui-content">
+    <div class='left-block'>
+      <?php include("list.php"); ?>
+    </div>
+    <div class='right-block'>
+      <p>Click on 'Start' to start the timer. When you are finished reading, click 'Stop.'</p>
+      <p>Go at your own pace. When you click stop, your words per minute will be displayed on the screen.<br /><br />
+        <input type='button' id='start' value='Start' onclick='startTheTimer()' />
+        <input id='stop' type='button' value='Stop' onclick='stopTheTimer()'/>
+        <input type='button' id='resettimer' value='Reset' onclick='resetTheTimer()' /><br /><br />
+        <div id='FieldWpm'></div>
     <?php
-      echo "Timer";
+    if(isset($current_passage)) {
+      echo "<h3>".$title."</h3>";
+      echo $passage;
+    }
+    else {
+      echo "Instructions"; }
      ?>
-
+</div>
   </div><!-- end main -->
 
   <div class="footer" data-role="footer" data-position="fixed" data-id="main-footer">
@@ -203,7 +226,7 @@ if(isset($_GET['passage_id'])) {
 
 <!-- quiz page -->
 <div data-role="page" class="ui-responsive-panel" data-theme="a" id="quiz">
-  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel5">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" class='nav-panel' data-position-fixed="true"  id="nav-panel5">
     <?php include("list.php"); ?>
 
   </div> <!-- end panel -->
@@ -218,7 +241,7 @@ if(isset($_GET['passage_id'])) {
             <li><a href="#reading">Reading</a></li>
             <li><a href="#scroll">Scrolled Reading</a></li>
             <li><a href="#timer">Timed Reading</a></li>
-            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#" class="ui-btn-active ui-state-persist">Quiz</a></li>
             <li><a href="#vocab">Vocabulary</a></li>
           </ul>
         </div>
@@ -239,7 +262,7 @@ if(isset($_GET['passage_id'])) {
 
 <!-- vocab page -->
 <div data-role="page" class="ui-responsive-panel" data-theme="a" id="vocab">
-  <div data-role="panel" data-theme="b" data-position="left" data-display="push" id="nav-panel6">
+  <div data-role="panel" data-theme="b" data-position="left" data-display="push" class='nav-panel' data-position-fixed="true"  id="nav-panel6">
     <?php include("list.php"); ?>
 
   </div> <!-- end panel -->
@@ -255,7 +278,7 @@ if(isset($_GET['passage_id'])) {
             <li><a href="#scroll">Scrolled Reading</a></li>
             <li><a href="#timer">Timed Reading</a></li>
             <li><a href="#quiz">Quiz</a></li>
-            <li><a href="#vocab">Vocabulary</a></li>
+            <li><a href="#" class="ui-btn-active ui-state-persist">Vocabulary</a></li>
           </ul>
         </div>
 

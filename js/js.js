@@ -8,12 +8,12 @@ $(document).ready(function() {
 
   uiContentHeight = $("#nav-panel").height();
 
-
 });
 
 // Functions for scrolling passages
 function scrollThePassage(wordcount) { // scrolls text
 	wpm = $("#userSpeed").val(); console.log(wpm);
+  if (wpm < 100) {$("#userSpeed").val('100'); wpm = 100;}
 	speed = wordcount / wpm * 60000; console.log(speed);
 	var passageHeight = $("#scrollPassage").height()+16; console.log(passageHeight);
 	$("#scrollPassage").animate({
@@ -22,9 +22,6 @@ function scrollThePassage(wordcount) { // scrolls text
 } // ends script scrolling
 
 function resetit() { //reset scrolling
-	$("#column1").hide();
-	$("#column1").html(scrollPage).html();
-	$("#scrollPassage").html(passage).html();
-	$("#column1").fadeIn("slow");
+	location.reload();
 }
 // end to scrolling Passages

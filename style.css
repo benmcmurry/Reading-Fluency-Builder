@@ -1,14 +1,42 @@
 .left-block {
-  width: 17em;
-  float: left;
-  height: 100%;
-  display: block;
-  /*margin-right: 3em;*/
+  display: none;
 }
 
-.right-block {
-margin-left: 19em;
+.right-block {}
 
+.block {
+  width: 18em;
+  margin-left: auto;
+  margin-right: auto;
+}
+.instructions {
+  width: 17em;
+  margin-left: auto;
+  margin-right: auto;
+  background-color:rgb(121, 193, 228);
+  padding: .5em;
+  border: solid 1px rgb(73, 129, 181);
+  text-shadow: none;
+}
+
+h3 {
+  margin-top: 0em;
+}
+
+.ui-content {
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media ( min-width: 40em ) {
+
+.ui-link.ui-btn-left.ui-btn.ui-icon-bars.ui-btn-icon-notext.ui-shadow.ui-corner-all {display: none;}
+.left-block { width: 17em;
+float: left; display:block;
+height: 100%; }
+.right-block {margin-left: 19em;}
+.nav-panel {display: auto;}
 }
 
 #footer {
@@ -16,17 +44,7 @@ margin-left: 19em;
 }
 
 .ui-panel-inner {padding: 0em 1em 0em 1em; }
-/*.ui-collapsible-heading-toggle {
 
-  font-family: 'Roboto', sans-serif;
-  font-weight: 300 !important;
-  color: white !important;
-}
-.reading_menu_options {
-  font-family: 'Martel', sans-serif;
-  font-weight: 300 !important;
-  color: white !important;
-}*/
 
 .ui-btn {
   font-family: 'Martel', sans-serif;
@@ -37,11 +55,11 @@ margin-left: 19em;
 
 
 #window {
-	width: 350px;
+	width: 17em;
 	height: 200px;
-	float:left;
+
 	overflow:hidden;
-	padding: 10px;
+	padding: .5em;
 	border: 1px solid #000;
 	margin-top: 10px;
 }
