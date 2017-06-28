@@ -12,6 +12,7 @@ if(isset($_GET['passage_id'])) {
     $wordcount=$passage_results_row['length'];
   }
   $passage_results->free(); //free results
+  echo $title;
 }
 
 ?>
