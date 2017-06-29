@@ -50,10 +50,12 @@ if(isset($_GET['passage_id'])) {
         <a class="nav-btn">Quiz</a>
         <a class="nav-btn">Vocabulary</a>
       </div>
+      <div id="passage">
       <?php if(isset($current_passage)) {
         echo $passage; }
         else { echo 'SoftRead 3.0';}
         ?>
+      </div>
     </div>
   </div>
   <div id="footer">
