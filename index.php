@@ -27,8 +27,18 @@ if(isset($_GET['passage_id'])) {
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  <?php
+    if(isset($_GET['page'])) {
+      echo "var page='".$_GET['page']."';";
 
+    }
+  ?>
+
+
+</script>
 <script src="js/js.js"></script>
+
 <title>
   SoftRead 3.0 - <?php echo $title; ?>
 </title>
@@ -48,17 +58,71 @@ if(isset($_GET['passage_id'])) {
     </div>
     <div id="content">
       <div id="navbar">
-        <a class="nav-btn">Reading</a>
-        <a class="nav-btn">Scrolled Reading</a>
-        <a class="nav-btn">Timed Reading</a>
-        <a class="nav-btn">Quiz</a>
-        <a class="nav-btn">Vocabulary</a>
+        <a id="reading-btn" class="nav-btn">Reading</a>
+        <a id="scroller-btn" class="nav-btn">Scrolled Reading</a>
+        <a id="timer-btn" class="nav-btn">Timed Reading</a>
+        <a id="quiz-btn" class="nav-btn">Quiz</a>
+        <a id="vocab-btn" class="nav-btn">Vocabulary</a>
       </div>
-      <div id="passage">
-      <?php if(isset($current_passage)) {
-        echo $passage; }
-        else { echo 'SoftRead 3.0';}
-        ?>
+      <div id="page">
+        <!-- reading page -->
+        <div class="page" id="reading">
+          <?php
+          if(isset($current_passage)) {
+            echo $passage; }
+          else { echo 'SoftRead 3.0';}
+          ?>
+        </div>
+        <!-- scroller page -->
+        <div class="page" id="scroller">
+          <div class='block'>
+            <div id='window'>
+              <div id='scrollPassage'>
+                <?php echo $passage; ?>
+              </div>
+            </div>
+            <div id='instruction'>
+              <p class='instructions'> Select how fast you want to read. When you push ok, the text above will begin scrolling.</p>
+              <div contenteditable="true" id='userSpeed'>rate</div>
+              <a class="btn" id='' onclick='scrollThePassage("<?php echo $wordcount; ?>")'>Go!</a>
+              <a class="btn" id='reset-scroller' href="index.php?passage_id=<?php echo $current_passage; ?>&page=scroller">Reset</a>
+            </div>
+          </div>
+        </div>
+        <!-- timer page -->
+        <div class="page" id="timer">
+          <p>Click on 'Start' to start the timer. When you are finished reading, click 'Stop.'</p>
+          <div id="timer-btn-bar">
+            <a class='btn timer-btn' id="start-timer" onclick='startTheTimer()'>Start</a>
+            <a class='btn timer-btn' id='timer-results' href="index.php?passage_id=<?php echo $current_passage; ?>&page=timer">Reset</a>
+            <?php echo "<a class='btn timer-btn' id='stop-timer' onclick='stopTheTimer($wordcount)'>Stop</a>"; ?>
+          </div>
+
+          <?php
+            if(isset($current_passage)) {
+              echo "<h3>".$title."</h3>";
+              echo $passage."<br />";
+
+
+            }
+            else {
+            echo "Instructions";
+            }
+           ?>
+        </div>
+
+        <!-- quiz page -->
+        <div class="page" id="quiz">
+quiz
+        </div>
+        <!-- end quiz page -->
+
+        <!-- vocab page -->
+        <div class="page" id="vocab">
+vocab
+        </div>
+        <!-- end vocab page -->
+
       </div>
     </div>
   </div>
@@ -67,71 +131,9 @@ if(isset($_GET['passage_id'])) {
   </div>
 
 
-<!-- reading page -->
-<div class="page" id="reading">
-    <?php
-
-      if(isset($current_passage)) {
-        echo "<h3>".$title."</h3>";
-        echo $passage;
-      }
-      else {
-        echo "Instructions";
-      }
-     ?>
-</div>
-
-
-<!-- scroller page -->
-<div class="page" id="scroll">
-  <div class='block'>
-    <div id='window'>
-      <div id='scrollPassage'>
-        <?php echo $passage; ?>
-      </div>
-    </div>
-    <div id='instruction'>
-      <p class='instructions'> Select how fast you want to read. When you push ok, the text above will begin scrolling. When you are finished, you can click on 'Quiz' above and take a quiz.</p>
-      <input id='userSpeed' type='text' />
-      <input type='button' id='' value='Go!' onclick='scrollThePassage("<?php echo $wordcount; ?>")' />
-      <input id='reset' type='button' value='Reset' onclick='resetit()' />
-    </div>
-  </div>
-</div>
 
 
 
-<!-- timer page -->
-<div class="page" id="timer">
-    <div class='block'>
-      <p>Click on 'Start' to start the timer. When you are finished reading, click 'Stop.'</p>
-      <p>Go at your own pace. When you click stop, your words per minute will be displayed on the screen.<br /><br />
-        <input type='button' id='start' value='Start' onclick='startTheTimer()' />
-        <input id='stop' type='button' value='Stop' onclick='stopTheTimer()'/>
-        <input type='button' id='resettimer' value='Reset' onclick='resetTheTimer()' /><br /><br />
-        <div id='FieldWpm'></div>
-    <?php
-    if(isset($current_passage)) {
-      echo "<h3>".$title."</h3>";
-      echo $passage;
-    }
-    else {
-      echo "Instructions"; }
-     ?>
-   </div>
-</div>
-
-<!-- quiz page -->
-<div class="page" id="quiz">
-
-</div>
-<!-- end quiz page -->
-
-<!-- vocab page -->
-<div class="page" id="vocab">
-
-</div>
-<!-- end vocab page -->
 
 
 
