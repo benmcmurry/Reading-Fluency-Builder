@@ -30,8 +30,8 @@ $(document).ready(function() {
   $(".nav-btn").on("click",function(){
     pageID = this.id.slice(0, -4); console.log(pageID);
     page=pageID;
-    $(".page").slideUp("slow");
-    $("#"+pageID).slideDown();
+    $(".page").hide();
+    $("#"+pageID).show();
     currentPage = window.location.href;
     window.history.replaceState(pageID, "", "index.php?passage_id="+passage_id+"&page="+pageID);
 

@@ -249,12 +249,15 @@ a.nav-btn:hover {
 {
   0% {
     background: rgb(62, 149, 240);
+    color: white;
   }
   50% {
-    background: rgb(43, 105, 187);
+    background: grey;
+    color: white;
   }
   100% {
     background: rgb(62, 149, 240);
+    color: white;
   }
 }
 @-webkit-keyframes stop-timer
@@ -262,12 +265,15 @@ a.nav-btn:hover {
 {
   0% {
     background: rgb(62, 149, 240);
+    color: white;
   }
   50% {
-    background: rgb(43, 105, 187);
+    background: grey;
+    color: white;
   }
   100% {
     background: rgb(62, 149, 240);
+    color: white;
   }
 }
 
