@@ -29,7 +29,22 @@ p {
   padding: 0em;
   margin: 0em;
 }
+#header #menu-btn {
+  float: left;
+}
+#menu-btn a img{
+  float: left;
+  display: inline block;
+  padding: 0px;
+  width: 1.8em;
+  margin: .1em;
+  border-radius: 5px;
 
+}
+
+#menu-btn a img:hover {
+background-color: #efefef;
+}
 
 /*Main content styles*/
 
@@ -37,6 +52,8 @@ p {
   max-width: 1024px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 2em;
+  /*height: calc(100vh - 50px);*/
 }
 
 #content {
@@ -63,10 +80,10 @@ p {
 }
 
 .instructions {
-  width: 17em;
+  text-align: center;
   margin-left: auto;
   margin-right: auto;
-  background-color: rgb(121, 193, 228);
+  background-color: rgb(238, 241, 99);
   padding: .5em;
   border: solid 1px rgb(73, 129, 181);
   text-shadow: none;
@@ -168,6 +185,13 @@ a.nav-btn:hover {
 
 
 /* Scroller styles */
+#userSpeed {
+  border: 1px dashed grey;
+  text-align: center;
+  line-height: 2em;
+  font-size: 1em;
+  margin-top: .3em;
+}
 #window {
   width: 17em;
   height: 200px;
@@ -182,6 +206,8 @@ a.nav-btn:hover {
 }
 
 #footer {
+  position: fixed;
+  bottom: 0px;
   width: 100%;
   height: 2em;
   background-color: White;
@@ -250,6 +276,9 @@ a.nav-btn:hover {
 }
 
 @media ( min-width: 40em) {
+  #open {
+    display: none;
+  }
   #nav-panel {
     width: 17em;
     float: left;
@@ -267,9 +296,13 @@ a.nav-btn:hover {
 
   #page {
     padding-left: .5em;
+
   }
   #timer-btn-bar {
     bottom: 2em;
+
+  }
+  #timer-btn-bar2 {
 
   }
   #footer {

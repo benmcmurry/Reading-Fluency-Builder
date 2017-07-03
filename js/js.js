@@ -1,38 +1,62 @@
 $(document).ready(function() {
+  window.onbeforeunload = function() {
+    alert("wait");
+    window.location.replace('index.php');
+  }
+  emSize = parseFloat($("body").css("font-size"));
+  largeWindow = emSize * 40;
+
   moveTimerBtnBar();
+
   // Gets Copyright Year
   var d = new Date();
 	var n = d.getFullYear();
 	$("span#year").text(n);
   // End Gets Copyright Year
-console.log ("working");
+
+//Nav Panel functionality
   $("#nav-panel").accordion({
     collapsible: true,
     heightStyle: "content",
     active: false,
   });
+
+//panel opener
+  $("#open").on("click", function(){
+    $("#nav-panel").toggle();
+  });
+
+//Nav button functionality
   $(".nav-btn").on("click",function(){
+    pageID = this.id.slice(0, -4); console.log(pageID);
+    page=pageID;
+    $(".page").slideUp("slow");
+    $("#"+pageID).slideDown();
+    currentPage = window.location.href;
+    window.history.replaceState(pageID, "", "index.php?passage_id="+passage_id+"&page="+pageID);
+
     $(".nav-btn").css({
       "background-color" : "rgb(239, 239, 239)",
       "color" : "black"
     });
+
     $(this).css({
       "background-color" : "rgb(62, 149, 240)",
       "color" : "white"
     });
-
-    pageID = this.id.slice(0, -4); console.log(pageID);
-    $(".page").fadeOut();
-    page=pageID;
-    $("#"+pageID).fadeIn();
   });
 
+//Window resize actions
   $(window).resize(function(){
+    if ($(window).width()> largeWindow ) {$("#nav-panel").show();}
+    else {$("#nav-panel").hide();}
     if (page == "timer") {
       moveTimerBtnBar();
     }
   });
-console.log(page);
+
+//manipulate selected page and nav buttons
+
   switch (page) {
     case "reading":
       $("#reading-btn").click();
@@ -55,7 +79,10 @@ console.log(page);
       console.log(page);
       break;
   }
-});
+
+
+
+}); //end document ready
 
 // Functions for scrolling passages
 function scrollThePassage(wordcount) { // scrolls text

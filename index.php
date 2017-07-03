@@ -33,6 +33,9 @@ if(isset($_GET['passage_id'])) {
       echo "var page='".$_GET['page']."';";
 
     }
+    if(isset($_GET['passage_id'])) {
+      echo "passage_id='".$_GET['passage_id']."';";
+    }
   ?>
 
 
@@ -46,6 +49,9 @@ if(isset($_GET['passage_id'])) {
 </head>
 <body>
   <div id="header">
+    <div id="menu-btn" >
+      <a id="open"><img src="open.png" /></a>
+    </div>
     <?php if(isset($current_passage)) {
       echo $title; }
       else { echo 'SoftRead 3.0';}
@@ -82,8 +88,8 @@ if(isset($_GET['passage_id'])) {
               </div>
             </div>
             <div id='instruction'>
-              <p class='instructions'> Select how fast you want to read. When you push ok, the text above will begin scrolling.</p>
-              <div contenteditable="true" id='userSpeed'>rate</div>
+              <!-- <p class='instructions'> Select how fast you want to read. When you push ok, the text above will begin scrolling.</p> -->
+              <div contenteditable="true" id='userSpeed'>Enter Rate as WPM (1000)</div>
               <a class="btn" id='' onclick='scrollThePassage("<?php echo $wordcount; ?>")'>Go!</a>
               <a class="btn" id='reset-scroller' href="index.php?passage_id=<?php echo $current_passage; ?>&page=scroller">Reset</a>
             </div>
@@ -91,13 +97,14 @@ if(isset($_GET['passage_id'])) {
         </div>
         <!-- timer page -->
         <div class="page" id="timer">
-          <p>Click on 'Start' to start the timer. When you are finished reading, click 'Stop.'</p>
+          <p class='instructions'>Click on 'Start' to start the timer. When you are finished reading, click 'Stop.'</p>
           <div id="timer-btn-bar">
             <a class='btn timer-btn' id="start-timer" onclick='startTheTimer()'>Start</a>
             <a class='btn timer-btn' id='timer-results' href="index.php?passage_id=<?php echo $current_passage; ?>&page=timer">Reset</a>
             <?php echo "<a class='btn timer-btn' id='stop-timer' onclick='stopTheTimer($wordcount)'>Stop</a>"; ?>
           </div>
-
+          <div id="timer-btn_bar2">
+          </div>
           <?php
             if(isset($current_passage)) {
               echo "<h3>".$title."</h3>";
