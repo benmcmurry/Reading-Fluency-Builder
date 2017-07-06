@@ -12,6 +12,7 @@ if(isset($_GET['passage_id'])) {
     $wordcount=$passage_results_row['length'];
   }
   $passage_results->free(); //free results
+$passage_id = $_GET['passage_id'];
 }
 
 ?>
@@ -90,7 +91,7 @@ if(isset($_GET['passage_id'])) {
             <div id='instruction'>
               <!-- <p class='instructions'> Select how fast you want to read. When you push ok, the text above will begin scrolling.</p> -->
               <div contenteditable="true" id='userSpeed'>Enter Rate as WPM (1000)</div>
-              <a class="btn" id='' onclick='scrollThePassage("<?php echo $wordcount; ?>")'>Go!</a>
+              <a class="btn" id='go' onclick='scrollThePassage("<?php echo $wordcount; ?>")'>Go!</a>
               <a class="btn" id='reset-scroller' href="index.php?passage_id=<?php echo $current_passage; ?>&page=scroller">Reset</a>
             </div>
           </div>
@@ -98,7 +99,7 @@ if(isset($_GET['passage_id'])) {
         <!-- timer page -->
         <div class="page" id="timer">
           <p class='instructions'>Click on 'Start' to start the timer. When you are finished reading, click 'Stop.'</p>
-          <div id="timer-btn-bar">
+          <div class="btn-bar">
             <a class='btn timer-btn' id="start-timer" onclick='startTheTimer()'>Start</a>
             <a class='btn timer-btn' id='timer-results' href="index.php?passage_id=<?php echo $current_passage; ?>&page=timer">Reset</a>
             <?php echo "<a class='btn timer-btn' id='stop-timer' onclick='stopTheTimer($wordcount)'>Stop</a>"; ?>
@@ -120,13 +121,50 @@ if(isset($_GET['passage_id'])) {
 
         <!-- quiz page -->
         <div class="page" id="quiz">
-quiz
+          <?php
+            $query_quiz = "Select * from Questions where passage_id=$passage_id order by question_order asc";
+            if(!$quiz_results = $db->query($query_quiz)){
+              die('There was an error running the query [' . $db->error . ']');
+            }
+
+          while($quiz_results_rows = $quiz_results->fetch_assoc()){
+              echo "<div class='question-box'><div class='stem'>".$quiz_results_rows['question_text']."</div>";
+              $answers = array(
+              "<div class='answer correct-answer'><input type='radio' name='".$quiz_results_rows['question_id']."' value='correct'> ".$quiz_results_rows['correct_answer']."</div>",
+              "<div class='answer'><input type='radio' name='".$quiz_results_rows['question_id']."' value='incorrect'> ".$quiz_results_rows['distractor_1']."</div>",
+              "<div class='answer'><input type='radio' name='".$quiz_results_rows['question_id']."' value='incorrect'> ".$quiz_results_rows['distractor_2']."</div>",
+              "<div class='answer'><input type='radio' name='".$quiz_results_rows['question_id']."' value='incorrect'> ".$quiz_results_rows['distractor_2']."</div>"
+            );
+            shuffle($answers);
+              echo $answers[0];
+              echo $answers[1];
+              echo $answers[2];
+              echo $answers[3];
+              echo "</div>";
+          }
+
+          ?>
+<div class="btn-bar">
+          <a id="check-answers" class="btn">Check Answers</a></div>
         </div>
         <!-- end quiz page -->
 
         <!-- vocab page -->
         <div class="page" id="vocab">
-vocab
+          <?php
+
+            $query_vocab = "Select * from Vocabulary where passage_id=$passage_id order by word asc";
+            if(!$vocab_results = $db->query($query_vocab)){
+              die('There was an error running the query [' . $db->error . ']');
+            }
+
+            while($vocab_results_row = $vocab_results->fetch_assoc()){
+
+              echo "<p class='vocab'><strong>".$vocab_results_row['word']."</strong> - ".$vocab_results_row['definition']."<br />";
+              if ($vocab_results_row['example']) { echo "<em>".$vocab_results_row['example']."</em></p>";}
+            }
+          ?>
+
         </div>
         <!-- end vocab page -->
 

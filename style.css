@@ -205,25 +205,8 @@ a.nav-btn:hover {
   top: 205px;
 }
 
-#footer {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  height: 2em;
-  background-color: White;
-  /*border-bottom: rgb(62, 149, 240) solid .3em;*/
-  border-top: gray solid 1px;
-  line-height: 2em;
-  font-size: .8em;
-  text-align: center;
-  font-family: "Martel Sans";
-  font-weight: "700";
-  padding: 0em;
-  margin: 0em;
-  clear: both;
-}
-
-#timer-btn-bar {
+/*Timer styles */
+.btn-bar {
   position: fixed;
   bottom: 1.4em;
   left: 0em;
@@ -280,7 +263,42 @@ a.nav-btn:hover {
 #timer-results {
   display: none;
 }
+/* Quiz Styles */
+.question-box {
+  border-bottom: solid grey 1px;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+}
 
+.answer {
+  display: block;
+  margin-left: 1.5em;
+}
+
+
+/* Vocab Styles */
+p.vocab {
+  border-bottom: black solid 1px;
+  padding-bottom: 1em;
+}
+
+#footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  height: 2em;
+  background-color: White;
+  /*border-bottom: rgb(62, 149, 240) solid .3em;*/
+  border-top: gray solid 1px;
+  line-height: 2em;
+  font-size: .8em;
+  text-align: center;
+  font-family: "Martel Sans";
+  font-weight: "700";
+  padding: 0em;
+  margin: 0em;
+  clear: both;
+}
 @media ( min-width: 40em) {
   #open {
     display: none;
@@ -302,15 +320,14 @@ a.nav-btn:hover {
 
   #page {
     padding-left: .5em;
+    
 
   }
-  #timer-btn-bar {
+  .btn-bar {
     bottom: 2em;
 
   }
-  #timer-btn-bar2 {
 
-  }
   #footer {
     font-size: 1em;
     border-bottom: rgb(62, 149, 240) solid .3em;
