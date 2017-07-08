@@ -1,6 +1,5 @@
 $(document).ready(function() {
   window.onbeforeunload = function() {
-    alert("wait");
     window.location.replace('index.php');
   }
   emSize = parseFloat($("body").css("font-size"));

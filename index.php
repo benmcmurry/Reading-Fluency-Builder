@@ -25,6 +25,8 @@ $passage_id = $_GET['passage_id'];
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="87036161150-rodj9tne2c7g865ps9h0pgoq6346gut5.apps.googleusercontent.com">
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -52,6 +54,9 @@ $passage_id = $_GET['passage_id'];
   <div id="header">
     <div id="menu-btn" >
       <a id="open"><img src="open.png" /></a>
+    </div>
+    <div id="login-btn">
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </div>
     <?php if(isset($current_passage)) {
       echo $title; }

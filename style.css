@@ -46,6 +46,10 @@ p {
 background-color: #efefef;
 }
 
+#login-btn {
+  position:absolute;
+  right: 0;
+}
 /*Main content styles*/
 
 #main {
@@ -320,7 +324,7 @@ p.vocab {
 
   #page {
     padding-left: .5em;
-    
+
 
   }
   .btn-bar {
