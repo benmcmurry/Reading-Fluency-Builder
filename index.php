@@ -1,4 +1,12 @@
 <?php
+session_start();
+if($_SESSION['logged_in'] == 'yes'){
+  // echo "logged in";
+} else {
+  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php'>";
+
+}
+
 include_once('../../connectFiles/connect_sr.php');
 if(isset($_GET['passage_id'])) {
   $current_passage = $_GET['passage_id'];
@@ -25,12 +33,11 @@ $passage_id = $_GET['passage_id'];
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<meta name="google-signin-client_id" content="87036161150-rodj9tne2c7g865ps9h0pgoq6346gut5.apps.googleusercontent.com">
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
+
   <?php
     if(isset($_GET['page'])) {
       echo "var page='".$_GET['page']."';";
@@ -52,12 +59,22 @@ $passage_id = $_GET['passage_id'];
 </head>
 <body>
   <div id="header">
+
     <div id="menu-btn" >
-      <a id="open"><img src="open.png" /></a>
+      <a id="open"><img src="images/open.png" /></a>
     </div>
-    <div id="login-btn">
-      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <div id="user-btn">
+      <?php
+      echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
+      <div id="drop-down">
+      <?php
+echo "Welcome, ".$_SESSION['given_name']."!";
+       ?>
+      <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
+       <a href="start.php?message=signout"><img class='icon' src='images/signout.png' />Sign Out</a>
     </div>
+    </div>
+
     <?php if(isset($current_passage)) {
       echo $title; }
       else { echo 'SoftRead 3.0';}

@@ -1,11 +1,15 @@
 $(document).ready(function() {
+
   window.onbeforeunload = function() {
     window.location.replace('index.php');
   }
   emSize = parseFloat($("body").css("font-size"));
-  largeWindow = emSize * 40;
+  var largeWindow = emSize * 40;
 
   moveBtnBar();
+  $("#user-btn img").on("click", function(){
+    $("#drop-down").slideToggle();
+  });
 
   // Gets Copyright Year
   var d = new Date();
