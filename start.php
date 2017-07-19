@@ -12,7 +12,7 @@ if(isset($_GET['current_url'])) {
     }
 
 } else {
-  $current_url = "index.php";
+  $current_url = "index.php?begin=yes";
 }
 
 if(isset($_GET['page'])) {
