@@ -9,7 +9,7 @@ $email = $_POST['email'];
 $current_url = $_POST['current_url'];
 
 
-$search_for_id = "Select * from Users where google_id=$google_id";
+$search_for_id = "Select * from Users where google_id='".$google_id."'";
 if(!$result = $db->query($search_for_id)){
   die('There was an error running the query [' . $db->error . ']');
 }
