@@ -13,6 +13,8 @@ $search_for_id = "Select * from Users where google_id=$google_id";
 if(!$result = $db->query($search_for_id)){
   die('There was an error running the query [' . $db->error . ']');
 }
+
+echo mysqli_num_rows($result);
 if (mysqli_num_rows($result)==0) {
 mysqli_free_result($result);
   $add_user = "Insert into Users (google_id, full_name, given_name, family_name, image_url, email)
@@ -36,12 +38,6 @@ $_SESSION['email'] = $email;
 $_SESSION['logged_in'] = "yes";
 
 
-echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=$current_url'>";
+// echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=$current_url'>";
 
-echo $_SESSION['given_name'];
-echo $full_name;
-echo $given_name;
-echo $family_name;
-echo $image_url;
-echo $email;
 ?>
