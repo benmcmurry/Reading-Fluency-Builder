@@ -84,6 +84,13 @@ p {
 #user-btn #drop-down a {
   display: block;
   font-size: .8em;
+  text-decoration: none;
+  color: rgb(62, 149, 240);
+}
+
+#user-btn #drop-down a:hover {
+  color: white;
+  background-color: rgb(62, 149, 240);
 }
 
 
@@ -103,6 +110,10 @@ p {
   font-size: 1em;
   background-color: white;
   outline: 1px solid grey;
+}
+
+#welcome {
+  padding: .5em;
 }
 
 #page {
@@ -355,6 +366,14 @@ p.vocab {
   padding: 0em;
   margin: 0em;
   clear: both;
+}
+
+/*Editor Styles*/
+h3.passage {
+  text-align: left;
+}
+div.passage-details {
+  text-align: left;
 }
 
 @media ( min-width: 40em) {

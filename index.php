@@ -3,7 +3,8 @@ session_start();
 if($_SESSION['logged_in'] == 'yes'){
   // echo "logged in";
 } else {
-  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php'>";
+  $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
 
 }
 
@@ -15,12 +16,16 @@ if(isset($_GET['passage_id'])) {
     die('There was an error running the query [' . $db->error . ']');
   }
   while($passage_results_row = $passage_results->fetch_assoc()){
-    $title = $passage_results_row['title'];
+    $title = "SoftRead 3.0 - ".$passage_results_row['title'];
     $passage = $passage_results_row['passage_text'];
     $wordcount=$passage_results_row['length'];
   }
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
+
+} else {
+$title = "SoftRead 3.0";
+
 }
 
 ?>
@@ -42,10 +47,11 @@ $passage_id = $_GET['passage_id'];
     if(isset($_GET['page'])) {
       echo "var page='".$_GET['page']."';";
 
-    }
+    } else {echo "var page='instructions';";}
     if(isset($_GET['passage_id'])) {
-      echo "passage_id='".$_GET['passage_id']."';";
-    }
+      echo "var passage_id='".$_GET['passage_id']."';";
+    } else {echo "var passage_id='';";}
+
   ?>
 
 
@@ -53,7 +59,7 @@ $passage_id = $_GET['passage_id'];
 <script src="js/js.js"></script>
 
 <title>
-  SoftRead 3.0 - <?php echo $title; ?>
+  <?php echo $title; ?>
 </title>
 
 </head>
@@ -94,6 +100,12 @@ echo "Welcome, ".$_SESSION['given_name']."!";
         <a id="vocab-btn" class="nav-btn">Vocabulary</a>
       </div>
       <div id="page">
+        <!-- instructions page -->
+        <div class="page" id="instructions">
+          <h1>Welcome to SoftRead</h1>
+          <p>Begin by using the menu on the right to select a passage to read. After you select a passage, there will be a menu at the top of the page.</p> <p>The <strong>Reading</strong> tab lets you read the passage. The <strong>Scrolled Reading</strong> tab lets you set a speed at which the text will scroll so that you can improve reading rate. The <strong>Timed Reading</strong> tab lets you time yourself as you read at any pace you'd like. The <strong>Quiz</strong> tab includes comprehension questions. The <strong>Vocabulary</strong> tab give you a list of vocabulary words from the reading.</p></div>
+        </div>
+
         <!-- reading page -->
         <div class="page" id="reading">
           <?php

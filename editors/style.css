@@ -1,0 +1,31 @@
+body, html, h1, h2, h3, h4, h5, p {
+  margin: 0em;
+  padding: 0em;
+}
+
+body {
+  background-color: rgb(245, 245, 245);
+}
+
+h3 {
+  margin-top: 0em;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+#header {
+  width: 100%;
+  height: 2em;
+  background-color: White;
+  border-top: rgb(62, 149, 240) solid .3em;
+  border-bottom: grey solid .1em;
+  line-height: 2em;
+  font-size: 1.17em;
+  text-align: center;
+  font-family: "Martel Sans";
+  font-weight: "700";
+  padding: 0em;
+  margin: 0em;
+}

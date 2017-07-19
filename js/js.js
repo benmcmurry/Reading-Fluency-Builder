@@ -31,7 +31,9 @@ $(document).ready(function() {
 
   //Nav button functionality
   $(".nav-btn").on("click", function() {
+
     pageID = this.id.slice(0, -4);
+    console.log("Menu Click Triggered: "+ pageID);
     page = pageID;
     $(".page").hide();
     $("#" + pageID).show();
@@ -48,6 +50,9 @@ $(document).ready(function() {
       "color": "white"
     });
   });
+
+
+
 
   $("#check-answers").on("click", function() {
     $(".correct-answer").css({
@@ -79,24 +84,8 @@ $(document).ready(function() {
   });
 
   //manipulate selected page and nav buttons
+pageSet(page);
 
-  switch (page) {
-    case "reading":
-      $("#reading-btn").click();
-      break;
-    case "scroller":
-      $("#scroller-btn").click();
-      break;
-    case "timer":
-      $("#timer-btn").click();
-      break;
-    case "quiz":
-      $("#quiz-btn").click();
-      break;
-    case "vocab":
-      $("#vocab-btn").click();
-      break;
-  }
 $("#userSpeed").on("click", function(){$(this).empty();});
 $("#userSpeed").keypress(function(e){
   if(e.which === 13) {
@@ -109,6 +98,35 @@ $("#userSpeed").keypress(function(e){
 
 }); //end document ready
 
+function pageSet(page) {
+  switch (page) {
+
+    case "reading":
+      console.log(page+" from pageSet");
+      $("#reading-btn").click();
+      break;
+    case "scroller":
+      console.log(page+" from pageSet");
+      $("#scroller-btn").click();
+      break;
+    case "timer":
+      console.log(page+" from pageSet");
+      $("#timer-btn").click();
+      break;
+    case "quiz":
+      console.log(page+" from pageSet");
+      $("#quiz-btn").click();
+      break;
+    case "vocab":
+      console.log(page+" from pageSet");
+      $("#vocab-btn").click();
+      break;
+    case "instructions":
+      console.log(page+" from pageSet");
+      $("#instructions").show();
+      break;
+  }
+}
 // Functions for scrolling passages
 function scrollThePassage(wordcount) { // scrolls text
   wpm = $("#userSpeed").html();

@@ -3,6 +3,19 @@ session_start();
 session_unset();
 
 session_destroy();
+if(isset($_GET['current_url'])) {
+  $current_url = $_GET['current_url'];
+
+} else {
+  $current_url = "index.php";
+}
+
+if(isset($_GET['page'])) {
+  $page = $_GET['page'];
+
+} else {
+  $page = "instructions";
+}
 
  ?>
 <!DOCTYPE html>
@@ -52,7 +65,8 @@ $(document).ready(function() {
       given_name: given_name,
       family_name: family_name,
       image_url: image_url,
-      email: email
+      email: email,
+      current_url: "<?php echo $current_url."&page=".$page; ?>"
       }
   }).done(function(phpfile) {
   $("#save_dialog").html(phpfile);
@@ -126,7 +140,7 @@ $(document).ready(function() {
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-longtitle="true"></div>
     <h1>SoftRead 3.0a</h1>
     <img class="screenshot" src="images/screens.gif" />
-    <div id="save_dialog"></div>  
+    <div id="save_dialog"></div>
   </div>
 </body>
 

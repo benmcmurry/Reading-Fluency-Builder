@@ -6,7 +6,7 @@ $given_name = $_POST['given_name'];
 $family_name = $_POST['family_name'];
 $image_url = $_POST['image_url'];
 $email = $_POST['email'];
-
+$current_url = $_POST['current_url'];
 
 
 $search_for_id = "Select * from Users where google_id=$google_id";
@@ -28,6 +28,7 @@ if (mysqli_num_rows($result)==0) {
   }
 }
 if(!isset($_SESSION)){session_start();}
+$_SESSION['google_id'] = $google_id;
 $_SESSION['given_name'] = $given_name;
 $_SESSION['family_name'] = $family_name;
 $_SESSION['image_url'] = $image_url;
@@ -35,7 +36,7 @@ $_SESSION['email'] = $email;
 $_SESSION['logged_in'] = "yes";
 
 
-echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=index.php'>";
+echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=$current_url'>";
 
 echo $_SESSION['given_name'];
 echo $full_name;
