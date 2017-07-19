@@ -77,7 +77,7 @@ $title = "SoftRead 3.0";
 echo "Welcome, ".$_SESSION['given_name']."!";
        ?>
       <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
-       <a href="start.php?message=signout"><img class='icon' src='images/signout.png' />Sign Out</a>
+       <a href="logout.php"><img class='icon' src='images/signout.png' />Sign Out</a>
     </div>
     </div>
 

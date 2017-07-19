@@ -34,7 +34,7 @@ if(isset($_GET['page'])) {
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
-<!-- <script src="https://apis.google.com/js/api.js"></script> -->
+
 <link href="https://fonts.googleapis.com/css?family=Martel+Sans:400,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
