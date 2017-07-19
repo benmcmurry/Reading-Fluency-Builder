@@ -4,7 +4,12 @@ session_unset();
 
 session_destroy();
 if(isset($_GET['current_url'])) {
-  $current_url = $_GET['current_url'];
+  $pos = strpos($_GET['current_url'], ".php");
+    if ($pos === false) {
+      $current_url = $current_url."index.php?begin=yes";
+    } else {
+      $current_url = $_GET['current_url'];
+    }
 
 } else {
   $current_url = "index.php";
@@ -16,6 +21,8 @@ if(isset($_GET['page'])) {
 } else {
   $page = "instructions";
 }
+
+
 
  ?>
 <!DOCTYPE html>
