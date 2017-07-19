@@ -38,6 +38,6 @@ $_SESSION['email'] = $email;
 $_SESSION['logged_in'] = "yes";
 
 
-// echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=$current_url'>";
+echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=$current_url'>";
 
 ?>
