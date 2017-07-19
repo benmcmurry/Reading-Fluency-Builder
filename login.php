@@ -14,13 +14,13 @@ if(!$result = $db->query($search_for_id)){
   die('There was an error running the query [' . $db->error . ']');
 }
 if (mysqli_num_rows($result)==0) {
-  $result->free();
+
   $add_user = "Insert into Users (google_id, full_name, given_name, family_name, image_url, email)
   values ('$google_id', '$full_name', '$given_name', '$family_name', '$image_url', '$email')";
   if(!$result = $db->query($add_user)){
     die('There was an error running the query [' . $db->error . ']');
   }
-  // $result->free();
+  
 } else {
   $update_user = "UPDATE Users SET full_name = '$full_name', given_name = '$given_name', family_name = '$family_name', image_url = '$image_url', email = '$email' WHERE google_id='$google_id'";
   if(!$result = $db->query($update_user)){
