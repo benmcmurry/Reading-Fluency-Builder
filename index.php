@@ -1,11 +1,11 @@
 <?php
 session_start();
 if($_SESSION['logged_in'] == 'yes'){
-   echo "logged in";
+  //  echo "logged in";
 } else {
   //echo "not logged in";
   $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-  //echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
+  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
 
 }
 
@@ -78,7 +78,7 @@ $title = "SoftRead 3.0";
 echo "Welcome, ".$_SESSION['given_name']."!";
        ?>
       <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
-       <a href="start.php?message=signout"><img class='icon' src='images/signout.png' />Sign Out</a>
+       <a href="logout.php"><img class='icon' src='images/signout.png' />Sign Out</a>
     </div>
     </div>
 
