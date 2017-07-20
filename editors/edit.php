@@ -276,7 +276,25 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 </div>
 <div class='editable-chunk'>
   <div class='label'>Temporary Vocabulary Holder</div>
-  <div id='vocabulary' class='editable' contenteditable='true'><?php echo $vocabulary;?></div>
+  <div id='vocabulary' class='editable' contenteditable='true'>
+    <?php
+      if ($vocabulary == ""){
+        $query_vocab = "Select * from Vocabulary where passage_id=$passage_id order by word asc";
+        if(!$vocab_results = $db->query($query_vocab)){
+          die('There was an error running the query [' . $db->error . ']');
+        }
+
+        while($vocab_results_row = $vocab_results->fetch_assoc()){
+
+          echo "<p class='vocab'><strong>".$vocab_results_row['word']."</strong> - ".$vocab_results_row['definition']."<br />";
+          if ($vocab_results_row['example']) { echo "<em>".$vocab_results_row['example']."</em></p>";}
+        }
+      } else{
+        echo $vocabulary;
+      }
+
+    ?>
+  </div>
 </div>
 </div>
 <div class="editable-box">

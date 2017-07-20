@@ -20,6 +20,7 @@ if(isset($_GET['passage_id'])) {
     $title = "SoftRead 3.0 - ".$passage_results_row['title'];
     $passage = $passage_results_row['passage_text'];
     $wordcount=$passage_results_row['length'];
+    $vocabulary = $passage_results_row['vocabulary'];
   }
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
@@ -199,7 +200,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
         <!-- vocab page -->
         <div class="page" id="vocab">
           <?php
-
+          if($vocabulary == ""){
             $query_vocab = "Select * from Vocabulary where passage_id=$passage_id order by word asc";
             if(!$vocab_results = $db->query($query_vocab)){
               die('There was an error running the query [' . $db->error . ']');
@@ -210,6 +211,9 @@ echo "Welcome, ".$_SESSION['given_name']."!";
               echo "<p class='vocab'><strong>".$vocab_results_row['word']."</strong> - ".$vocab_results_row['definition']."<br />";
               if ($vocab_results_row['example']) { echo "<em>".$vocab_results_row['example']."</em></p>";}
             }
+          } else {
+            echo $vocabulary;
+          }
           ?>
 
         </div>
