@@ -1,10 +1,11 @@
 <?php
 session_start();
 if($_SESSION['logged_in'] == 'yes'){
-  // echo "logged in";
+   echo "logged in";
 } else {
+  //echo "not logged in";
   $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
+  //echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
 
 }
 
