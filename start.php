@@ -1,8 +1,7 @@
 <?php
 session_start();
-session_unset();
-
-session_destroy();
+echo session_id();
+echo ini_get('session.cookie_domain');
 if(isset($_GET['current_url'])) {
   $pos = strpos($_GET['current_url'], ".php");
     if ($pos === false) {

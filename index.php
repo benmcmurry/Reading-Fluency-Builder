@@ -1,10 +1,14 @@
 <?php
 session_start();
+echo session_id();
+echo ini_get('session.cookie_domain');
+var_dump($_SESSION);
 if($_SESSION['logged_in'] == 'yes'){
-  // echo "logged in";
+  echo "logged in";
 } else {
+  echo "not logged in";
   $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
+  // echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
 
 }
 
@@ -27,6 +31,15 @@ $passage_id = $_GET['passage_id'];
 $title = "SoftRead 3.0";
 
 }
+
+$query_user_editor = "Select * from Users where google_id='".$_SESSION['google_id']."'";
+if(!$query_user_editor_results = $db->query($query_user_editor)){
+  die('There was an error running the query [' . $db->error . ']');
+}
+
+$user_result = $query_user_editor_results->fetch_assoc();
+
+if ($user_result['editor'] == 1) {$editor = true;} else {$editor = false;}
 
 ?>
 <!DOCTYPE html>
@@ -77,6 +90,12 @@ $title = "SoftRead 3.0";
 echo "Welcome, ".$_SESSION['given_name']."!";
        ?>
       <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
+
+      <?php
+        if ($editor) {echo "<a href='#'>New Passage</a>";}
+       ?>
+
+
        <a href="logout.php"><img class='icon' src='images/signout.png' />Sign Out</a>
     </div>
     </div>

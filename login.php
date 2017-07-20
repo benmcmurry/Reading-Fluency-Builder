@@ -29,7 +29,10 @@ mysqli_free_result($result);
     die('There was an error running the query [' . $db->error . ']');
   }
 }
-if(!isset($_SESSION)){session_start();}
+// if(!isset($_SESSION)){session_start();}
+session_start();
+echo session_id();
+echo ini_get('session.cookie_domain');
 $_SESSION['google_id'] = $google_id;
 $_SESSION['given_name'] = $given_name;
 $_SESSION['family_name'] = $family_name;
@@ -37,7 +40,14 @@ $_SESSION['image_url'] = $image_url;
 $_SESSION['email'] = $email;
 $_SESSION['logged_in'] = "yes";
 
+var_dump($_SESSION);
 
+// echo $_SESSION['google_id'];
+// echo $_SESSION['given_name'];
+// echo $_SESSION['family_name'];
+// echo $_SESSION['image_url'];
+// echo $_SESSION['email'];
+// echo $_SESSION['logged_in'];
 echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=$current_url'>";
 
 ?>
