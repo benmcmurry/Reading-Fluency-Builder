@@ -1,7 +1,5 @@
 <?php
 session_start();
-echo session_id();
-echo ini_get('session.cookie_domain');
 var_dump($_SESSION);
 if($_SESSION['logged_in'] == 'yes'){
   echo "logged in";

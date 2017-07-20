@@ -29,8 +29,7 @@ mysqli_free_result($result);
     die('There was an error running the query [' . $db->error . ']');
   }
 }
-// if(!isset($_SESSION)){session_start();}
-// session_start();
+if(!isset($_SESSION)){session_start();}
 echo session_id();
 echo ini_get('session.cookie_domain');
 $_SESSION['google_id'] = $google_id;
