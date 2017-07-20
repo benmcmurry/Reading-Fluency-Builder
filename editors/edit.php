@@ -25,6 +25,7 @@ while($passage_row = $passage->fetch_assoc()){
   $flesch_kincaid_level = $passage_row['flesch_kincaid_level'];
   $elc_copyright = $passage_row['elc_copyright'];
   $library_id = $passage_row['library_id'];
+  $vocabulary = $passage_row['vocabulary'];
 }
 ?>
 
@@ -110,6 +111,7 @@ $(document).ready(function() {
        flesch_reading_ease: $("#flesch_reading_ease").html(),
        flesch_kincaid_level: $("#flesch_kincaid_level").html(),
        library_id: $("#library_id").html(),
+       vocabulary: $("#vocabulary").html(),
        modified_by: google_id
      },
      success: function(phpfile)
@@ -271,6 +273,10 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 <div class='editable-chunk'>
   <div class='label'>Library</div>
   <div id='library_id' class='editable' contenteditable='true'><?php echo $library_id;?></div>
+</div>
+<div class='editable-chunk'>
+  <div class='label'>Temporary Vocabulary Holder</div>
+  <div id='vocabulary' class='editable' contenteditable='true'><?php echo $vocabulary;?></div>
 </div>
 </div>
 <div class="editable-box">

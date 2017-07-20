@@ -8,6 +8,7 @@ $lexile = $_POST['lexile'];
 $flesch_reading_ease = $_POST['flesch_reading_ease'];
 $flesch_kincaid_level = $_POST['flesch_kincaid_level'];
 $library_id = $_POST['library_id'];
+$vocabulary =  mysqli_real_escape_string($db, $_POST['vocabulary']);
 $modified_by = $_POST['modified_by'];
 
 $passage_text = mysqli_real_escape_string($db, $passage_text);
@@ -22,6 +23,7 @@ $update_passage = "UPDATE Passages SET
     flesch_reading_ease = '$flesch_reading_ease',
     flesch_kincaid_level = '$flesch_kincaid_level',
     library_id = '$library_id',
+    vocabulary = '$vocabulary',
     modified_by = '$modified_by'
  WHERE passage_id='$passage_id'";
 if(!$result = $db->query($update_passage)){
