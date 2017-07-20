@@ -230,6 +230,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 
        echo "<a href='../index.php?passage_id=$passage_id'><img class='icon' src='../images/return.png' />Return<a>";
        ?>
+       <a href='new_passage.php'><img class='icon' src='../images/new.png' />New Passage</a>
       <a href="#"><img class='icon' src='../images/settings.png' />Settings</a>
        <a href="start.php?message=signout"><img class='icon' src='../images/signout.png' />Sign Out</a>
     </div>

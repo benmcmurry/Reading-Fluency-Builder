@@ -84,7 +84,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
       <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
       <?php
       if($_SESSION['editor'] == "1") {
-        echo "<a href=''><img class='icon' src='images/new.png' />New Passage</a>";
+        echo "<a href='editors/new_passage.php'><img class='icon' src='images/new.png' />New Passage</a>";
         if(isset($passage_id)) {
           echo "<a href='editors/edit.php?passage_id=".$passage_id."'><img class='icon' src='images/edit.png' />Edit Passage</a>";
         }
