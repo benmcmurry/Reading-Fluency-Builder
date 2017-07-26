@@ -234,7 +234,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
        ?>
        <a href='new_passage.php'><img class='icon' src='../images/new.png' />New Passage</a>
       <a href="#"><img class='icon' src='../images/settings.png' />Settings</a>
-       <a href="start.php?message=signout"><img class='icon' src='../images/signout.png' />Sign Out</a>
+       <a href="../logout.php"><img class='icon' src='../images/signout.png' />Sign Out</a>
     </div>
   </div>
   SoftRead Editor: <spane id='title' contenteditable="true"><?php echo $title; ?></span>
