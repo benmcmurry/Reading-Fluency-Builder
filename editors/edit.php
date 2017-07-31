@@ -1,6 +1,6 @@
 <?php
 session_start();
-if($_SESSION['logged_in'] == 'yes' && $_SESSION['google_id'] == "110466253529943196246" && isset($_GET['passage_id'])){
+if($_SESSION['logged_in'] == 'yes' && $_SESSION['editor'] == "1" && isset($_GET['passage_id'])){
   // echo "logged in";
 } else {
   $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
