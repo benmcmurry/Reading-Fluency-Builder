@@ -2,7 +2,7 @@
 include_once('../../../connectFiles/connect_sr.php');
 $passage_id = $_POST['passage_id'];
 $passage_title = $_POST['passage_title'];
-$passage_text = $_POST['passage_text'];
+$passage_text = stripslashes(mysqli_real_escape_string($db, $_POST['passage_text']));
 $author = $_POST['author'];
 $source = $_POST['source'];
 $length = $_POST['length'];
@@ -10,12 +10,12 @@ $lexile = $_POST['lexile'];
 $flesch_reading_ease = (float)$_POST['flesch_reading_ease'];
 $flesch_kincaid_level = (float)$_POST['flesch_kincaid_level'];
 $library_id = $_POST['library_id'];
-$vocabulary =  mysqli_real_escape_string($db, $_POST['vocabulary']);
+$vocabulary =  stripslashes(mysqli_real_escape_string($db, $_POST['vocabulary']));
 $modified_by = $_POST['modified_by'];
 
 
 $passage_text = mysqli_real_escape_string($db, $passage_text);
-
+$vocabulary = mysqli_real_escape_string($db, $vocabulary);
 
 
 if (is_float($flesch_reading_ease)){} else {$flesch_reading_ease = 0;}
