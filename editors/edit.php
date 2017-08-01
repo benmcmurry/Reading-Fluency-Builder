@@ -19,6 +19,7 @@ while($passage_row = $passage->fetch_assoc()){
   $title= $passage_row['title'];
   $passage_text = $passage_row['passage_text'];
   $source = $passage_row['source'];
+  $author = $passage_row['author'];
   $length = $passage_row['length'];
   $lexile = $passage_row['lexile'];
   $flesch_reading_ease = $passage_row['flesch_reading_ease'];
@@ -70,11 +71,11 @@ $(document).ready(function() {
   $(".quiz_item").on("blur", function(){
     question_id = $(this).parent().attr("id"); console.log(question_id);
     console.log("question_text-"+question_id);
-    question_text = $("#question_text-"+question_id).html();console.log(question_text);
-    correct_answer = $("#correct_answer-"+question_id).html();console.log(correct_answer);
-    distractor_1 = $("#distractor_1-"+question_id).html();console.log(distractor_1);
-    distractor_2 = $("#distractor_2-"+question_id).html();console.log(distractor_2);
-    distractor_3 = $("#distractor_3-"+question_id).html();console.log(distractor_3);
+    question_text = $("#question_text-"+question_id).text();console.log(question_text);
+    correct_answer = $("#correct_answer-"+question_id).text();console.log(correct_answer);
+    distractor_1 = $("#distractor_1-"+question_id).text();console.log(distractor_1);
+    distractor_2 = $("#distractor_2-"+question_id).text();console.log(distractor_2);
+    distractor_3 = $("#distractor_3-"+question_id).text();console.log(distractor_3);
     $.ajax({
       type: "POST",
       url: "save_question.php",
@@ -104,18 +105,21 @@ $(document).ready(function() {
      dataType: "html",
      data: {
        passage_id: passage_id,
+       passage_title: $("#title").text(),
        passage_text: $("#passage_text").html(),
-       source: $("#source").html(),
-       length: $("#length").html(),
-       lexile: $("#lexile").html(),
-       flesch_reading_ease: $("#flesch_reading_ease").html(),
-       flesch_kincaid_level: $("#flesch_kincaid_level").html(),
-       library_id: $("#library_id").html(),
+       author: $("#author").text(),
+       source: $("#source").text(),
+       length: $("#length").text(),
+       lexile: $("#lexile").text(),
+       flesch_reading_ease: $("#flesch_reading_ease").text(),
+       flesch_kincaid_level: $("#flesch_kincaid_level").text(),
+       library_id: $("#library_id").text(),
        vocabulary: $("#vocabulary").html(),
        modified_by: google_id
      },
      success: function(phpfile)
      {
+
      $("#save_dialog").html(phpfile).fadeIn().delay(2000).fadeOut(2000);
      }
      });
@@ -237,7 +241,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
        <a href="../logout.php"><img class='icon' src='../images/signout.png' />Sign Out</a>
     </div>
   </div>
-  SoftRead Editor: <spane id='title' contenteditable="true"><?php echo $title; ?></span>
+  SoftRead Editor: <span id='title' contenteditable="true"><?php echo $title; ?></span>
 </div>
 <div id="main">
   <div id="save_dialog"></div>
@@ -247,26 +251,30 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div class='editable-box' id='passage_details'>
 <h1> Passage Information </h1>
   <div class='editable-chunk-special'>
-    <div class='label'>Passage Text</div>
+    <div class='label'>Passage Text (paste as plain text)</div>
     <div id='passage_text' class='editable' contenteditable='true'><?php echo $passage_text; ?></div>
   </div>
   <div class='editable-chunk'>
-  <div class='label'>Source/Author</div>
-  <div id='source' class='editable' contenteditable='true'><?php echo $source; ?></div>
+  <div class='label'>Author</div>
+  <div id='author' class='editable' contenteditable='true'><?php echo $author; ?></div>
+</div>
+<div class='editable-chunk'>
+<div class='label'>Source</div>
+<div id='source' class='editable' contenteditable='true'><?php echo $source; ?></div>
 </div>
 <div class='editable-chunk'>  <div class='label'>Length</div>
   <div id='length' class='editable' contenteditable='true'><?php echo $length;?></div>
 </div>
 <div class='editable-chunk'>
-  <div class='label'>Lexile</div>
+  <div class='label'>Lexile (example: 700)</div>
   <div id='lexile' class='editable' contenteditable='true'><?php echo $lexile;?></div>
 </div>
 <div class='editable-chunk'>
-  <div class='label'>Flesch Reading Ease</div>
+  <div class='label'>Flesch Reading Ease (example: 58.4)</div>
   <div id='flesch_reading_ease' class='editable' contenteditable='true'><?php echo $flesch_reading_ease;?></div>
 </div>
 <div class='editable-chunk'>
-  <div class='label'>Flesch Kincaid Level</div>
+  <div class='label'>Flesch Kincaid Level (example: 9.4)</div>
   <div id='flesch_kincaid_level' class='editable' contenteditable='true'><?php echo $flesch_kincaid_level;?></div>
 </div>
 
@@ -275,7 +283,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div id='library_id' class='editable' contenteditable='true'><?php echo $library_id;?></div>
 </div>
 <div class='editable-chunk'>
-  <div class='label'>Temporary Vocabulary Holder</div>
+  <div class='label'>Temporary Vocabulary Holder (paste as plain text) </div>
   <div id='vocabulary' class='editable' contenteditable='true'>
     <?php
       if ($vocabulary == ""){
