@@ -9,6 +9,14 @@ $(document).ready(function() {
   moveBtnBar();
   $("#user-btn img").on("click", function(){
     $("#drop-down").slideToggle();
+    $("#invisible-background").toggle();
+  });
+
+  $("#invisible-background").on("click", function(){
+    if($("#drop-down").is(":visible")) {
+      $("#drop-down").slideToggle();
+      $("#invisible-background").toggle();
+  }
   });
 
   // Gets Copyright Year

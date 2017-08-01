@@ -99,36 +99,39 @@ $(document).ready(function() {
   });
 
   $("#save").on("click", function(){
-    $.ajax({
-     type: "POST",
-     url: "save_passage.php",
-     dataType: "html",
-     data: {
-       passage_id: passage_id,
-       passage_title: $("#title").text(),
-       passage_text: $("#passage_text").html(),
-       author: $("#author").text(),
-       source: $("#source").text(),
-       length: $("#length").text(),
-       lexile: $("#lexile").text(),
-       flesch_reading_ease: $("#flesch_reading_ease").text(),
-       flesch_kincaid_level: $("#flesch_kincaid_level").text(),
-       library_id: $("#library_id").text(),
-       vocabulary: $("#vocabulary").html(),
-       modified_by: google_id
-     },
-     success: function(phpfile)
-     {
+    save_passage();
 
-     $("#save_dialog").html(phpfile).fadeIn().delay(2000).fadeOut(2000);
-     }
-     });
-
+  });
+  $(".editable-passage").on("blur", function(){
+    save_passage();
   });
 });
 
 function save_passage() {
-  alert("Saving");
+  $.ajax({
+   type: "POST",
+   url: "save_passage.php",
+   dataType: "html",
+   data: {
+     passage_id: passage_id,
+     passage_title: $("#title").text(),
+     passage_text: $("#passage_text").html(),
+     author: $("#author").text(),
+     source: $("#source").text(),
+     length: $("#length").text(),
+     lexile: $("#lexile").text(),
+     flesch_reading_ease: $("#flesch_reading_ease").text(),
+     flesch_kincaid_level: $("#flesch_kincaid_level").text(),
+     library_id: $("#library_id").text(),
+     vocabulary: $("#vocabulary").html(),
+     modified_by: google_id
+   },
+   success: function(phpfile)
+   {
+
+   $("#save_dialog").html(phpfile).fadeIn().delay(2000).fadeOut(2000);
+   }
+   });
 }
 </script>
 <style>
@@ -159,7 +162,7 @@ h1 {
   margin-left:2em;
 }
 
-.editable {
+.editable, .editable-passage {
 
   font-family: "Martel Sans";
   background-color: white;
@@ -252,39 +255,39 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 <h1> Passage Information </h1>
   <div class='editable-chunk-special'>
     <div class='label'>Passage Text (paste as plain text)</div>
-    <div id='passage_text' class='editable' contenteditable='true'><?php echo $passage_text; ?></div>
+    <div id='passage_text' class='editable-passage' contenteditable='true'><?php echo $passage_text; ?></div>
   </div>
   <div class='editable-chunk'>
   <div class='label'>Author</div>
-  <div id='author' class='editable' contenteditable='true'><?php echo $author; ?></div>
+  <div id='author' class='editable-passage' contenteditable='true'><?php echo $author; ?></div>
 </div>
 <div class='editable-chunk'>
 <div class='label'>Source</div>
-<div id='source' class='editable' contenteditable='true'><?php echo $source; ?></div>
+<div id='source' class='editable-passage' contenteditable='true'><?php echo $source; ?></div>
 </div>
 <div class='editable-chunk'>  <div class='label'>Length</div>
-  <div id='length' class='editable' contenteditable='true'><?php echo $length;?></div>
+  <div id='length' class='editable-passage' contenteditable='true'><?php echo $length;?></div>
 </div>
 <div class='editable-chunk'>
   <div class='label'>Lexile (example: 700)</div>
-  <div id='lexile' class='editable' contenteditable='true'><?php echo $lexile;?></div>
+  <div id='lexile' class='editable-passage' contenteditable='true'><?php echo $lexile;?></div>
 </div>
 <div class='editable-chunk'>
   <div class='label'>Flesch Reading Ease (example: 58.4)</div>
-  <div id='flesch_reading_ease' class='editable' contenteditable='true'><?php echo $flesch_reading_ease;?></div>
+  <div id='flesch_reading_ease' class='editable-passage' contenteditable='true'><?php echo $flesch_reading_ease;?></div>
 </div>
 <div class='editable-chunk'>
   <div class='label'>Flesch Kincaid Level (example: 9.4)</div>
-  <div id='flesch_kincaid_level' class='editable' contenteditable='true'><?php echo $flesch_kincaid_level;?></div>
+  <div id='flesch_kincaid_level' class='editable-passage' contenteditable='true'><?php echo $flesch_kincaid_level;?></div>
 </div>
 
 <div class='editable-chunk'>
   <div class='label'>Library</div>
-  <div id='library_id' class='editable' contenteditable='true'><?php echo $library_id;?></div>
+  <div id='library_id' class='editable-passage' contenteditable='true'><?php echo $library_id;?></div>
 </div>
 <div class='editable-chunk'>
   <div class='label'>Temporary Vocabulary Holder (paste as plain text) </div>
-  <div id='vocabulary' class='editable' contenteditable='true'>
+  <div id='vocabulary' class='editable-passage' contenteditable='true'>
     <?php
       if ($vocabulary == ""){
         $query_vocab = "Select * from Vocabulary where passage_id=$passage_id order by word asc";
@@ -336,5 +339,6 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 
 
 </div>
+<div id="invisible-background"></div>
 </body>
 </html>

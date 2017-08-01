@@ -53,6 +53,7 @@ p {
   right: 0;
   text-align: right;
   /*width: 2em;*/
+  z-index:100;
 }
 
 #user-btn img {
@@ -60,6 +61,7 @@ p {
   height: 1.8em;
   border-radius: .9em;
   margin: .15em;
+
 }
 
 #user-btn img#user-image {
@@ -79,6 +81,7 @@ p {
   margin: 0em;
   background-color: white;
   outline: 1px solid gray;
+  z-index: 100;
 }
 
 #user-btn #drop-down a {
@@ -366,6 +369,17 @@ p.vocab {
   padding: 0em;
   margin: 0em;
   clear: both;
+}
+
+#invisible-background {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.1);
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  display: none;
+  z-index: 99;
 }
 
 /*Editor Styles*/

@@ -225,6 +225,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div id="footer">
     Copyright &copy; <span id="year">year</span>. English Language Center
   </div>
+  <div id="invisible-background"></div>
 
 
 
