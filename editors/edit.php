@@ -223,6 +223,10 @@ padding: 1em;
   color:white;
   background-color: rgb(240, 30, 62);
 }
+
+#new_question {
+  float: right;
+}
 @media ( min-width: 640px) {
 
 }
@@ -309,8 +313,8 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 </div>
 </div>
 <div class="editable-box">
-  <h1> Quiz Items</h1>
   <a class='button' id='new_question'>Add another question</a>
+  <h1> Quiz Items</h1>
   <?php
     $query_quiz = "Select * from Questions where passage_id=$passage_id order by question_order asc";
     if(!$quiz_results = $db->query($query_quiz)){
