@@ -105,6 +105,22 @@ $(document).ready(function() {
   $(".editable-passage").on("blur", function(){
     save_passage();
   });
+
+  $(".editable-passage, .editable").on("paste", function(e){
+    e.preventDefault();
+    if (e.clipboardData)
+    {text = e.clipboardData.getData('text/plain');
+  console.log("1: "+text);}
+else if (window.clipboardData)
+    {text = window.clipboardData.getData('Text');
+    console.log("2: "+text);}
+else if (e.originalEvent.clipboardData)
+    {text = e.originalEvent.clipboardData.getData('text');
+  console.log("3: "+ text);}
+
+      destination = this.id;
+    document.execCommand("insertHTML", false, text);
+  });
 });
 
 function save_passage() {

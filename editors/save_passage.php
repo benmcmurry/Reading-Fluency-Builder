@@ -1,7 +1,7 @@
 <?php
 include_once('../../../connectFiles/connect_sr.php');
 $passage_id = $_POST['passage_id'];
-$passage_title = $_POST['passage_title'];
+$passage_title = mysqli_real_escape_string($db, $_POST['passage_title']);
 $passage_text = stripslashes(mysqli_real_escape_string($db, $_POST['passage_text']));
 $author = $_POST['author'];
 $source = $_POST['source'];
