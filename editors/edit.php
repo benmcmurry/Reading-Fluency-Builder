@@ -34,6 +34,7 @@ while($passage_row = $passage->fetch_assoc()){
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <link href="https://fonts.googleapis.com/css?family=Martel+Sans:400,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
@@ -55,7 +56,9 @@ google_id = "<?php echo $google_id; ?>";
 
 </head>
 <body>
-  <div id="header" style="height:3.5em;line-height:3.5em;">
+  <div id="header">
+    <a id="save" class='button'>Save</a>
+    <a class='button' id='new_question'>Add another question</a>
     <div id="user-btn">
       <?php
       echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
@@ -74,7 +77,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 </div>
 <div id="main">
   <div id="save_dialog"></div>
-  <a id="save" class='button'>Save</a>
+
 
 
   <div class='editable-box' id='passage_details'>
@@ -135,7 +138,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 </div>
 </div>
 <div class="editable-box">
-  <a class='button' id='new_question'>Add another question</a>
+
   <h1> Quiz Items</h1>
   <?php
     $query_quiz = "Select * from Questions where passage_id=$passage_id order by question_order asc";
