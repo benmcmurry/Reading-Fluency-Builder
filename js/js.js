@@ -8,11 +8,13 @@ $(document).ready(function() {
 
   moveBtnBar();
   $("#user-btn img").on("click", function(){
+    console.log("clicked");
     $("#drop-down").slideToggle();
     $("#invisible-background").toggle();
   });
 
   $("#invisible-background").on("click", function(){
+    console.log("clicked background");
     if($("#drop-down").is(":visible")) {
       $("#drop-down").slideToggle();
       $("#invisible-background").toggle();
