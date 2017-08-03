@@ -10,7 +10,7 @@ $lexile = $_POST['lexile'];
 $flesch_reading_ease = (float)$_POST['flesch_reading_ease'];
 $flesch_kincaid_level = (float)$_POST['flesch_kincaid_level'];
 $library_id = $_POST['library_id'];
-$vocabulary =  stripslashes(mysqli_real_escape_string($db, $_POST['vocabulary']));
+$vocabulary =  mysqli_real_escape_string($db, $_POST['vocabulary']);
 $modified_by = $_POST['modified_by'];
 
 
