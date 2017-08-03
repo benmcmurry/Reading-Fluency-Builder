@@ -7,7 +7,6 @@ h1 {
 }
 
 #header {
-  /*position: fixed;*/
   top: 0px;
 }
 
@@ -16,7 +15,21 @@ h1 {
 }
 #main {
   padding: 1em;
-  margin-top: 3em;
+}
+
+#edit-menu {
+  float: left;
+  width: 8em;
+  background-color: rgb(246, 248, 250);
+  position: fixed;
+  Padding: .5em;
+}
+.navigator {
+  display:block;
+  font-family: "Open Sans", sans-serif;
+}
+#inside-wrapper {
+  margin-left: 9em;
 }
 
 .editable-chunk {
@@ -70,8 +83,8 @@ padding: 1em;
   font-family: "Open Sans", sans-serif;
 }
 .button {
-  float: left;
-  margin-left: 1em;
+  display: block;
+  margin: .5em 0em;
   color: white;
   background-color: rgb(62, 149, 240);
   box-shadow: 1px 1px 10px rgba(0,0,0,0.5);

@@ -56,8 +56,7 @@ google_id = "<?php echo $google_id; ?>";
 </head>
 <body>
   <div id="header">
-    <a id="save" class='button'>Save</a>
-    <a class='button' id='new_question'>Add another question</a>
+
     <div id="user-btn">
       <?php
       echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
@@ -77,8 +76,22 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 <div id="main">
   <div id="save_dialog"></div>
 
-
-
+  <div id="edit-menu">
+    <h1 style="font-size:1.3em">Edit Menu</h1>
+    <a id="save" class='button'>Save</a>
+    <a class='button' id='new_question'>Add question</a>
+  <a class="navigator" href="#passage_text">Passage Text</a>
+  <a class="navigator" href="#author">author</a>
+  <a class="navigator" href="#source">source</a>
+  <a class="navigator" href="#length">length</a>
+  <a class="navigator" href="#lexile">lexile</a>
+  <a class="navigator" href="#flesch_reading_ease">flesch_reading_ease</a>
+  <a class="navigator" href="#flesch_kincaid_level">flesch_kincaid_level</a>
+  <a class="navigator" href="#library_id">library_id</a>
+  <a class="navigator" href="#passage_text">vocabulary</a>
+  <a class="navigator" href="#quiz">Quiz Questions</a>
+  </div>
+  <div id="inside-wrapper">
   <div class='editable-box' id='passage_details'>
 <h1> Passage Information </h1>
   <div class='editable-chunk-special'>
@@ -138,7 +151,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 </div>
 <div class="editable-box">
 
-  <h1> Quiz Items</h1>
+  <h1 id="quiz"> Quiz Items</h1>
   <?php
     $query_quiz = "Select * from Questions where passage_id=$passage_id order by question_order asc";
     if(!$quiz_results = $db->query($query_quiz)){
@@ -165,7 +178,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 
 </div>
 
-
+</div>
 </div>
 <div id="invisible-background"></div>
 </body>
