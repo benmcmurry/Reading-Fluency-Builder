@@ -39,9 +39,12 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
 <link href="https://fonts.googleapis.com/css?family=Martel+Sans:400,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
 
@@ -186,7 +189,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
             if ($quiz_results_rows['correct_answer'] == "True") {
               echo $answers[0];
               echo $answers[1];
-              
+
             } elseif ($quiz_results_rows['correct_answer'] == "False") {
               echo $answers[1];
               echo $answers[0];

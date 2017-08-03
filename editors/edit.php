@@ -38,6 +38,7 @@ while($passage_row = $passage->fetch_assoc()){
 <link href="https://fonts.googleapis.com/css?family=Martel+Sans:400,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
 
 <link rel="stylesheet" href="../style.css">
 <link rel="stylesheet" href="style.css">
