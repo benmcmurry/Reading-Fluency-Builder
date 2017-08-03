@@ -249,7 +249,7 @@ padding: 1em;
 </style>
 </head>
 <body>
-  <div id="header">
+  <div id="header" style="height:3.5em;line-height:3.5em;">
     <div id="user-btn">
       <?php
       echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
@@ -264,7 +264,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
        <a href="../logout.php"><img class='icon' src='../images/signout.png' />Sign Out</a>
     </div>
   </div>
-  SoftRead Editor: <span id='title' contenteditable="true"><?php echo $title; ?></span>
+  SoftRead Editor: <span id='title' class='editable-passage' contenteditable="true" style="margin-left:1em;"><?php echo $title; ?></span>
 </div>
 <div id="main">
   <div id="save_dialog"></div>
