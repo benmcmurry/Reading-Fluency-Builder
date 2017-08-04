@@ -71,7 +71,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
        <a href="../logout.php"><img class='icon' src='../images/signout.png' />Sign Out</a>
     </div>
   </div>
-  SoftRead Editor: <span id='title' class='editable-passage' contenteditable="true" style="margin-left:1em;"><?php echo $title; ?></span>
+  SoftRead Editor: <span id='title' class='editable-passage' contenteditable="true" ><?php echo $title; ?></span>
 </div>
 <div id="main">
   <div id="save_dialog"></div>
@@ -81,14 +81,14 @@ echo "Welcome, ".$_SESSION['given_name']."!";
     <a id="save" class='button'>Save</a>
 
   <a class="navigator" href="#passage_text">Passage Text</a>
-  <a class="navigator" href="#author">author</a>
-  <a class="navigator" href="#source">source</a>
-  <a class="navigator" href="#length">length</a>
-  <a class="navigator" href="#lexile">lexile</a>
-  <a class="navigator" href="#flesch_reading_ease">flesch_reading_ease</a>
-  <a class="navigator" href="#flesch_kincaid_level">flesch_kincaid_level</a>
-  <a class="navigator" href="#library_id">library_id</a>
-  <a class="navigator" href="#passage_text">vocabulary</a>
+  <a class="navigator" href="#author">Author</a>
+  <a class="navigator" href="#source">Source</a>
+  <a class="navigator" href="#length">Length</a>
+  <a class="navigator" href="#lexile">Lexile</a>
+  <a class="navigator" href="#flesch_reading_ease">FRE</a>
+  <a class="navigator" href="#flesch_kincaid_level">FKL</a>
+  <a class="navigator" href="#library_id">Library</a>
+  <a class="navigator" href="#passage_text">Vocabulary</a>
   <a class="navigator" href="#quiz">Quiz Questions</a>
   <a class='button' id='new_question'>Add question</a>
   </div>
@@ -153,6 +153,8 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 <div class="editable-box">
 
   <h1 id="quiz"> Quiz Items</h1>
+  <ul id="questions">
+
   <?php
     $query_quiz = "Select * from Questions where passage_id=$passage_id order by question_order asc";
     if(!$quiz_results = $db->query($query_quiz)){
@@ -160,7 +162,14 @@ echo "Welcome, ".$_SESSION['given_name']."!";
     }
 
   while($quiz_results_rows = $quiz_results->fetch_assoc()){
-      echo "<div class='question-box' id='{$quiz_results_rows['question_id']}'><div class='label'>Stem</div><div id='question_text-{$quiz_results_rows['question_id']}' class='quiz_item editable' contenteditable='true'>".$quiz_results_rows['question_text']."</div>";
+      if(empty($quiz_results_rows['question_order'])) {$quiz_results_rows['question_order'] = 0;}
+      echo "<li class='question-box' id='{$quiz_results_rows['question_id']}_{$quiz_results_rows['question_order']}'>
+      <div class='delete' id='delete_{$quiz_results_rows['question_id']}'><img src='images/delete.png' /></div>
+      <div class='handle'>
+        <img src='images/cursor-move-icon.png' />
+      </div>
+              <div class='label'>Stem</div>
+              <div id='question_text-{$quiz_results_rows['question_id']}' class='quiz_item editable' contenteditable='true'>".$quiz_results_rows['question_text']."</div>";
       $answers = array(
       "<div class='label indent'>Correct Answer</div><div id='correct_answer-{$quiz_results_rows['question_id']}' contenteditable='true' class='quiz_item editable indent'>".$quiz_results_rows['correct_answer']."</div>",
       "<div class='label indent'>Distractor 1</div><div id='distractor_1-{$quiz_results_rows['question_id']}' contenteditable='true' class='quiz_item editable indent'>".$quiz_results_rows['distractor_1']."</div>",
@@ -172,11 +181,11 @@ echo "Welcome, ".$_SESSION['given_name']."!";
       echo $answers[1];
       echo $answers[2];
       echo $answers[3];
-      echo "</div>";
+      echo "</li>";
   }
 
   ?>
-
+</ul>
 </div>
 
 </div>

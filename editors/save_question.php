@@ -23,6 +23,8 @@ if(!$result = $db->query($update_question)){
   die('There was an error running the query [' . $db->error . ']');
 } else {
 
+// $backup_question = "Insert into Questions_backup (passage_id, question_id, question_text, question_order, correct_answer, distractor_1, distractor_2, distractor_3, date_created, date_modified, modified_by) values
+// ()"
   echo "Data saved for question $question_id.";
 }
 

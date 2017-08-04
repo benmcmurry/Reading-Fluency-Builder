@@ -7,7 +7,7 @@ h1 {
 }
 
 #header {
-  top: 0px;
+
 }
 
 #header .editable-passage {
@@ -19,17 +19,20 @@ h1 {
 
 #edit-menu {
   float: left;
-  width: 10em;
+  width: 9em;
   background-color: rgb(246, 248, 250);
   position: fixed;
   Padding: .5em;
+  /*border: 1px solid black;
+  border-right: 0px;*/
+
 }
 .navigator {
   display:block;
   font-family: "Open Sans", sans-serif;
 }
 #inside-wrapper {
-  margin-left: 11em;
+  margin-left: 10em;
 }
 
 .editable-chunk {
@@ -37,7 +40,7 @@ h1 {
 }
 .label {
 
-  font-size: 1.5em;
+  font-size: 1.3em;
   font-family: "Open Sans", sans-serif;
   margin-top: .3em;
   /*font-variant: small-caps;*/
@@ -54,8 +57,13 @@ h1 {
   background-color: white;
   border: dotted grey 2px;
   padding: .5em;
+  /*cursor:cell;*/
 }
-
+#header .editable-passage {
+  display: inline-block;
+  line-height: 1.3em;
+  padding-top:.5em;
+}
 .editable-box {
 padding: 1em;
   margin-bottom: 1.5em;
@@ -64,10 +72,36 @@ padding: 1em;
 
 }
 
+.ui-state-highlight {
+  background-color: rgb(230,230,230);
+}
+ul#questions {
+  list-style-type: none; margin: 0; padding: 0;
+
+}
+.handle {
+  cursor:move;
+
+}
+
+.handle img {
+  width: 1.5em;
+  float: right;
+}
+.delete img{
+  width: 1.5em;
+  float: right;
+  cursor: pointer;
+}
 .question-box {
+  list-style-type: none;
   padding: 1em;
   border: 3px solid rgb(62, 149, 240);
-/*background-color: rgb(167, 206, 246);*/
+background-color: rgb(245,245,245);
+/*cursor:move;*/
+}
+.quiz-item {
+  clear: both;
 }
 #save_dialog {
   position: fixed;
@@ -96,6 +130,7 @@ padding: 1em;
   border-radius: 1px;
   position: relative;
   top: .3em;
+  text-align: center;
 }
 .button:hover {
   background-color:white;
