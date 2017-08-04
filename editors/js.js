@@ -10,6 +10,7 @@ $(document).ready(function() {
     passage_id: passage_id
   },
   success: function(phpfile) {$("#save_dialog").html(phpfile).fadeIn().delay(2000).fadeOut(2000);
+window.location.href = window.location.href+"#quiz";
   location.reload();
 }
 });

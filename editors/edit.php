@@ -79,7 +79,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div id="edit-menu">
     <h1 style="font-size:1.3em">Edit Menu</h1>
     <a id="save" class='button'>Save</a>
-    <a class='button' id='new_question'>Add question</a>
+
   <a class="navigator" href="#passage_text">Passage Text</a>
   <a class="navigator" href="#author">author</a>
   <a class="navigator" href="#source">source</a>
@@ -90,12 +90,13 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <a class="navigator" href="#library_id">library_id</a>
   <a class="navigator" href="#passage_text">vocabulary</a>
   <a class="navigator" href="#quiz">Quiz Questions</a>
+  <a class='button' id='new_question'>Add question</a>
   </div>
   <div id="inside-wrapper">
   <div class='editable-box' id='passage_details'>
 <h1> Passage Information </h1>
   <div class='editable-chunk-special'>
-    <div class='label'>Passage Text (paste as plain text)</div>
+    <div class='label'>Passage Text</div>
     <div id='passage_text' class='editable-passage' contenteditable='true'><?php echo $passage_text; ?></div>
   </div>
   <div class='editable-chunk'>
@@ -127,7 +128,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div id='library_id' class='editable-passage' contenteditable='true'><?php echo $library_id;?></div>
 </div>
 <div class='editable-chunk'>
-  <div class='label'>Temporary Vocabulary Holder (paste as plain text) </div>
+  <div class='label'>Temporary Vocabulary Holder</div>
   <div id='vocabulary' class='editable-passage' contenteditable='true'>
     <?php
       if ($vocabulary == ""){
