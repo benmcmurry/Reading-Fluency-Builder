@@ -91,6 +91,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <a class="navigator" href="#passage_text">Vocabulary</a>
   <a class="navigator" href="#quiz">Quiz Questions</a>
   <a class='button' id='new_question'>Add question</a>
+  <div id="save_dialog"></div>
   </div>
   <div id="inside-wrapper">
   <div class='editable-box' id='passage_details'>

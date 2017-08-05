@@ -50,7 +50,7 @@ $(document).ready(function() {
       });
     },
   });
-  order = $("#questions").sortable('serialize');
+
 
   $("#new_question").on("click", function() {
     console.log("new question");
@@ -70,7 +70,9 @@ $(document).ready(function() {
   });
   $(".quiz_item").on("blur", function() {
     question_id = $(this).parent().attr("id");
-    console.log(question_id);
+    question_id = question_id.split("_" , 1);
+    question_id = question_id[0];
+    console.log("ID: "+question_id);
     console.log("question_text-" + question_id);
     question_text = $("#question_text-" + question_id).text();
     console.log(question_text);
@@ -96,7 +98,7 @@ $(document).ready(function() {
         modified_by: google_id
       },
       success: function(phpfile) {
-        $("#save_dialog").html(phpfile).fadeIn().delay(2000).fadeOut(2000);
+        $("#save_dialog").html(phpfile).fadeIn();
       }
     });
 
