@@ -9,7 +9,8 @@ $distractor_3 = mysqli_real_escape_string($db, $_POST['distractor_3']);
 
 $modified_by = $_POST['modified_by'];
 
-
+$question_id = explode("_", $question_id);
+$question_id = $question_id[0];
 
 $update_question = "UPDATE Questions SET
     question_text = '$question_text',
