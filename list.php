@@ -156,3 +156,27 @@
       $results->free(); //free results
     ?>
  </div>
+
+<?php
+ $libraries = "Select Distinct library_id from Passages";
+ if (!$libraries_results = $db->query($libraries)) {
+     die('There was an error running the query [' . $db->error . ']');
+ }
+ while ($libraries_results_rows = $libraries_results->fetch_assoc()) {
+if ($libraries_results_rows['library_id']) {
+   echo "<h3 class='reading_menu'>".$libraries_results_rows['library_id']."</h3><div>";
+
+           $query = "Select * from Passages where library_id = '{$libraries_results_rows['library_id']}'order by title";
+         if (!$results = $db->query($query)) {
+             die('There was an error running the query [' . $db->error . ']');
+         }
+         while ($results_row = $results->fetch_assoc()) {
+           echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+         }
+         $results->free(); //free results
+       echo "</div>";
+}
+
+
+ }
+?>
