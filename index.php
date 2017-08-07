@@ -158,15 +158,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
           <div id="timer-btn_bar2">
           </div>
           <?php
-            if(isset($current_passage)) {
-              echo "<h3>".$title."</h3>";
               echo $passage."<br />";
-
-
-            }
-            else {
-            echo "Instructions";
-            }
            ?>
         </div>
 

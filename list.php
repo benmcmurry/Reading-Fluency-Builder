@@ -6,7 +6,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
     ?>
@@ -20,7 +20,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-          echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+          echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
     ?>
@@ -34,7 +34,7 @@
          die('There was an error running the query [' . $db->error . ']');
      }
      while ($results_row = $results->fetch_assoc()) {
-         echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+         echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
      }
      $results->free(); //free results
     ?>
@@ -47,7 +47,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-          echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+          echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
    ?>
@@ -60,7 +60,7 @@
          die('There was an error running the query [' . $db->error . ']');
      }
      while ($results_row = $results->fetch_assoc()) {
-         echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+         echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
      }
      $results->free(); //free results
   ?>
@@ -73,7 +73,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-          echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+          echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
    ?>
@@ -86,7 +86,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
    ?>
@@ -99,7 +99,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
     ?>
@@ -112,7 +112,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
     ?>
@@ -125,7 +125,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
     ?>
@@ -138,7 +138,7 @@
          die('There was an error running the query [' . $db->error . ']');
      }
      while ($results_row = $results->fetch_assoc()) {
-       echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+       echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
      }
      $results->free(); //free results
    ?>
@@ -151,7 +151,7 @@
           die('There was an error running the query [' . $db->error . ']');
       }
       while ($results_row = $results->fetch_assoc()) {
-        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
+        echo "<a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a>";
       }
       $results->free(); //free results
     ?>
