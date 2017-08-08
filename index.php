@@ -59,7 +59,10 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
     } else {echo "var page='instructions';";}
     if(isset($_GET['passage_id'])) {
       echo "var passage_id='".$_GET['passage_id']."';";
-    } else {echo "var passage_id='';";}
+    } else {echo "var passage_id='';";
+          
+    }
+
 
   ?>
 

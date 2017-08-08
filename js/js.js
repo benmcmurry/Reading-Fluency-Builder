@@ -106,6 +106,10 @@ $(document).ready(function() {
   });
 
   //manipulate selected page and nav buttons
+  if(passage_id=='') {
+    $('#navbar').hide();
+    $('#page').css("padding-top" , "0px");
+  }
 pageSet(page);
 
 $("#userSpeed").on("click", function(){$(this).empty();});
