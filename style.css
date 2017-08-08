@@ -176,16 +176,28 @@ a.btn:active {}
 #nav-panel {
   display: none;
 }
-
-#nav-panel h3 {
+#nav-panel ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+#nav-panel h3, #nav-panel h4{
   padding: .5em;
   margin: 0em;
   font-family: "Open Sans", sans-serif;
   font-weight: normal;
   font-size: 1em;
-  /*background-color: rgb(239,239,239);*/
+  /*background-color: rgb(220,220,220);*/
   border-bottom: 1px solid grey;
+  /*border-top-width: 0px;*/
   cursor: pointer;
+  /*text-align: center;*/
+  font-weight: 600;
+  text-transform: uppercase;
+  /*background: linear-gradient(rgb(239,239,239), rgb(220,220,220));*/
+}
+#nav-panel h4{
+  padding-left: 1em;
 }
 
 a.reading_menu_options {
@@ -197,15 +209,20 @@ a.reading_menu_options {
   font-family: "Open Sans", sans-serif;
   font-size: 1em;
   padding: .5em;
-  padding-left: 1em;
+  padding-left: 2em;
   border-bottom: 1px solid gray;
+  /*border-bottom: 0px;*/
+
 }
 
-a.reading_menu_options:hover {
-  background-color: rgb(62, 149, 240);
+a.reading_menu_options:hover, #nav-panel h3:hover, #nav-panel h4:hover {
+  background: linear-gradient(rgb(76, 165, 255), rgb(62, 149, 240));
   color: white;
 }
-
+a.reading_menu_options:active, #nav-panel h3:active, #nav-panel h4:active {
+  background: linear-gradient(rgb(76, 165, 255), rgb(62, 149, 240));
+  color: white;
+}
 span.lexile {
   font-size: 0.7em;
 }
@@ -401,7 +418,7 @@ div.passage-details {
     height: 100%;
   }
   #content {
-    margin-left: 18em;
+    margin-left: 17em;
   }
   .nav-panel {
     display: auto;

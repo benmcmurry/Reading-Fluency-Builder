@@ -28,7 +28,7 @@ $(document).ready(function() {
   // End Gets Copyright Year
 
   //Nav Panel functionality
-  $("#nav-panel").accordion({
+  $("#reading-list, .sublist").accordion({
     collapsible: true,
     heightStyle: "content",
     active: false,
@@ -61,7 +61,19 @@ $(document).ready(function() {
     });
   });
 
-
+  $(".nav-btn").hover(
+    function() {
+      $(this).css({
+        "background-color": "rgb(62, 149, 240)",
+        "color": "white"
+      });
+    }, function() {
+      $(this).css({
+        "background-color": "rgb(239, 239, 239)",
+        "color": "black"
+      });
+    }
+  );
 
 
   $("#check-answers").on("click", function() {

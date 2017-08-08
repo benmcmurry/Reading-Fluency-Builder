@@ -106,7 +106,9 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 
   <div id="main">
     <div id="nav-panel">
+      <ul id='reading-list'>
       <?php include_once('list.php'); ?>
+      </ul>
     </div>
     <div id="content">
       <div id="navbar">
