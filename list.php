@@ -4,10 +4,10 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where date_created >= '2017-07-31'";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare("Select * from Passages where date_created >= '2017-07-31'");
+      $query->execute();
+      $results = $query->get_result();
+
       while ($results_row = $results->fetch_assoc()) {
         echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -21,10 +21,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile <'101' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile <'101' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
           echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -36,10 +35,9 @@
  <ul>
 
    <?php
-     $query = "Select * from Passages where lexile <'201' AND lexile > '99' order by lexile ASC";
-     if (!$results = $db->query($query)) {
-         die('There was an error running the query [' . $db->error . ']');
-     }
+     $query = $db->prepare( "Select * from Passages where lexile <'201' AND lexile > '99' order by lexile ASC");
+     $query->execute();
+     $results = $query->get_result();
      while ($results_row = $results->fetch_assoc()) {
          echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
      }
@@ -50,10 +48,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile <'301' AND lexile > '199' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile <'301' AND lexile > '199' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
           echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -64,10 +61,9 @@
  <ul>
 
    <?php
-     $query = "Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC";
-     if (!$results = $db->query($query)) {
-         die('There was an error running the query [' . $db->error . ']');
-     }
+     $query = $db->prepare( "Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC");
+     $query->execute();
+     $results = $query->get_result();
      while ($results_row = $results->fetch_assoc()) {
          echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
      }
@@ -78,10 +74,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
           echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -92,10 +87,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile <'601' AND lexile > '499' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile <'601' AND lexile > '499' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
         echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -106,10 +100,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile <'701' AND lexile > '599' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile <'701' AND lexile > '599' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
         echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -120,10 +113,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile <'801' AND lexile > '699' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile <'801' AND lexile > '699' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
         echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -134,10 +126,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile <'901' AND lexile > '799' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile <'901' AND lexile > '799' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
         echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -148,10 +139,9 @@
  <ul>
 
    <?php
-     $query = "Select * from Passages where lexile <'1001' AND lexile > '899' order by lexile ASC";
-     if (!$results = $db->query($query)) {
-         die('There was an error running the query [' . $db->error . ']');
-     }
+     $query = $db->prepare( "Select * from Passages where lexile <'1001' AND lexile > '899' order by lexile ASC");
+     $query->execute();
+     $results = $query->get_result();
      while ($results_row = $results->fetch_assoc()) {
        echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
      }
@@ -162,10 +152,9 @@
  <ul>
 
     <?php
-      $query = "Select * from Passages where lexile > '999' order by lexile ASC";
-      if (!$results = $db->query($query)) {
-          die('There was an error running the query [' . $db->error . ']');
-      }
+      $query = $db->prepare( "Select * from Passages where lexile > '999' order by lexile ASC");
+      $query->execute();
+      $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
         echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
       }
@@ -178,19 +167,17 @@
   <h3>Library > </h3>
   <ul class='sublist'>
 <?php
- $libraries = "Select Distinct library_id from Passages";
- if (!$libraries_results = $db->query($libraries)) {
-     die('There was an error running the query [' . $db->error . ']');
- }
+ $libraries = $db->prepare("Select Distinct library_id from Passages");
+ $libraries->execute();
+ $libraries_results = $libraries->get_result();
  while ($libraries_results_rows = $libraries_results->fetch_assoc()) {
 if ($libraries_results_rows['library_id']) {
    echo "<li><h4>".$libraries_results_rows['library_id']." > </h4>
  <ul>";
 
-           $query = "Select * from Passages where library_id = '{$libraries_results_rows['library_id']}'order by title";
-         if (!$results = $db->query($query)) {
-             die('There was an error running the query [' . $db->error . ']');
-         }
+           $query = $db->prepare( "Select * from Passages where library_id = '{$libraries_results_rows['library_id']}'order by title");
+           $query->execute();
+           $results = $query->get_result();
          while ($results_row = $results->fetch_assoc()) {
            echo "<li><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
          }

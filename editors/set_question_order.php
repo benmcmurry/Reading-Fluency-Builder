@@ -1,28 +1,26 @@
 <?php
+session_start();
+if($_SESSION['logged_in'] == 'yes' && $_SESSION['editor'] == "1"){
+  // echo "logged in";
+} else {
+  $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=../start.php?current_url=$current_url'>";
+
+}
 include_once('../../../connectFiles/connect_sr.php');
 
 $i=1;
-foreach ($_POST as $key => &$value) {
+foreach ($_POST as $question_id => &$value) {
+ mysqli_real_escape_string($db, $question_id);
+    $update_order_query = $db->prepare("Update Questions set question_order = ? where question_id = ?");
+    $update_order_query->bind_param("ss", $i, $question_id);
+    $update_order_query->execute();
+    $result = $update_order_query->get_result();
 
-    $update_order_query = "Update Questions set question_order=$i where question_id=$key";
-      if(!$result = $db->query($update_order_query)){
-      die('There was an error running the query [' . $db->error . ']');
-    } else {
-
-
-    }
     $i++;
 
 }
 echo "Question order saved.";
 
-
-// $add_question = "Insert into Questions (passage_id) values ($passage_id)";
-//
-// if(!$result = $db->query($add_question)){
-//   die('There was an error running the query [' . $db->error . ']');
-// } else {
-//   echo "Data saved.";
-// }
 
  ?>

@@ -9,27 +9,31 @@ $email = $_POST['email'];
 $current_url = $_POST['current_url'];
 
 
-$search_for_id = "Select * from Users where google_id='".$google_id."'";
-if(!$result = $db->query($search_for_id)){
-  die('There was an error running the query [' . $db->error . ']');
-}
+$search_for_id = $db->prepare("Select * from Users where google_id= ? ");
+$search_for_id->bind_param("s", $google_id);
+$search_for_id->execute();
+$result = $search_for_id->get_result();
+
 if (mysqli_num_rows($result)==0) {
 
-  $add_user = "Insert into Users (google_id, full_name, given_name, family_name, image_url, email)
-  values ('$google_id', '$full_name', '$given_name', '$family_name', '$image_url', '$email')";
-  if(!$result = $db->query($add_user)){
-    die('There was an error running the query [' . $db->error . ']');
-  }
+  $add_user = $db->prepare("Insert into Users (google_id, full_name, given_name, family_name, image_url, email)
+  values (?, ?, ?, ?, ?, ?)");
+  $add_user->bind_param("ssssss", $google_id, $full_name, $given_name, $family_name, $image_url, $email);
+  $add_user->execute();
+  $result = $add_user->get_result();
+
 
 } else {
-  $update_user = "UPDATE Users SET full_name = '$full_name', given_name = '$given_name', family_name = '$family_name', image_url = '$image_url', email = '$email' WHERE google_id='$google_id'";
-  if(!$result = $db->query($update_user)){
-    die('There was an error running the query [' . $db->error . ']');
-  }
-  $get_user_query = "Select editor from Users where google_id='".$google_id."'";
-  if(!$result = $db->query($get_user_query)){
-    die('There was an error running the query [' . $db->error . ']');
-  }
+  $update_user = $db->prepare("UPDATE Users SET full_name = ?, given_name = ?, family_name = ?, image_url = ?, email = ? WHERE google_id = ? ");
+  $update_user->bind_param("ssssss", $full_name, $given_name, $family_name, $image_url, $email, $google_id);
+$update_user->execute();
+$update_user_result = $update_user->get_result();
+
+  $get_user_query = $db->prepare("Select editor from Users where google_id = ? ");
+  $get_user_query->bind_param("s", $google_id);
+  $get_user_query->execute();
+  $result = $get_user_query->get_result();
+
   $user = $result->fetch_assoc();
   $editor = $user['editor'];
 }

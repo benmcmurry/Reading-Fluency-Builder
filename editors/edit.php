@@ -11,10 +11,11 @@ $google_id = $_SESSION['google_id'];
 $passage_id = $_GET['passage_id'];
 include_once('../../../connectFiles/connect_sr.php');
 
-$query = "Select * from Passages where passage_id=$passage_id";
-if(!$passage = $db->query($query)){
-  die('There was an error running the query [' . $db->error . ']');
-}
+$query = $db->prepare("Select * from Passages where passage_id= ? ");
+$query->bind_param("s", $passage_id);
+$query->execute();
+$passage = $query->get_result();
+
 while($passage_row = $passage->fetch_assoc()){
   $title= $passage_row['title'];
   $passage_text = $passage_row['passage_text'];
@@ -56,7 +57,6 @@ google_id = "<?php echo $google_id; ?>";
 </head>
 <body>
   <div id="header">
-
     <div id="user-btn">
       <?php
       echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
@@ -133,10 +133,10 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div id='vocabulary' class='editable-passage' contenteditable='true'>
     <?php
       if ($vocabulary == ""){
-        $query_vocab = "Select * from Vocabulary where passage_id=$passage_id order by word asc";
-        if(!$vocab_results = $db->query($query_vocab)){
-          die('There was an error running the query [' . $db->error . ']');
-        }
+        $query_vocab = $db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
+        $query_vocab->bind_param("s", $passage_id);
+        $query_vocab->execute();
+        $vocab_results = $query_vocab->get_result();
 
         while($vocab_results_row = $vocab_results->fetch_assoc()){
 
@@ -157,12 +157,13 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <ul id="questions">
 
   <?php
-    $query_quiz = "Select * from Questions where passage_id=$passage_id order by question_order asc";
-    if(!$quiz_results = $db->query($query_quiz)){
-      die('There was an error running the query [' . $db->error . ']');
-    }
+    $query_quiz = $db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
+    $query_quiz->bind_param("s", $passage_id);
+    $query_quiz->execute();
+    $quiz_result = $query_quiz->get_result();
 
-  while($quiz_results_rows = $quiz_results->fetch_assoc()){
+
+  while($quiz_results_rows = $quiz_result->fetch_assoc()){
       if(empty($quiz_results_rows['question_order'])) {$quiz_results_rows['question_order'] = 0;}
       echo "<li class='question-box' id='{$quiz_results_rows['question_id']}_{$quiz_results_rows['question_order']}'>
       <div class='delete' id='delete_{$quiz_results_rows['question_id']}'><img src='images/delete.png' /></div>

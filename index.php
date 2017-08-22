@@ -12,12 +12,14 @@ if($_SESSION['logged_in'] == 'yes'){
 include_once('../../connectFiles/connect_sr.php');
 if(isset($_GET['passage_id'])) {
   $current_passage = $_GET['passage_id'];
-  $passage_query = "Select * from Passages where passage_id='$current_passage'";
-  if(!$passage_results = $db->query($passage_query)){
-    die('There was an error running the query [' . $db->error . ']');
-  }
+  $passage_query = $db->prepare("Select * from Passages where passage_id=?");
+  $passage_query->bind_param("s", $current_passage);
+  $passage_query->execute();
+  $passage_results = $passage_query->get_result();
+
   while($passage_results_row = $passage_results->fetch_assoc()){
     $title = "SoftRead 3.0 - ".$passage_results_row['title'];
+    $source = $passage_results_row['source'];
     $passage = $passage_results_row['passage_text'];
     $wordcount=$passage_results_row['length'];
     $vocabulary = $passage_results_row['vocabulary'];
@@ -60,7 +62,7 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
     if(isset($_GET['passage_id'])) {
       echo "var passage_id='".$_GET['passage_id']."';";
     } else {echo "var passage_id='';";
-          
+
     }
 
 
@@ -134,7 +136,9 @@ echo "Welcome, ".$_SESSION['given_name']."!";
           if(isset($current_passage)) {
             echo $passage; }
           else { echo 'SoftRead 3.0';}
+          echo "This passage comes from ".$source.".";
           ?>
+
         </div>
         <!-- scroller page -->
         <div class="page" id="scroller">
@@ -170,10 +174,10 @@ echo "Welcome, ".$_SESSION['given_name']."!";
         <!-- quiz page -->
         <div class="page" id="quiz">
           <?php
-            $query_quiz = "Select * from Questions where passage_id=$passage_id order by question_order asc";
-            if(!$quiz_results = $db->query($query_quiz)){
-              die('There was an error running the query [' . $db->error . ']');
-            }
+            $query_quiz = $db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
+            $query_quiz->bind_param("s", $passage_id);
+            $query_quiz->execute();
+            $quiz_results = $query_quiz->get_result();
 
           while($quiz_results_rows = $quiz_results->fetch_assoc()){
               echo "<div class='question-box'><div class='stem'>".$quiz_results_rows['question_text']."</div>";
@@ -212,10 +216,10 @@ echo "Welcome, ".$_SESSION['given_name']."!";
         <div class="page" id="vocab">
           <?php
           if($vocabulary == ""){
-            $query_vocab = "Select * from Vocabulary where passage_id=$passage_id order by word asc";
-            if(!$vocab_results = $db->query($query_vocab)){
-              die('There was an error running the query [' . $db->error . ']');
-            }
+            $query_vocab = $db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
+            $query_vocab->bind_param("s", $passage_id);
+            $query_vocab->execute();
+            $vocab_results = $query_vocab->get_result();
 
             while($vocab_results_row = $vocab_results->fetch_assoc()){
 
