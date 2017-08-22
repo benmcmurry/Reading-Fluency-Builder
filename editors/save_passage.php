@@ -40,7 +40,7 @@ $update_passage = $db->prepare("UPDATE Passages SET
     library_id = ?,
     vocabulary = ?,
     modified_by = ?
-    WHERE passage_id=?se");
+    WHERE passage_id=?");
 $update_passage->bind_param("ssssssssssss", $passage_text, $passage_title, $author, $source, $length, $lexile, $flesch_reading_ease, $flesch_kincaid_level, $library_id, $vocabulary, $modified_by, $passage_id);
 $update_passage->execute();
 $result = $update_passage->get_result();
