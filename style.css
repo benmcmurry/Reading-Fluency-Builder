@@ -84,6 +84,12 @@ p {
   z-index: 100;
 }
 
+#user-btn #drop-down #stats{
+  font-size: .8em;
+  border-top: 1px grey solid;
+  border-bottom: 1px grey solid;
+}
+
 #user-btn #drop-down a {
   display: block;
   font-size: .8em;
@@ -397,6 +403,22 @@ p.vocab {
   bottom: 0px;
   display: none;
   z-index: 99;
+}
+
+#email_results_popup {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 17em;
+  display: none;
+  z-index: 199;
+  background-color: white;
+  padding: 1em;
+  font-family: "Roboto";
+}
+#email_results_popup h2 {
+  font-weight: normal;
+  text-align: center;
 }
 
 /*Editor Styles*/

@@ -15,6 +15,7 @@ $(document).ready(function() {
 
   $("#invisible-background").on("click", function(){
     console.log("clicked background");
+    $("#email_results_popup").hide();
     if($("#drop-down").is(":visible")) {
       $("#drop-down").slideToggle();
       $("#invisible-background").toggle();
@@ -90,7 +91,19 @@ $(document).ready(function() {
 
     });
     score = Math.round(totalCorrect / totalPossible * 100);
-    $("#check-answers").html(score + "% - Total Correct: " + totalCorrect + "/" + totalPossible).off();
+    score = totalCorrect + "/" + totalPossible + " correct - " + score +"%";
+    $("#check-answers").html(score).off();
+
+    $.ajax({
+       type: "POST",
+       url: "history.php",
+       data: {score: score},
+       success: function(phpfile)
+       {
+       $(".comprehension_quiz").html(phpfile);
+       }
+    });
+
   });
 
   //Window resize actions
@@ -121,6 +134,20 @@ $("#userSpeed").keypress(function(e){
 }
 });
 
+$("#email_results").on("click", function(){
+  $("#invisible-background").show();
+  w = $("#email_results_popup").width();
+  h = $("#email_results_popup").height();
+  windoww = $(window).width();
+  windowh = $(window).height();
+  topPos = (windowh-h)/2;
+  leftPos = (windoww-w)/2;
+
+  $("#email_results_popup").css({
+    "top" : topPos,
+    "left" : leftPos
+  }).show();
+});
 
 }); //end document ready
 
@@ -165,6 +192,18 @@ function scrollThePassage(wordcount) { // scrolls text
   $("#scrollPassage").animate({
     top: "-" + passageHeight,
   }, speed, "linear");
+
+  $.ajax({
+     type: "POST",
+     url: "history.php",
+     data: {userSpeed: wpm},
+     success: function(phpfile)
+     {
+     $(".scrolled_reading").html(phpfile);
+     }
+ });
+
+
 } // ends script scrolling
 
 // end functions for scrolling Passages
@@ -197,6 +236,16 @@ function stopTheTimer(wordcount) {
   completeTime = minutesRound + ":" + seconds + "";
   timedwpm = Math.round(wordcount / minutes);
   $("#timer-results").html("Time: " + completeTime + "  WPM: " + timedwpm).text;
+    $.ajax({
+       type: "POST",
+       url: "history.php",
+       data: {time: completeTime,
+              wpm: timedwpm},
+       success: function(phpfile)
+       {
+       $(".timed_reading").html(phpfile);
+       }
+   });
 
 }
 

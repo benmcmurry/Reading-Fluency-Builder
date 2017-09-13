@@ -11,6 +11,7 @@ if($_SESSION['logged_in'] == 'yes'){
 
 include_once('../../connectFiles/connect_sr.php');
 if(isset($_GET['passage_id'])) {
+  $_SESSION['passage_id'] = $_GET['passage_id'];
   $current_passage = $_GET['passage_id'];
   $passage_query = $db->prepare("Select * from Passages where passage_id=?");
   $passage_query->bind_param("s", $current_passage);
@@ -19,6 +20,7 @@ if(isset($_GET['passage_id'])) {
 
   while($passage_results_row = $passage_results->fetch_assoc()){
     $title = "SoftRead 3.0 - ".$passage_results_row['title'];
+    $passage_name = $passage_results_row['title'];
     $source = $passage_results_row['source'];
     $passage = $passage_results_row['passage_text'];
     $wordcount=$passage_results_row['length'];
@@ -26,6 +28,35 @@ if(isset($_GET['passage_id'])) {
   }
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
+
+$history_query = $db->prepare("Select * from History where google_id=? and passage_id=?");
+$history_query->bind_param("ss", $_SESSION['google_id'], $passage_id);
+$history_query->execute();
+$history_results = $history_query->get_result();
+if (!$history_results->fetch_assoc())
+  {
+    $history_results->free();
+    $history_query = $db->prepare("Insert into History (google_id, passage_id, date_modified) values (?, ?, now())");
+    $history_query->bind_param("ss", $_SESSION['google_id'], $_SESSION['passage_id']);
+    $history_query->execute();
+    $history_results = $history_query->get_result();
+  } else {
+    $history_results->free();
+    $history_query = $db->prepare("Select * from History where google_id=? and passage_id=?");
+    $history_query->bind_param("ss", $_SESSION['google_id'], $_SESSION['passage_id']);
+    $history_query->execute();
+    $history_results = $history_query->get_result();
+
+    while ($history_results_rows = $history_results->fetch_assoc()){
+      $timed_reading_wpm = $history_results_rows['timed_reading_wpm'];
+      $timed_reading_time = $history_results_rows['timed_reading_time'];
+      $scrolled_reading = $history_results_rows['scrolled_reading'];
+      $comprehension_quiz = $history_results_rows['comprehension_quiz'];
+      $date_modified = $history_results_rows['date_modified'];
+    }
+  }
+
+
 
 } else {
 $title = "SoftRead 3.0";
@@ -89,7 +120,15 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
       <div id="drop-down">
       <?php
 echo "Welcome, ".$_SESSION['given_name']."!";
-       ?>
+      echo "<div id='stats'>
+      <strong>Your Scores for this Passage</strong><br />
+      <strong>Timed Reading Time:</strong> <span class='timed_reading_time'> $timed_reading_time</span><br />
+      <strong>Timed Reading WMP:</strong> <span class='timed_reading_wpm'> $timed_reading_wpm</span><br />
+      <strong>Scrolled Reading WMP:</strong> <span class='scrolled_reading'>$scrolled_reading</span><br />
+      <strong>Quiz Score:</strong> <span class='comprehension_quiz'>$comprehension_quiz</span><br />
+      <a id='email_results' class='btn' style='color: white'>Email Results</a>
+    </div>";
+    ?>
       <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
       <?php
       if($_SESSION['editor'] == "1") {
@@ -241,6 +280,15 @@ echo "Welcome, ".$_SESSION['given_name']."!";
     Copyright &copy; <span id="year">year</span>. English Language Center
   </div>
   <div id="invisible-background"></div>
+  <div id="email_results_popup">
+    <?php echo "<h2>Your Scores for $passage_name</h2><br />
+    <strong>Timed Reading Time:</strong> <span class='timed_reading_time'> $timed_reading_time</span><br />
+    <strong>Timed Reading WMP:</strong> <span class='timed_reading_wpm'> $timed_reading_wpm</span><br />
+    <strong>Scrolled Reading WMP:</strong> <span class='scrolled_reading'>$scrolled_reading</span><br />
+    <strong>Quiz Score:</strong> <span class='comprehension_quiz'>$comprehension_quiz</span><br />";
+    ?>
+
+  </div>
 
 
 
