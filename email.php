@@ -51,12 +51,10 @@ $headers[] = 'MIME-Version: 1.0';
 $headers[] = 'Content-type: text/html; charset=iso-8859-1';
 
 // Additional headers
-$headers[] = 'To: <'.$_POST['email'].'>';
 $headers[] = 'From: SoftRead <no-reply@elc.byu.edu>';
-$headers[] = 'Cc: '.$full_name.' <'.$email.'>';
 
 
-mail($to, $subject, $message, implode("\r\n", $headers));
+// mail($to, $subject, $message, implode("\r\n", $headers));
 
 if(mail($to, $subject, $message, implode("\r\n", $headers)))
 {
