@@ -25,6 +25,7 @@ while ($data = $result->fetch_assoc()) {
 }
 $to1 = $_POST['email'];
 $to2 = $email;
+if ($to1 === $to2) {$different = FALSE;} else {$different = TRUE;}
 $subject = "SoftRead: $title - Results for $full_name";
 $message = <<<EOT
 <html><body>
@@ -47,6 +48,8 @@ $message = <<<EOT
 <strong>Quiz Results:</strong> $comprehension_quiz <br />
 </p>
 </body></html>
+
+
 EOT;
 
 $headers[] = 'MIME-Version: 1.0';
@@ -56,11 +59,12 @@ $headers[] = 'Content-type: text/html; charset=iso-8859-1';
 $headers[] = 'From: SoftRead <no-reply@elc.byu.edu>';
 
 
+// mail($to, $subject, $message, implode("\r\n", $headers));
 
 if(mail($to1, $subject, $message, implode("\r\n", $headers)))
 {
   echo "Mail Sent Successfully";
-  if ($to1 !== $to2){mail($to2, $subject, $message, implode("\r\n", $headers));}
+  if($different) { mail($to2, $subject, $message, implode("\r\n", $headers));}
 }else{
   echo "Mail Not Sent";
 }
