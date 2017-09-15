@@ -23,7 +23,8 @@ while ($data = $result->fetch_assoc()) {
   $flesch_kincaid_level = $data['flesch_kincaid_level'];
 
 }
-$to = $_POST['email'].", ".$email;
+$to1 = $_POST['email'];
+$to2 = $email;
 $subject = "SoftRead: $title - Results for $full_name";
 $message = <<<EOT
 SoftRead: $title - Results for $full_name <br />
@@ -46,7 +47,6 @@ Quiz Results: $comprehension_quiz <br />
 
 EOT;
 
-
 $headers[] = 'MIME-Version: 1.0';
 $headers[] = 'Content-type: text/html; charset=iso-8859-1';
 
@@ -56,9 +56,10 @@ $headers[] = 'From: SoftRead <no-reply@elc.byu.edu>';
 
 // mail($to, $subject, $message, implode("\r\n", $headers));
 
-if(mail($to, $subject, $message, implode("\r\n", $headers)))
+if(mail($to1, $subject, $message, implode("\r\n", $headers)))
 {
   echo "Mail Sent Successfully";
+  mail($to2, $subject, $message, implode("\r\n", $headers));
 }else{
   echo "Mail Not Sent";
 }
