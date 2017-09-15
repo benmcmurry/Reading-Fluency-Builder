@@ -27,22 +27,23 @@ $to1 = $_POST['email'];
 $to2 = $email;
 $subject = "SoftRead: $title - Results for $full_name";
 $message = <<<EOT
-SoftRead: $title - Results for $full_name <br />
-Passage Info: <br />
+<html><body>
+<h2>SoftRead: $title - Results for $full_name </h2><br />
+<h3>Passage Info: </h3><br />
 Title: $title <br />
 Author: $author <br />
 Length: $length <br />
 Lexile: $lexile <br />
 Flesch Reading Ease: $flesch_reading_ease <br />
 Flesch Kincaid Level: $flesch_kincaid_level <br />
-
-Student Results for $full_name <br />
+<br />
+<h3>Student Results for $full_name </h3><br />
 Date Last Accessed: $date_modified <br />
 Timed Reading WPM: $timed_reading_wpm <br />
 Timed Reading Time: $timed_reading_time <br />
 Scrolled Reading: $scrolled_reading <br />
 Quiz Results: $comprehension_quiz <br />
-
+</body></html>
 
 
 EOT;
