@@ -421,6 +421,37 @@ p.vocab {
   font-weight: normal;
   text-align: center;
 }
+a#close_email_popup {
+  display:block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+    color:white;
+    background-color: red;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    /*border-radius: .8em;*/
+    width: 1.5em;
+    text-align: center;
+    cursor: pointer;
+
+}
+
+#sent {
+  position: fixed;
+  display: none;
+  top:0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: white;
+  border: 1em black solid;
+  z-index: 200;
+  color: black;
+
+}
+
+
 
 /*Editor Styles*/
 h3.passage {

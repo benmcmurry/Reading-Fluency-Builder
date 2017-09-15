@@ -13,17 +13,22 @@ $(document).ready(function() {
     $("#invisible-background").toggle();
   });
 
-  $("#invisible-background").on("click", function() {
+  $("#invisible-background").on("click", function(){
+    closePopups();
+  });
 
-    if ($("#email_results_popup").is(":visible")) {
-      $("#email_results_popup").hide();
-    } else {
-      if ($("#drop-down").is(":visible")) {
-        $("#drop-down").slideToggle();
-        $("#invisible-background").toggle();
-      }
+  $(document).keyup(function(e) {
+     if (e.keyCode == 27) { // escape key maps to keycode `27`
+        if ($("#invisible-background").is(":visible")) {
+          closePopups();
+        }
     }
   });
+
+  $( "form" ).submit(function( event ) {
+  event.preventDefault();
+});
+
 
   // Gets Copyright Year
   var d = new Date();
@@ -152,8 +157,18 @@ $(document).ready(function() {
 
     $("#email_results_popup").css({
       "top": topPos,
-      "left": leftPos
+      "left": leftPos,
+      "width": w,
+      "height": h
     }).show();
+    $("#sent").css({
+      "top": topPos,
+      "left": leftPos,
+      "width": w,
+      "height": h
+    });
+
+
   });
   $("#send_email").on("click", function() {
     formData = $("#email_results_form").serializeArray();
@@ -165,6 +180,10 @@ $(document).ready(function() {
     };
 
 
+  });
+
+  $("a#close_email_popup").on("click", function(){
+    $("#email_results_popup").hide();
   });
 
 }); //end document ready
@@ -296,11 +315,10 @@ function sendEmail(google_id, passage_id, email) {
           email: email},
    success: function(phpfile)
    {
-   $("#email_results_popup").html(phpfile);
+   $("#sent").html(phpfile).show().delay(3000).fadeOut();
    }
    });
 
-  alert("Sent!");
 }
 
 function validateEmail(email) {
@@ -309,4 +327,15 @@ function validateEmail(email) {
   }
   alert("You have entered an invalid email address!")
   return (false)
+}
+
+function closePopups() {
+  if ($("#email_results_popup").is(":visible")) {
+    $("#email_results_popup").hide();
+  } else {
+    if ($("#drop-down").is(":visible")) {
+      $("#drop-down").slideToggle();
+      $("#invisible-background").toggle();
+    }
+  }
 }

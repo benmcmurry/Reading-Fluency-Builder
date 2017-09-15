@@ -59,11 +59,10 @@ $headers[] = 'Content-type: text/html; charset=iso-8859-1';
 $headers[] = 'From: SoftRead <no-reply@elc.byu.edu>';
 
 
-// mail($to, $subject, $message, implode("\r\n", $headers));
 
 if(mail($to1, $subject, $message, implode("\r\n", $headers)))
 {
-  echo "Mail Sent Successfully";
+  echo "<p>Mail Sent Successfully</p>";
   if($different) { mail($to2, $subject, $message, implode("\r\n", $headers));}
 }else{
   echo "Mail Not Sent";

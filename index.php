@@ -284,16 +284,19 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   </div>
   <div id="invisible-background"></div>
   <div id="email_results_popup">
+    <a class='close' id='close_email_popup'>x</a>
     <?php echo "<h2>Email Results</h2><br />
     <form id='email_results_form'>
       Please enter the email address you wish to send the results to.
       <input type='hidden' name='google_id' value='$google_id' />
       <input type='hidden' name='passage_id' value='$passage_id' />
-      <input type='text' name='email' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
+      <input type='text' id='email' name='email' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
       </form>
       <a class='btn' id='send_email'>Send Email</>
       ";
 ?>
+  <div id="sent">
+  </div>
   </div>
 
 
