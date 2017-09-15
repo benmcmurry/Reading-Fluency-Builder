@@ -13,21 +13,21 @@ $(document).ready(function() {
     $("#invisible-background").toggle();
   });
 
-  $("#invisible-background").on("click", function(){
+  $("#invisible-background").on("click", function() {
     closePopups();
   });
 
   $(document).keyup(function(e) {
-     if (e.keyCode == 27) { // escape key maps to keycode `27`
-        if ($("#invisible-background").is(":visible")) {
-          closePopups();
-        }
+    if (e.keyCode == 27) { // escape key maps to keycode `27`
+      if ($("#invisible-background").is(":visible")) {
+        closePopups();
+      }
     }
   });
 
-  $( "form" ).submit(function( event ) {
-  event.preventDefault();
-});
+  $("form").submit(function(event) {
+    event.preventDefault();
+  });
 
 
   // Gets Copyright Year
@@ -182,7 +182,7 @@ $(document).ready(function() {
 
   });
 
-  $("a#close_email_popup").on("click", function(){
+  $("a#close_email_popup").on("click", function() {
     $("#email_results_popup").hide();
   });
 
@@ -273,7 +273,7 @@ function stopTheTimer(wordcount) {
   }
   completeTime = minutesRound + ":" + seconds + "";
   timedwpm = Math.round(wordcount / minutes);
-  $("#timer-results, .timed_reading").html("Time: " + completeTime + "  WPM: " + timedwpm).text;
+  $("#timer-results").html("Time: " + completeTime + "  WPM: " + timedwpm).text;
   $.ajax({
     type: "POST",
     url: "history.php",
@@ -308,16 +308,17 @@ function moveBtnBar() {
 
 function sendEmail(google_id, passage_id, email) {
   $.ajax({
-   type: "POST",
-   url: "email.php",
-   data: {google_id: google_id,
-          passage_id: passage_id,
-          email: email},
-   success: function(phpfile)
-   {
-   $("#sent").html(phpfile).show().delay(3000).fadeOut();
-   }
-   });
+    type: "POST",
+    url: "email.php",
+    data: {
+      google_id: google_id,
+      passage_id: passage_id,
+      email: email
+    },
+    success: function(phpfile) {
+      $("#sent").html(phpfile).show().delay(3000).fadeOut();
+    }
+  });
 
 }
 

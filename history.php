@@ -3,7 +3,7 @@ session_start();
 include_once('../../connectFiles/connect_sr.php');
 
 if(isset($_POST['time'])){
-  echo $_POST['time']." , WPM: ".$_POST['wpm']."<br /> Passage: ".$_SESSION['passage_id']."<br />";
+  echo "Time: ".$_POST['time']." , WPM: ".$_POST['wpm'];
   $history_update = $db->prepare("UPDATE History SET
     timed_reading_time = ?,
     timed_reading_wpm = ?
@@ -17,7 +17,7 @@ if(isset($_POST['time'])){
 
 if(isset($_POST['userSpeed'])){
 
-  echo $_POST['userSpeed']."<br />";
+  echo $_POST['userSpeed'];
   $history_update = $db->prepare("UPDATE History SET
     scrolled_reading = ?
     WHERE google_id = ? AND passage_id = ?");
@@ -30,7 +30,7 @@ if(isset($_POST['userSpeed'])){
 }
 if(isset($_POST['score'])){
 
-  echo $_POST['score']."<br />";
+  echo $_POST['score'];
   $history_update = $db->prepare("UPDATE History SET
     comprehension_quiz = ?
     WHERE google_id = ? AND passage_id = ?");

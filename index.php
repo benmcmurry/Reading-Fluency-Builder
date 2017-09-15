@@ -5,7 +5,7 @@ if($_SESSION['logged_in'] == 'yes'){
 } else {
   //echo "not logged in";
   $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
+  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php'>";
   return;
 }
 $google_id = $_SESSION['google_id'];
@@ -42,6 +42,7 @@ if (!$history_results->fetch_assoc())
     $history_results = $history_query->get_result();
   } else {
     $history_results->free();
+    }
     $history_query = $db->prepare("Select * from History where google_id=? and passage_id=?");
     $history_query->bind_param("ss", $_SESSION['google_id'], $_SESSION['passage_id']);
     $history_query->execute();
@@ -54,7 +55,7 @@ if (!$history_results->fetch_assoc())
       $comprehension_quiz = $history_results_rows['comprehension_quiz'];
       $date_modified = $history_results_rows['date_modified'];
     }
-  }
+
 
 
 
@@ -133,14 +134,16 @@ echo "Welcome, ".$_SESSION['given_name']."!";
        ?>
        <a href="logout.php"><img class='icon' src='images/signout.png' />Sign Out</a>
        <?php
+       if ($_GET['page'] != 'instructions') {
        echo "<div id='stats'>
        <strong>Your Scores for this Passage</strong><br />
        <strong>Timed Reading</strong> <br />
-       <span class='timed_reading'>Time: $timed_reading_time WPM: $timed_reading_wpm<br />
+       <span class='timed_reading'>Time: $timed_reading_time WPM: $timed_reading_wpm</span><br />
        <strong>Scrolled Reading WMP:</strong> <span class='scrolled_reading'>$scrolled_reading</span><br />
        <strong>Quiz Score:</strong> <span class='comprehension_quiz'>$comprehension_quiz</span><br />
        <a id='email_results' class='btn' style='color: white'>Email Results</a>
      </div>";
+   }
      ?>
     </div>
     </div>
