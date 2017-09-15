@@ -28,18 +28,18 @@ $to2 = $email;
 $subject = "SoftRead: $title - Results for $full_name";
 $message = <<<EOT
 <html><body>
-<h2>SoftRead: $title - Results for $full_name </h2>
-<h3>Passage Info: </h3>
-<p style='font-size:2em'>
+<h1>SoftRead: $title - Results for $full_name </h1>
+<h2>Passage Info: </h2>
+<p style='font-size:1em'>
 <strong>Title:</strong> $title <br />
 <strong>Author:</strong> $author <br />
 <strong>Length:</strong> $length <br />
 <strong>Lexile:</strong> $lexile <br />
 <strong>Flesch Reading Ease:</strong> $flesch_reading_ease <br />
 <strong>Flesch Kincaid Level:</strong> $flesch_kincaid_level <br />
-<br />
-<h3>Student Results for $full_name </h3>
-<strong>Date Last Accessed:</strong> $date_modified <br />
+</p>
+<h2>Student Results for $full_name </h2>
+<p><strong>Date Last Accessed:</strong> $date_modified <br />
 <strong>Timed Reading WPM:</strong> $timed_reading_wpm <br />
 <strong>Timed Reading Time: </strong>$timed_reading_time <br />
 <strong>Scrolled Reading: </strong>$scrolled_reading <br />
