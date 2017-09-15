@@ -2,8 +2,8 @@
 session_start();
 include_once('../../connectFiles/connect_sr.php');
 
-$email_query = $db->prepare("SELECT * from History INNER JOIN Users on History.google_id=Users.google_id INNER JOIN Passages on History.passage_id=Passages.passage_id where History.google_id=? and History.passage_id=?");
-$email_query->bind_param("ss", $_POST['google_id'], $_POST['passage_id']);
+$email_query = $db->prepare("SELECT * from History INNER JOIN Users on History.user_id=Users.user_id INNER JOIN Passages on History.passage_id=Passages.passage_id where History.user_id=? and History.passage_id=?");
+$email_query->bind_param("ss", $_POST['user_id'], $_POST['passage_id']);
 $email_query->execute();
 $result = $email_query->get_result();
 while ($data = $result->fetch_assoc()) {

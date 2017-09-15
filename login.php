@@ -29,17 +29,17 @@ if (mysqli_num_rows($result)==0) {
 $update_user->execute();
 $update_user_result = $update_user->get_result();
 
-  $get_user_query = $db->prepare("Select editor from Users where google_id = ? ");
+  $get_user_query = $db->prepare("Select editor, user_id from Users where google_id = ? ");
   $get_user_query->bind_param("s", $google_id);
   $get_user_query->execute();
   $result = $get_user_query->get_result();
 
   $user = $result->fetch_assoc();
   $editor = $user['editor'];
-  // $user_id = $user['user_id'];
+  $user_id = $user['user_id'];
 }
 if(!isset($_SESSION)){session_start();}
-// $_SESSION['user_id'] = $user_id;
+$_SESSION['user_id'] = $user_id;
 $_SESSION['google_id'] = $google_id;
 $_SESSION['given_name'] = $given_name;
 $_SESSION['family_name'] = $family_name;

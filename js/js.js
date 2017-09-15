@@ -172,11 +172,11 @@ $(document).ready(function() {
   });
   $("#send_email").on("click", function() {
     formData = $("#email_results_form").serializeArray();
-    google_id = formData[0].value;
+    user_id = formData[0].value;
     passage_id = formData[1].value;
     email = formData[2].value;
     if (validateEmail(email)) {
-      sendEmail(google_id, passage_id, email);
+      sendEmail(user_id, passage_id, email);
     };
 
 
@@ -306,12 +306,12 @@ function moveBtnBar() {
 }
 // end Functions for timing passages
 
-function sendEmail(google_id, passage_id, email) {
+function sendEmail(user_id, passage_id, email) {
   $.ajax({
     type: "POST",
     url: "email.php",
     data: {
-      google_id: google_id,
+      user_id: user_id,
       passage_id: passage_id,
       email: email
     },

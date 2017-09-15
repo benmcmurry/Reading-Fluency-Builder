@@ -9,6 +9,7 @@ if($_SESSION['logged_in'] == 'yes'){
   return;
 }
 $google_id = $_SESSION['google_id'];
+$user_id = $_SESSION['user_id'];
 include_once('../../connectFiles/connect_sr.php');
 if(isset($_GET['passage_id'])) {
   $_SESSION['passage_id'] = $_GET['passage_id'];
@@ -29,22 +30,22 @@ if(isset($_GET['passage_id'])) {
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
 
-$history_query = $db->prepare("Select * from History where google_id=? and passage_id=?");
-$history_query->bind_param("ss", $_SESSION['google_id'], $passage_id);
+$history_query = $db->prepare("Select * from History where user_id=? and passage_id=?");
+$history_query->bind_param("ss", $_SESSION['user_id'], $passage_id);
 $history_query->execute();
 $history_results = $history_query->get_result();
 if (!$history_results->fetch_assoc())
   {
     $history_results->free();
-    $history_query = $db->prepare("Insert into History (google_id, passage_id, date_modified) values (?, ?, now())");
-    $history_query->bind_param("ss", $_SESSION['google_id'], $_SESSION['passage_id']);
+    $history_query = $db->prepare("Insert into History (user_id, google_id, passage_id, date_modified) values (?, ?, ?, now())");
+    $history_query->bind_param("sss", $_SESSION['user_id'], $_SESSION['google_id' ], $_SESSION['passage_id']);
     $history_query->execute();
     $history_results = $history_query->get_result();
   } else {
     $history_results->free();
     }
-    $history_query = $db->prepare("Select * from History where google_id=? and passage_id=?");
-    $history_query->bind_param("ss", $_SESSION['google_id'], $_SESSION['passage_id']);
+    $history_query = $db->prepare("Select * from History where user_id=? and passage_id=?");
+    $history_query->bind_param("ss", $_SESSION['user_id'], $_SESSION['passage_id']);
     $history_query->execute();
     $history_results = $history_query->get_result();
 
@@ -291,7 +292,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
     <?php echo "<h2>Email Results</h2><br />
     <form id='email_results_form'>
       Please enter the email address you wish to send the results to.
-      <input type='hidden' name='google_id' value='$google_id' />
+      <input type='hidden' name='user_id' value='$user_id' />
       <input type='hidden' name='passage_id' value='$passage_id' />
       <input type='text' id='email' name='email' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
       </form>
