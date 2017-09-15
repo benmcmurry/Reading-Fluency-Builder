@@ -30,7 +30,7 @@ $message = <<<EOT
 <html><body>
 <h1>SoftRead: $title - Results for $full_name </h1>
 <h2>Passage Info: </h2>
-<p style='font-size:1em'>
+<p style='font-size:1.3em'>
 <strong>Title:</strong> $title <br />
 <strong>Author:</strong> $author <br />
 <strong>Length:</strong> $length <br />
@@ -39,15 +39,14 @@ $message = <<<EOT
 <strong>Flesch Kincaid Level:</strong> $flesch_kincaid_level <br />
 </p>
 <h2>Student Results for $full_name </h2>
-<p><strong>Date Last Accessed:</strong> $date_modified <br />
+<p style='font-size:1.3em'>
+<strong>Date Last Accessed:</strong> $date_modified <br />
 <strong>Timed Reading WPM:</strong> $timed_reading_wpm <br />
 <strong>Timed Reading Time: </strong>$timed_reading_time <br />
 <strong>Scrolled Reading: </strong>$scrolled_reading <br />
 <strong>Quiz Results:</strong> $comprehension_quiz <br />
 </p>
 </body></html>
-
-
 EOT;
 
 $headers[] = 'MIME-Version: 1.0';
@@ -57,12 +56,11 @@ $headers[] = 'Content-type: text/html; charset=iso-8859-1';
 $headers[] = 'From: SoftRead <no-reply@elc.byu.edu>';
 
 
-// mail($to, $subject, $message, implode("\r\n", $headers));
 
 if(mail($to1, $subject, $message, implode("\r\n", $headers)))
 {
   echo "Mail Sent Successfully";
-  mail($to2, $subject, $message, implode("\r\n", $headers));
+  if ($to1 !=$to2){mail($to2, $subject, $message, implode("\r\n", $headers));}
 }else{
   echo "Mail Not Sent";
 }
