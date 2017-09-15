@@ -60,7 +60,7 @@ $headers[] = 'From: SoftRead <no-reply@elc.byu.edu>';
 if(mail($to1, $subject, $message, implode("\r\n", $headers)))
 {
   echo "Mail Sent Successfully";
-  if ($to1 !=$to2){mail($to2, $subject, $message, implode("\r\n", $headers));}
+  if ($to1 !== $to2){mail($to2, $subject, $message, implode("\r\n", $headers));}
 }else{
   echo "Mail Not Sent";
 }
