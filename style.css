@@ -396,7 +396,7 @@ p.vocab {
 
 #invisible-background {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.3);
   top: 0px;
   left: 0px;
   right: 0px;
@@ -415,6 +415,7 @@ p.vocab {
   background-color: white;
   padding: 1em;
   font-family: "Roboto";
+  box-shadow: 3px 3px 10px rgba(100, 100, 100, 0.8);
 }
 #email_results_popup h2 {
   font-weight: normal;

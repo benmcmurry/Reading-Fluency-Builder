@@ -7,19 +7,22 @@ $(document).ready(function() {
   var largeWindow = emSize * 40;
 
   moveBtnBar();
-  $("#user-btn img").on("click", function(){
+  $("#user-btn img").on("click", function() {
     console.log("clicked");
     $("#drop-down").slideToggle();
     $("#invisible-background").toggle();
   });
 
-  $("#invisible-background").on("click", function(){
-    console.log("clicked background");
-    $("#email_results_popup").hide();
-    if($("#drop-down").is(":visible")) {
-      $("#drop-down").slideToggle();
-      $("#invisible-background").toggle();
-  }
+  $("#invisible-background").on("click", function() {
+
+    if ($("#email_results_popup").is(":visible")) {
+      $("#email_results_popup").hide();
+    } else {
+      if ($("#drop-down").is(":visible")) {
+        $("#drop-down").slideToggle();
+        $("#invisible-background").toggle();
+      }
+    }
   });
 
   // Gets Copyright Year
@@ -44,7 +47,7 @@ $(document).ready(function() {
   $(".nav-btn").on("click", function() {
 
     pageID = this.id.slice(0, -4);
-    console.log("Menu Click Triggered: "+ pageID);
+    console.log("Menu Click Triggered: " + pageID);
     page = pageID;
     $(".page").hide();
     $("#" + pageID).show();
@@ -68,7 +71,8 @@ $(document).ready(function() {
         "background-color": "rgb(62, 149, 240)",
         "color": "white"
       });
-    }, function() {
+    },
+    function() {
       $(this).css({
         "background-color": "rgb(239, 239, 239)",
         "color": "black"
@@ -91,17 +95,18 @@ $(document).ready(function() {
 
     });
     score = Math.round(totalCorrect / totalPossible * 100);
-    score = totalCorrect + "/" + totalPossible + " correct - " + score +"%";
+    score = totalCorrect + "/" + totalPossible + " correct - " + score + "%";
     $("#check-answers").html(score).off();
 
     $.ajax({
-       type: "POST",
-       url: "history.php",
-       data: {score: score},
-       success: function(phpfile)
-       {
-       $(".comprehension_quiz").html(phpfile);
-       }
+      type: "POST",
+      url: "history.php",
+      data: {
+        score: score
+      },
+      success: function(phpfile) {
+        $(".comprehension_quiz").html(phpfile);
+      }
     });
 
   });
@@ -119,35 +124,48 @@ $(document).ready(function() {
   });
 
   //manipulate selected page and nav buttons
-  if(passage_id=='') {
+  if (passage_id == '') {
     $('#navbar').hide();
-    $('#page').css("padding-top" , "0px");
+    $('#page').css("padding-top", "0px");
   }
-pageSet(page);
+  pageSet(page);
 
-$("#userSpeed").on("click", function(){$(this).empty();});
-$("#userSpeed").keypress(function(e){
-  if(e.which === 13) {
-    e.preventDefault();
-    $("#go").trigger("click");
+  $("#userSpeed").on("click", function() {
+    $(this).empty();
+  });
+  $("#userSpeed").keypress(function(e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      $("#go").trigger("click");
 
-}
-});
+    }
+  });
 
-$("#email_results").on("click", function(){
-  $("#invisible-background").show();
-  w = $("#email_results_popup").width();
-  h = $("#email_results_popup").height();
-  windoww = $(window).width();
-  windowh = $(window).height();
-  topPos = (windowh-h)/2;
-  leftPos = (windoww-w)/2;
+  $("#email_results").on("click", function() {
+    $("#invisible-background").show();
+    w = $("#email_results_popup").width();
+    h = $("#email_results_popup").height();
+    windoww = $(window).width();
+    windowh = $(window).height();
+    topPos = (windowh - h) / 2;
+    leftPos = (windoww - w) / 2;
 
-  $("#email_results_popup").css({
-    "top" : topPos,
-    "left" : leftPos
-  }).show();
-});
+    $("#email_results_popup").css({
+      "top": topPos,
+      "left": leftPos
+    }).show();
+  });
+  $("#send_email").on("click", function() {
+    formData = $("#email_results_form").serializeArray();
+    google_id = formData[0].value;
+    passage_id = formData[1].value;
+    email = formData[2].value;
+    if (validateEmail(email)) {
+      sendEmail(google_id, passage_id, email);
+    };
+
+
+  });
 
 }); //end document ready
 
@@ -155,27 +173,27 @@ function pageSet(page) {
   switch (page) {
 
     case "reading":
-      console.log(page+" from pageSet");
+      console.log(page + " from pageSet");
       $("#reading-btn").click();
       break;
     case "scroller":
-      console.log(page+" from pageSet");
+      console.log(page + " from pageSet");
       $("#scroller-btn").click();
       break;
     case "timer":
-      console.log(page+" from pageSet");
+      console.log(page + " from pageSet");
       $("#timer-btn").click();
       break;
     case "quiz":
-      console.log(page+" from pageSet");
+      console.log(page + " from pageSet");
       $("#quiz-btn").click();
       break;
     case "vocab":
-      console.log(page+" from pageSet");
+      console.log(page + " from pageSet");
       $("#vocab-btn").click();
       break;
     case "instructions":
-      console.log(page+" from pageSet");
+      console.log(page + " from pageSet");
       $("#instructions").show();
       break;
   }
@@ -194,14 +212,15 @@ function scrollThePassage(wordcount) { // scrolls text
   }, speed, "linear");
 
   $.ajax({
-     type: "POST",
-     url: "history.php",
-     data: {userSpeed: wpm},
-     success: function(phpfile)
-     {
-     $(".scrolled_reading").html(phpfile);
-     }
- });
+    type: "POST",
+    url: "history.php",
+    data: {
+      userSpeed: wpm
+    },
+    success: function(phpfile) {
+      $(".scrolled_reading").html(phpfile);
+    }
+  });
 
 
 } // ends script scrolling
@@ -235,17 +254,18 @@ function stopTheTimer(wordcount) {
   }
   completeTime = minutesRound + ":" + seconds + "";
   timedwpm = Math.round(wordcount / minutes);
-  $("#timer-results").html("Time: " + completeTime + "  WPM: " + timedwpm).text;
-    $.ajax({
-       type: "POST",
-       url: "history.php",
-       data: {time: completeTime,
-              wpm: timedwpm},
-       success: function(phpfile)
-       {
-       $(".timed_reading").html(phpfile);
-       }
-   });
+  $("#timer-results, .timed_reading").html("Time: " + completeTime + "  WPM: " + timedwpm).text;
+  $.ajax({
+    type: "POST",
+    url: "history.php",
+    data: {
+      time: completeTime,
+      wpm: timedwpm
+    },
+    success: function(phpfile) {
+      $(".timed_reading").html(phpfile);
+    }
+  });
 
 }
 
@@ -266,3 +286,27 @@ function moveBtnBar() {
 
 }
 // end Functions for timing passages
+
+function sendEmail(google_id, passage_id, email) {
+  $.ajax({
+   type: "POST",
+   url: "email.php",
+   data: {google_id: google_id,
+          passage_id: passage_id,
+          email: email},
+   success: function(phpfile)
+   {
+   $("#email_results_popup").html(phpfile);
+   }
+   });
+
+  alert("Sent!");
+}
+
+function validateEmail(email) {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    return (true)
+  }
+  alert("You have entered an invalid email address!")
+  return (false)
+}

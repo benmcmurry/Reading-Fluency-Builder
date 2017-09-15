@@ -8,7 +8,7 @@ if($_SESSION['logged_in'] == 'yes'){
   echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php?current_url=$current_url'>";
   return;
 }
-
+$google_id = $_SESSION['google_id'];
 include_once('../../connectFiles/connect_sr.php');
 if(isset($_GET['passage_id'])) {
   $_SESSION['passage_id'] = $_GET['passage_id'];
@@ -120,14 +120,7 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
       <div id="drop-down">
       <?php
 echo "Welcome, ".$_SESSION['given_name']."!";
-      echo "<div id='stats'>
-      <strong>Your Scores for this Passage</strong><br />
-      <strong>Timed Reading Time:</strong> <span class='timed_reading_time'> $timed_reading_time</span><br />
-      <strong>Timed Reading WMP:</strong> <span class='timed_reading_wpm'> $timed_reading_wpm</span><br />
-      <strong>Scrolled Reading WMP:</strong> <span class='scrolled_reading'>$scrolled_reading</span><br />
-      <strong>Quiz Score:</strong> <span class='comprehension_quiz'>$comprehension_quiz</span><br />
-      <a id='email_results' class='btn' style='color: white'>Email Results</a>
-    </div>";
+
     ?>
       <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
       <?php
@@ -139,6 +132,16 @@ echo "Welcome, ".$_SESSION['given_name']."!";
       }
        ?>
        <a href="logout.php"><img class='icon' src='images/signout.png' />Sign Out</a>
+       <?php
+       echo "<div id='stats'>
+       <strong>Your Scores for this Passage</strong><br />
+       <strong>Timed Reading</strong> <br />
+       <span class='timed_reading'>Time: $timed_reading_time WPM: $timed_reading_wpm<br />
+       <strong>Scrolled Reading WMP:</strong> <span class='scrolled_reading'>$scrolled_reading</span><br />
+       <strong>Quiz Score:</strong> <span class='comprehension_quiz'>$comprehension_quiz</span><br />
+       <a id='email_results' class='btn' style='color: white'>Email Results</a>
+     </div>";
+     ?>
     </div>
     </div>
 
@@ -281,13 +284,16 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   </div>
   <div id="invisible-background"></div>
   <div id="email_results_popup">
-    <?php echo "<h2>Your Scores for $passage_name</h2><br />
-    <strong>Timed Reading Time:</strong> <span class='timed_reading_time'> $timed_reading_time</span><br />
-    <strong>Timed Reading WMP:</strong> <span class='timed_reading_wpm'> $timed_reading_wpm</span><br />
-    <strong>Scrolled Reading WMP:</strong> <span class='scrolled_reading'>$scrolled_reading</span><br />
-    <strong>Quiz Score:</strong> <span class='comprehension_quiz'>$comprehension_quiz</span><br />";
-    ?>
-
+    <?php echo "<h2>Email Results</h2><br />
+    <form id='email_results_form'>
+      Please enter the email address you wish to send the results to.
+      <input type='hidden' name='google_id' value='$google_id' />
+      <input type='hidden' name='passage_id' value='$passage_id' />
+      <input type='text' name='email' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
+      </form>
+      <a class='btn' id='send_email'>Send Email</>
+      ";
+?>
   </div>
 
 
