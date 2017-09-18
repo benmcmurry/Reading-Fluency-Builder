@@ -25,7 +25,7 @@ while($passage_row = $passage->fetch_assoc()){
   $lexile = $passage_row['lexile'];
   $flesch_reading_ease = $passage_row['flesch_reading_ease'];
   $flesch_kincaid_level = $passage_row['flesch_kincaid_level'];
-  $elc_copyright = $passage_row['elc_copyright'];
+  $share_status = $passage_row['share_status'];
   $library_id = $passage_row['library_id'];
   $vocabulary = $passage_row['vocabulary'];
 }

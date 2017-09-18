@@ -29,7 +29,7 @@ if (mysqli_num_rows($result)==0) {
 $update_user->execute();
 $update_user_result = $update_user->get_result();
 
-  $get_user_query = $db->prepare("Select editor, user_id from Users where google_id = ? ");
+  $get_user_query = $db->prepare("Select editor, user_id, cas from Users where google_id = ? ");
   $get_user_query->bind_param("s", $google_id);
   $get_user_query->execute();
   $result = $get_user_query->get_result();
@@ -37,6 +37,7 @@ $update_user_result = $update_user->get_result();
   $user = $result->fetch_assoc();
   $editor = $user['editor'];
   $user_id = $user['user_id'];
+  $cas = $user['cas'];
 }
 if(!isset($_SESSION)){session_start();}
 $_SESSION['user_id'] = $user_id;
@@ -45,8 +46,11 @@ $_SESSION['given_name'] = $given_name;
 $_SESSION['family_name'] = $family_name;
 $_SESSION['image_url'] = $image_url;
 $_SESSION['email'] = $email;
+
 $_SESSION['logged_in'] = "yes";
 $_SESSION['editor'] = $editor;
+
+$_SESSION['cas'] = $cas;
 
 
 echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=index.php?page=instructions'>";

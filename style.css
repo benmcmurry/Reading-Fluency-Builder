@@ -207,6 +207,9 @@ a.btn:active {}
   padding-left: 1em;
 }
 
+li.private {
+  /*display: none;*/
+}
 a.reading_menu_options {
   color: black;
   text-decoration: none;
@@ -221,6 +224,8 @@ a.reading_menu_options {
   /*border-bottom: 0px;*/
 
 }
+
+
 
 a.reading_menu_options:hover, #nav-panel h3:hover, #nav-panel h4:hover {
   background: linear-gradient(rgb(76, 165, 255), rgb(62, 149, 240));

@@ -3,24 +3,6 @@ session_start();
 session_unset();
 
 session_destroy();
-if(isset($_GET['current_url'])) {
-  $pos = strpos($_GET['current_url'], ".php");
-    if ($pos === false) {
-      $current_url = $current_url."index.php?begin=yes";
-    } else {
-      $current_url = $_GET['current_url'];
-    }
-
-} else {
-  $current_url = "index.php?begin=yes";
-}
-
-if(isset($_GET['page'])) {
-  $page = $_GET['page'];
-
-} else {
-  $page = "instructions";
-}
 
  ?>
 <!DOCTYPE html>
@@ -70,8 +52,7 @@ $(document).ready(function() {
       given_name: given_name,
       family_name: family_name,
       image_url: image_url,
-      email: email,
-      current_url: "<?php echo $current_url."&page=".$page; ?>"
+      email: email
       }
   }).done(function(phpfile) {
   $("#save_dialog").html(phpfile);
@@ -123,7 +104,13 @@ $(document).ready(function() {
     width: 19em;
 
   }
-
+#save_dialog {
+  color:black;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
   @media ( min-width: 30em) {
     h1 {
       font-size: 3em;
