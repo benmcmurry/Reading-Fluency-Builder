@@ -230,7 +230,7 @@ function checkStatus($status, $passage_id, $title, $lexile, $cas, $list, $i)
             $i++;
         }
     }
-    return $list;
+    return "Hello";
 }
 
 ?>
