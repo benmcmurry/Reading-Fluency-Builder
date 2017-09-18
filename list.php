@@ -1,6 +1,8 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+include_once('../../connectFiles/connect_sr.php');
+
 ?>
 <li>
   <h3>New Passages</h3>
