@@ -1,6 +1,6 @@
 
 <li>
-  <h3>New Passages > </h3>
+  <h3>New Passages</h3>
  <ul>
 
     <?php
