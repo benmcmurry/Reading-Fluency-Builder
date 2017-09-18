@@ -30,21 +30,21 @@ if(isset($_GET['passage_id'])) {
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
 
-$history_query = $db->prepare("Select * from History where user_id=? and passage_id=?");
+$history_query = $db->prepare("Select * from Scores where user_id=? and passage_id=?");
 $history_query->bind_param("ss", $_SESSION['user_id'], $passage_id);
 $history_query->execute();
 $history_results = $history_query->get_result();
 if (!$history_results->fetch_assoc())
   {
     $history_results->free();
-    $history_query = $db->prepare("Insert into History (user_id, google_id, passage_id, date_modified) values (?, ?, ?, now())");
+    $history_query = $db->prepare("Insert into Scores (user_id, google_id, passage_id, date_modified) values (?, ?, ?, now())");
     $history_query->bind_param("sss", $_SESSION['user_id'], $_SESSION['google_id' ], $_SESSION['passage_id']);
     $history_query->execute();
     $history_results = $history_query->get_result();
   } else {
     $history_results->free();
     }
-    $history_query = $db->prepare("Select * from History where user_id=? and passage_id=?");
+    $history_query = $db->prepare("Select * from Scores where user_id=? and passage_id=?");
     $history_query->bind_param("ss", $_SESSION['user_id'], $_SESSION['passage_id']);
     $history_query->execute();
     $history_results = $history_query->get_result();
