@@ -215,7 +215,7 @@ include_once('../../connectFiles/connect_sr.php');
          }
      }
  }
-?></ul></li>
+?></ul></li></ul>
 <?php
 
 
