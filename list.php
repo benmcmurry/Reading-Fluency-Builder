@@ -1,8 +1,5 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-session_start();
-include_once('../../connectFiles/connect_sr.php');
+
 
 ?>
 <li>
@@ -230,7 +227,7 @@ function checkStatus($status, $passage_id, $title, $lexile, $cas, $list, $i)
             $i++;
         }
     }
-    return $i;
+    return $list;
 }
 
 ?>
