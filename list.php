@@ -214,7 +214,7 @@ if ($libraries_results_rows['library_id']) {
 
  }
 ?></ul></li>
-<?
+<?php
 
 
 function checkStatus($status, $passage_id, $title, $lexile, $cas, $list, $i) {
