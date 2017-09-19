@@ -165,6 +165,15 @@ $(document).ready(function() {
 
 
   });
+  $("#attach_netid").on("click", function(){
+    formData = $("#attach_netid_form").serializeArray();
+    user_id = formData[0].value;
+    netid = formData[1].value;
+    if (validateNetid(netid)) {
+      attachNetid(user_id, netid);
+    };
+
+  });
 
 
 }); //end document ready
@@ -311,6 +320,14 @@ function validateEmail(email) {
   return (false)
 }
 
+function validateNetid(netid) {
+  if(/^[0-9a-zA-Z]+$/.test(netid)) {
+    return true;
+  }
+  alert("You have entered an invalid netid. Please use only letters and numbers");
+  return false;
+}
+
 function closePopups() {
   if ($(".popup").is(":visible")) {
     $(".popup").hide();
@@ -338,10 +355,24 @@ function openPopup(id) {
     "width": w,
     "height": h
   }).show();
-  $("#sent").css({
+  $(".response").css({
     "top": topPos,
     "left": leftPos,
     "width": w,
     "height": h
+  });
+}
+
+function attachNetid(user_id, netid) {
+  $.ajax({
+    type: "POST",
+    url: "netid.php",
+    data: {
+      user_id: user_id,
+      netid: netid
+    },
+    success: function(phpfile) {
+      $("#attached").html(phpfile).show().delay(3000).fadeOut();
+    }
   });
 }

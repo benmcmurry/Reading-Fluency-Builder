@@ -10,6 +10,7 @@ if($_SESSION['logged_in'] == 'yes'){
 }
 $google_id = $_SESSION['google_id'];
 $user_id = $_SESSION['user_id'];
+$netid = $_SESSION['cas'];
 include_once('../../connectFiles/connect_sr.php');
 if(isset($_GET['passage_id'])) {
   $_SESSION['passage_id'] = $_GET['passage_id'];
@@ -299,7 +300,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
       <a class='btn' id='send_email'>Send Email</>
       ";
       ?>
-  <div id="sent">
+  <div id="sent" class="response">
   </div>
 </div>
 <div id="settings_popup" class="popup">
@@ -308,11 +309,13 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <p>Enter in your BYU NetID for access to more passages.</p>
     <form id='attach_netid_form'>
     <input type='hidden' name='user_id' value='$user_id' />
-    <input type='text' id='netid' name='netid' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
+    <input type='text' id='netid' name='netid' value='$netid' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
     </form>
   <a class='btn' id='attach_netid'>Validate NetID</a>
   ";
   ?>
+  <div id="attached" class="response">
+  </div>
 </div>
 
 

@@ -445,7 +445,7 @@ a.close_popup {
 
 }
 
-#sent {
+.response {
   position: fixed;
   display: none;
   top:0px;
