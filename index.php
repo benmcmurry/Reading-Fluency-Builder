@@ -2,7 +2,7 @@
 session_start();
 if($_SESSION['logged_in'] == 'yes'){
   //  echo "logged in";
-  echo $_SESSION['cas'];
+  // echo $_SESSION['cas'];
 } else {
   //echo "not logged in";
   echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php'>";
@@ -124,7 +124,7 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
 echo "Welcome, ".$_SESSION['given_name']."!";
 
     ?>
-      <a href="#"><img class='icon' src='images/settings.png' />Settings</a>
+      <a href="#" class="popup_link" id="settings"><img class='icon' src='images/settings.png' />Settings</a>
       <?php
       if($_SESSION['editor'] == "1") {
         echo "<a href='editors/new_passage.php'><img class='icon' src='images/new.png' />New Passage</a>";
@@ -142,7 +142,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
        <span class='timed_reading'>Time: $timed_reading_time WPM: $timed_reading_wpm</span><br />
        <strong>Scrolled Reading WMP:</strong> <span class='scrolled_reading'>$scrolled_reading</span><br />
        <strong>Quiz Score:</strong> <span class='comprehension_quiz'>$comprehension_quiz</span><br />
-       <a id='email_results' class='btn' style='color: white'>Email Results</a>
+       <a id='email_results' class='btn popup_link' style='color: white'>Email Results</a>
      </div>";
    }
      ?>
@@ -287,8 +287,8 @@ echo "Welcome, ".$_SESSION['given_name']."!";
     Copyright &copy; <span id="year">year</span>. English Language Center
   </div>
   <div id="invisible-background"></div>
-  <div id="email_results_popup">
-    <a class='close' id='close_email_popup'>x</a>
+  <div id="email_results_popup" class="popup">
+    <a class='close_popup' id='close_email_popup'>x</a>
     <?php echo "<h2>Email Results</h2><br />
     <form id='email_results_form'>
       Please enter the email address you wish to send the results to.
@@ -298,10 +298,22 @@ echo "Welcome, ".$_SESSION['given_name']."!";
       </form>
       <a class='btn' id='send_email'>Send Email</>
       ";
-?>
+      ?>
   <div id="sent">
   </div>
-  </div>
+</div>
+<div id="settings_popup" class="popup">
+  <a class='close_popup' id='close_email_popup'>x</a>
+  <?php echo "<h2>Settings</h2>
+  <p>Enter in your BYU NetID for access to more passages.</p>
+    <form id='attach_netid_form'>
+    <input type='hidden' name='user_id' value='$user_id' />
+    <input type='text' id='netid' name='netid' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
+    </form>
+  <a class='btn' id='attach_netid'>Validate NetID</a>
+  ";
+  ?>
+</div>
 
 
 

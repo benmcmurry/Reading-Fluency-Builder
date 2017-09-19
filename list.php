@@ -3,7 +3,7 @@
 
 ?>
 <li>
-  <h3>New Passages</h3>
+  <h3>New Passages ></h3>
  <ul>
 
     <?php
@@ -180,7 +180,7 @@
 </li>
 </ul>
 <li>
-  <h3>Library</h3>
+  <h3>Library > </h3>
   <ul class='sublist'>
 <?php
  $libraries = $db->prepare("Select Distinct library_id from Passages");

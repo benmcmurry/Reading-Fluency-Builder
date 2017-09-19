@@ -411,7 +411,8 @@ p.vocab {
   z-index: 99;
 }
 
-#email_results_popup {
+.popup {
+  display: none;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -422,12 +423,13 @@ p.vocab {
   padding: 1em;
   font-family: "Roboto";
   box-shadow: 3px 3px 10px rgba(100, 100, 100, 0.8);
+  color: black;
 }
-#email_results_popup h2 {
+.popup h2 {
   font-weight: normal;
   text-align: center;
 }
-a#close_email_popup {
+a.close_popup {
   display:block;
   position: absolute;
   top: 0px;

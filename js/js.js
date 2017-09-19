@@ -13,7 +13,7 @@ $(document).ready(function() {
     $("#invisible-background").toggle();
   });
 
-  $("#invisible-background").on("click", function() {
+  $("#invisible-background, .close_popup").on("click", function() {
     closePopups();
   });
 
@@ -146,27 +146,11 @@ $(document).ready(function() {
     }
   });
 
-  $("#email_results").on("click", function() {
-    $("#invisible-background").show();
-    w = $("#email_results_popup").width();
-    h = $("#email_results_popup").height();
-    windoww = $(window).width();
-    windowh = $(window).height();
-    topPos = (windowh - h) / 2;
-    leftPos = (windoww - w) / 2;
+  $(".popup_link").on("click", function() {
 
-    $("#email_results_popup").css({
-      "top": topPos,
-      "left": leftPos,
-      "width": w,
-      "height": h
-    }).show();
-    $("#sent").css({
-      "top": topPos,
-      "left": leftPos,
-      "width": w,
-      "height": h
-    });
+    id = this.id;
+    openPopup(id);
+
 
 
   });
@@ -182,9 +166,6 @@ $(document).ready(function() {
 
   });
 
-  $("a#close_email_popup").on("click", function() {
-    $("#email_results_popup").hide();
-  });
 
 }); //end document ready
 
@@ -331,12 +312,36 @@ function validateEmail(email) {
 }
 
 function closePopups() {
-  if ($("#email_results_popup").is(":visible")) {
-    $("#email_results_popup").hide();
+  if ($(".popup").is(":visible")) {
+    $(".popup").hide();
   } else {
     if ($("#drop-down").is(":visible")) {
       $("#drop-down").slideToggle();
       $("#invisible-background").toggle();
     }
   }
+}
+
+function openPopup(id) {
+  $(".popup").hide();
+  $("#invisible-background").show();
+  w = $("#"+id+"_popup").width();
+  h = $("#"+id+"_popup").height();
+  windoww = $(window).width();
+  windowh = $(window).height();
+  topPos = (windowh - h) / 2;
+  leftPos = (windoww - w) / 2;
+
+  $("#"+id+"_popup").css({
+    "top": topPos,
+    "left": leftPos,
+    "width": w,
+    "height": h
+  }).show();
+  $("#sent").css({
+    "top": topPos,
+    "left": leftPos,
+    "width": w,
+    "height": h
+  });
 }
