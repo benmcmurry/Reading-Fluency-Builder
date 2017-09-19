@@ -447,13 +447,17 @@ a.close_popup {
 
 .response {
   position: fixed;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
   display: none;
   top:0px;
   bottom: 0px;
   left: 0px;
   right: 0px;
   background-color: white;
-  border: 1em black solid;
+  border: .5em black solid;
+  padding: .5em;
   z-index: 200;
   color: black;
 

@@ -306,7 +306,7 @@ function sendEmail(user_id, passage_id, email) {
       email: email
     },
     success: function(phpfile) {
-      $("#sent").html(phpfile).show().delay(3000).fadeOut();
+      $("#sent").html(phpfile).show().delay(2000).fadeOut();
     }
   });
 
@@ -372,7 +372,7 @@ function attachNetid(user_id, netid) {
       netid: netid
     },
     success: function(phpfile) {
-      $("#attached").html(phpfile).show().delay(3000).fadeOut();
+      $("#attached").html(phpfile).show().delay(2000).fadeOut();
     }
   });
 }
