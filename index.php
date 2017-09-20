@@ -31,31 +31,31 @@ if(isset($_GET['passage_id'])) {
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
 
-$history_query = $db->prepare("Select * from Scores where user_id=? and passage_id=?");
-$history_query->bind_param("ss", $_SESSION['user_id'], $passage_id);
-$history_query->execute();
-$history_results = $history_query->get_result();
-if (!$history_results->fetch_assoc())
+$scores_query = $db->prepare("Select * from Scores where user_id=? and passage_id=?");
+$scores_query->bind_param("ss", $_SESSION['user_id'], $passage_id);
+$scores_query->execute();
+$scores_results = $scores_query->get_result();
+if (!$scores_results->fetch_assoc())
   {
-    $history_results->free();
-    $history_query = $db->prepare("Insert into Scores (user_id, google_id, passage_id, date_modified) values (?, ?, ?, now())");
-    $history_query->bind_param("sss", $_SESSION['user_id'], $_SESSION['google_id' ], $_SESSION['passage_id']);
-    $history_query->execute();
-    $history_results = $history_query->get_result();
+    $scores_results->free();
+    $scores_query = $db->prepare("Insert into Scores (user_id, google_id, passage_id, date_modified) values (?, ?, ?, now())");
+    $scores_query->bind_param("sss", $_SESSION['user_id'], $_SESSION['google_id' ], $_SESSION['passage_id']);
+    $scores_query->execute();
+    $scores_results = $scores_query->get_result();
   } else {
-    $history_results->free();
+    $scores_results->free();
     }
-    $history_query = $db->prepare("Select * from Scores where user_id=? and passage_id=?");
-    $history_query->bind_param("ss", $_SESSION['user_id'], $_SESSION['passage_id']);
-    $history_query->execute();
-    $history_results = $history_query->get_result();
+    $scores_query = $db->prepare("Select * from Scores where user_id=? and passage_id=?");
+    $scores_query->bind_param("ss", $_SESSION['user_id'], $_SESSION['passage_id']);
+    $scores_query->execute();
+    $scores_results = $scores_query->get_result();
 
-    while ($history_results_rows = $history_results->fetch_assoc()){
-      $timed_reading_wpm = $history_results_rows['timed_reading_wpm'];
-      $timed_reading_time = $history_results_rows['timed_reading_time'];
-      $scrolled_reading = $history_results_rows['scrolled_reading'];
-      $comprehension_quiz = $history_results_rows['comprehension_quiz'];
-      $date_modified = $history_results_rows['date_modified'];
+    while ($scores_results_rows = $scores_results->fetch_assoc()){
+      $timed_reading_wpm = $scores_results_rows['timed_reading_wpm'];
+      $timed_reading_time = $scores_results_rows['timed_reading_time'];
+      $scrolled_reading = $scores_results_rows['scrolled_reading'];
+      $comprehension_quiz = $scores_results_rows['comprehension_quiz'];
+      $date_modified = $scores_results_rows['date_modified'];
     }
 
 
