@@ -21,6 +21,7 @@ if (mysqli_num_rows($result)==0) {
   $add_user->bind_param("ssssss", $google_id, $full_name, $given_name, $family_name, $image_url, $email);
   $add_user->execute();
   $result = $add_user->get_result();
+  $user_id = $db->insert_id;
 
 
 } else {
