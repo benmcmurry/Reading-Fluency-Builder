@@ -174,7 +174,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
         <!-- instructions page -->
         <div class="page" id="instructions">
           <h1>Welcome to SoftRead</h1>
-          <p>Begin by using the menu on the right to select a passage to read. After you select a passage, there will be a menu at the top of the page.</p> <p>The <strong>Reading</strong> tab lets you read the passage. The <strong>Scrolled Reading</strong> tab lets you set a speed at which the text will scroll so that you can improve reading rate. The <strong>Timed Reading</strong> tab lets you time yourself as you read at any pace you'd like. The <strong>Quiz</strong> tab includes comprehension questions. The <strong>Vocabulary</strong> tab give you a list of vocabulary words from the reading.</p></div>
+          <p>Begin by using the menu on the left to select a passage to read. After you select a passage, there will be a menu at the top of the page.</p> <p>The <strong>Reading</strong> tab lets you read the passage. The <strong>Scrolled Reading</strong> tab lets you set a speed at which the text will scroll so that you can improve reading rate. The <strong>Timed Reading</strong> tab lets you time yourself as you read at any pace you'd like. The <strong>Quiz</strong> tab includes comprehension questions. The <strong>Vocabulary</strong> tab give you a list of vocabulary words from the reading.</p></div>
         </div>
 
         <!-- reading page -->
