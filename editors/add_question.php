@@ -11,7 +11,7 @@ include_once('../../../connectFiles/connect_sr.php');
 $passage_id = $_POST['passage_id'];
 
 
-$add_question = $db->prepare("Insert into Questions (passage_id) values ( ? )");
+$add_question = $sr_db->prepare("Insert into Questions (passage_id) values ( ? )");
 $add_question->bind_param("s", $passage_id);
 $add_question->execute();
 $result = $add_question->get_result();

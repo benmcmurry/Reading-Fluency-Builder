@@ -11,7 +11,7 @@ $google_id = $_SESSION['google_id'];
 $passage_id = $_GET['passage_id'];
 include_once('../../../connectFiles/connect_sr.php');
 
-$query = $db->prepare("Select * from Passages where passage_id= ? ");
+$query = $sr_db->prepare("Select * from Passages where passage_id= ? ");
 $query->bind_param("s", $passage_id);
 $query->execute();
 $passage = $query->get_result();
@@ -133,7 +133,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div id='vocabulary' class='editable-passage' contenteditable='true'>
     <?php
       if ($vocabulary == ""){
-        $query_vocab = $db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
+        $query_vocab = $sr_db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
         $query_vocab->bind_param("s", $passage_id);
         $query_vocab->execute();
         $vocab_results = $query_vocab->get_result();
@@ -157,7 +157,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <ul id="questions">
 
   <?php
-    $query_quiz = $db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
+    $query_quiz = $sr_db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
     $query_quiz->bind_param("s", $passage_id);
     $query_quiz->execute();
     $quiz_result = $query_quiz->get_result();

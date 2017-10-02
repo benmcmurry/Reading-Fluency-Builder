@@ -19,7 +19,7 @@ $modified_by =  $_POST['modified_by'];
 
 
 
-$update_question = $db->prepare("UPDATE Questions SET
+$update_question = $sr_db->prepare("UPDATE Questions SET
     question_text = ?,
     correct_answer = ?,
     distractor_1 = ?,

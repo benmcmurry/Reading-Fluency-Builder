@@ -12,7 +12,7 @@ include_once('../../../connectFiles/connect_sr.php');
 $i=1;
 foreach ($_POST as $question_id => &$value) {
  
-    $update_order_query = $db->prepare("Update Questions set question_order = ? where question_id = ?");
+    $update_order_query = $sr_db->prepare("Update Questions set question_order = ? where question_id = ?");
     $update_order_query->bind_param("ss", $i, $question_id);
     $update_order_query->execute();
     $result = $update_order_query->get_result();

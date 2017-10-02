@@ -9,28 +9,28 @@ $email = $_POST['email'];
 // $current_url = $_POST['current_url'];
 
 
-$search_for_id = $db->prepare("Select * from Users where google_id= ? ");
+$search_for_id = $sr_db->prepare("Select * from Users where google_id= ? ");
 $search_for_id->bind_param("s", $google_id);
 $search_for_id->execute();
 $result = $search_for_id->get_result();
 
 if (mysqli_num_rows($result)==0) {
 
-  $add_user = $db->prepare("Insert into Users (google_id, full_name, given_name, family_name, image_url, email)
+  $add_user = $sr_db->prepare("Insert into Users (google_id, full_name, given_name, family_name, image_url, email)
   values (?, ?, ?, ?, ?, ?)");
   $add_user->bind_param("ssssss", $google_id, $full_name, $given_name, $family_name, $image_url, $email);
   $add_user->execute();
   $result = $add_user->get_result();
-  $user_id = $db->insert_id;
+  $user_id = $sr_db->insert_id;
 
 
 } else {
-  $update_user = $db->prepare("UPDATE Users SET full_name = ?, given_name = ?, family_name = ?, image_url = ?, email = ? WHERE google_id = ? ");
+  $update_user = $sr_db->prepare("UPDATE Users SET full_name = ?, given_name = ?, family_name = ?, image_url = ?, email = ? WHERE google_id = ? ");
   $update_user->bind_param("ssssss", $full_name, $given_name, $family_name, $image_url, $email, $google_id);
 $update_user->execute();
 $update_user_result = $update_user->get_result();
 
-  $get_user_query = $db->prepare("Select editor, user_id, cas from Users where google_id = ? ");
+  $get_user_query = $sr_db->prepare("Select editor, user_id, cas from Users where google_id = ? ");
   $get_user_query->bind_param("s", $google_id);
   $get_user_query->execute();
   $result = $get_user_query->get_result();

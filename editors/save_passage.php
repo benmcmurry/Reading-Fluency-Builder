@@ -28,7 +28,7 @@ $modified_by =  $_POST['modified_by'];
 
 if (is_float($flesch_reading_ease)){} else {$flesch_reading_ease = 0;}
 if (is_float($flesch_kincaid_level)){} else {$flesch_kincaid_level = 0;}
-$update_passage = $db->prepare("UPDATE Passages SET
+$update_passage = $sr_db->prepare("UPDATE Passages SET
     passage_text = ?,
     title = ?,
     author = ?,

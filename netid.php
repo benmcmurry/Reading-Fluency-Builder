@@ -2,7 +2,7 @@
 session_start();
 include_once('../../connectFiles/connect_sr.php');
 
-$search_for_netid = $db->prepare("Select netid from Netids where netid=?");
+$search_for_netid = $sr_db->prepare("Select netid from Netids where netid=?");
 $search_for_netid->bind_param("s", $_POST['netid']);
 $search_for_netid->execute();
 $results = $search_for_netid->get_result();
@@ -14,7 +14,7 @@ if ($results->num_rows == 0) {
 
 
 $_SESSION['cas'] = $_POST['netid'];
-$attach_netid = $db->prepare("UPDATE Users SET
+$attach_netid = $sr_db->prepare("UPDATE Users SET
   cas = ?
   WHERE user_id = ?");
 
