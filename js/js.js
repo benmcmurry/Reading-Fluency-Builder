@@ -5,7 +5,7 @@ $(document).ready(function() {
   }
   emSize = parseFloat($("body").css("font-size"));
   var largeWindow = emSize * 40;
-
+searchBoxSize(largeWindow);
   moveBtnBar();
   $("#user-btn img").on("click", function() {
     console.log("clicked");
@@ -126,6 +126,7 @@ $(document).ready(function() {
     if (page == "timer" || page == "quiz") {
       moveBtnBar();
     }
+    searchBoxSize(largeWindow);
   });
 
   //manipulate selected page and nav buttons
@@ -174,7 +175,29 @@ $(document).ready(function() {
     };
 
   });
+$("#search").easyAutocomplete({
+  url: function(phrase) {
+    return "search.php?phrase="+phrase+ "&format=json";
+  },
+  getValue: "title",
+  template: {
+    type: "links",
+    fields: {
+      link: "link"
+    }
+  },
+  list: {
+    maxNumberOfElements: 10,
+  match: {
+    enabled: true
+  },
+      onKeyEnterEvent: function(){
+        var value = $("#search").getSelectedItemData().link;
+        window.location = value;
 
+      }
+  }
+});
 
 }); //end document ready
 
@@ -375,4 +398,12 @@ function attachNetid(user_id, netid) {
       $("#attached").html(phpfile).show().delay(2000).fadeOut();
     }
   });
+}
+
+function searchBoxSize(largeWindows) {
+  if ($(window).width() > largeWindow) {
+    $("input#search").css("width", $("#nav-panel").width());
+  } else {
+    $("input#search").css("width", $("body").width());
+  }
 }

@@ -81,11 +81,14 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+<link rel="stylesheet" href="js/easy-autocomplete.css">
 
 <link rel="stylesheet" href="style.css">
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="js/jquery.easy-autocomplete.min.js"></script>
+
 <script>
 
   <?php
@@ -158,6 +161,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 
   <div id="main">
     <div id="nav-panel">
+      <input id="search" type="search" placeholder="search" />
       <ul id='reading-list'>
       <?php include_once('list.php'); ?>
       </ul>
