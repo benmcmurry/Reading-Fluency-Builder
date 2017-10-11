@@ -400,7 +400,7 @@ function attachNetid(user_id, netid) {
   });
 }
 
-function searchBoxSize(largeWindows) {
+function searchBoxSize(largeWindow) {
   if ($(window).width() > largeWindow) {
     $("input#search").css("width", $("#nav-panel").width());
   } else {
