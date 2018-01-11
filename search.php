@@ -23,7 +23,7 @@ echo json_encode($list);
 
 
 $passage_results->free(); //free results
-// $title = "SoftRead 3.0 - ".;
+// $title = "Reading Fluency Builder - ".;
 // $passage_name = $passage_results_row['title'];
 // $source = $passage_results_row['source'];
 // $passage = $passage_results_row['passage_text'];

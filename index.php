@@ -21,7 +21,7 @@ if(isset($_GET['passage_id'])) {
   $passage_results = $passage_query->get_result();
 
   while($passage_results_row = $passage_results->fetch_assoc()){
-    $title = "SoftRead 3.0 - ".$passage_results_row['title'];
+    $title = "Reading Fluency Builder - ".$passage_results_row['title'];
     $passage_name = $passage_results_row['title'];
     $source = $passage_results_row['source'];
     $passage = $passage_results_row['passage_text'];
@@ -62,7 +62,7 @@ if (!$scores_results->fetch_assoc())
 
 
 } else {
-$title = "SoftRead 3.0";
+$title = "Reading Fluency Builder";
 
 }
 
@@ -155,7 +155,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
 
     <?php if(isset($current_passage)) {
       echo $title; }
-      else { echo 'SoftRead 3.0';}
+      else { echo 'Reading Fluency Builder';}
       ?>
   </div>
 
@@ -177,7 +177,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
       <div id="page">
         <!-- instructions page -->
         <div class="page" id="instructions">
-          <h1>Welcome to SoftRead</h1>
+          <h1>Welcome to Reading Fluency Builder</h1>
           <p>Begin by using the menu on the left to select a passage to read. After you select a passage, there will be a menu at the top of the page.</p> <p>The <strong>Reading</strong> tab lets you read the passage. The <strong>Scrolled Reading</strong> tab lets you set a speed at which the text will scroll so that you can improve reading rate. The <strong>Timed Reading</strong> tab lets you time yourself as you read at any pace you'd like. The <strong>Quiz</strong> tab includes comprehension questions. The <strong>Vocabulary</strong> tab give you a list of vocabulary words from the reading.</p></div>
         </div>
 
@@ -186,7 +186,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
           <?php
           if(isset($current_passage)) {
             echo $passage; }
-          else { echo 'SoftRead 3.0';}
+          else { echo 'Reading Fluency Builder';}
           echo "This passage comes from ".$source.".";
           ?>
 

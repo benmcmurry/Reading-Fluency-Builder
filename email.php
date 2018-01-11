@@ -26,10 +26,10 @@ while ($data = $result->fetch_assoc()) {
 $to1 = $_POST['email'];
 $to2 = $email;
 if ($to1 === $to2) {$different = FALSE;} else {$different = TRUE;}
-$subject = "SoftRead: $title - Results for $full_name";
+$subject = "Reading Fluency Builder: $title - Results for $full_name";
 $message = <<<EOT
 <html><body>
-<h1>SoftRead: $title - Results for $full_name </h1>
+<h1>Reading Fluency Builder: $title - Results for $full_name </h1>
 <h2>Passage Info: </h2>
 <p style='font-size:1.3em'>
 <strong>Title:</strong> $title <br />
@@ -56,7 +56,7 @@ $headers[] = 'MIME-Version: 1.0';
 $headers[] = 'Content-type: text/html; charset=iso-8859-1';
 
 // Additional headers
-$headers[] = 'From: SoftRead <no-reply@elc.byu.edu>';
+$headers[] = 'From: Reading Fluency Builder <no-reply@elc.byu.edu>';
 
 
 

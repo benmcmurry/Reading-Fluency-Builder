@@ -105,8 +105,8 @@ function onLoad() {
 
 <body>
   <div id="login-container">
-    <h1>SoftRead 3.0a</h1>
-    <p> Thank you for using SoftRead. </p>
+    <h1>Reading Fluency Buildera</h1>
+    <p> Thank you for using Reading Fluency Builder. </p>
 
   </div>
 </body>
