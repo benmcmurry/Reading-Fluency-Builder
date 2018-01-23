@@ -49,8 +49,8 @@ page=false;
 passage_id = <?php echo $passage_id; ?>;
 google_id = "<?php echo $google_id; ?>";
 </script>
-<script src="../js/js.js">
-</script>
+<!-- <script src="../js/js.js">
+</script> -->
 <script src="js.js">
 </script>
 
