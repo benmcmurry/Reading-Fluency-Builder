@@ -12,7 +12,11 @@ $google_id = $_SESSION['google_id'];
 $user_id = $_SESSION['user_id'];
 $netid = $_SESSION['cas'];
 include_once('../../connectFiles/connect_sr.php');
+
+
+
 if(isset($_GET['passage_id'])) {
+  $passage=TRUE;
   $_SESSION['passage_id'] = $_GET['passage_id'];
   $current_passage = $_GET['passage_id'];
   $passage_query = $sr_db->prepare("Select * from Passages where passage_id=?");
@@ -62,7 +66,13 @@ if (!$scores_results->fetch_assoc())
 
 
 } else {
+  $timed_reading_wpm = "N/A";
+  $timed_reading_time = "N/A";
+  $scrolled_reading = "N/A";
+  $comprehension_quiz = "N/A";
+  $date_modified = "N/A";
 $title = "Reading Fluency Builder";
+$passage=FALSE;
 
 }
 
@@ -139,7 +149,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
        ?>
        <a href="logout.php"><img class='icon' src='images/signout.png' />Sign Out</a>
        <?php
-       if ($_GET['page'] != 'instructions') {
+       if ($passage) {
        echo "<div id='stats'>
        <strong>Your Scores for this Passage</strong><br />
        <strong>Timed Reading</strong> <br />

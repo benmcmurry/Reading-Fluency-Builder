@@ -1,5 +1,21 @@
 $(document).ready(function() {
+    $("#user-btn img").on("click", function() {
+        console.log("clicked");
+        $("#drop-down").slideToggle();
+        $("#invisible-background").toggle();
+    });
 
+    $("#invisible-background, .close_popup").on("click", function() {
+        closePopups();
+    });
+
+    $(document).keyup(function(e) {
+        if (e.keyCode == 27) { // escape key maps to keycode `27`
+            if ($("#invisible-background").is(":visible")) {
+                closePopups();
+            }
+        }
+    });
     $(document).on('keydown', function(e) {
         if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode == 83) {
             console.log('saved');
