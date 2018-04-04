@@ -130,7 +130,7 @@ $(document).ready(function() {
 <body>
   <div id="login-container">
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-longtitle="true"></div>
-    <h1>Reading Fluency Buildera</h1>
+    <h1>Reading Fluency Builder</h1>
     <img class="screenshot" src="images/screens.gif" />
     <div id="save_dialog"></div>
   </div>
