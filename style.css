@@ -444,7 +444,7 @@ p.vocab {
     position: fixed;
     bottom: 0px;
     width: 100%;
-    height: 2em;
+    height: 2.5em;
     background-color: White;
     /*border-bottom: rgb(62, 149, 240) solid .3em;*/
     border-top: gray solid 1px;
@@ -456,6 +456,27 @@ p.vocab {
     padding: 0em;
     margin: 0em;
     clear: both;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+div#footer div {
+    padding-top: 5px;
+}
+
+div#footer div#attribution {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 1em;
+    line-height: 1em;
+    margin-left: 10px;
+}
+
+div#footer div#attribution span {
+    /* padding: .1em; */
 }
 
 #invisible-background {

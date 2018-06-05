@@ -299,7 +299,9 @@ echo "Welcome, ".$_SESSION['given_name']."!";
     </div>
   </div>
   <div id="footer">
-    Copyright &copy; <span id="year">year</span>. English Language Center
+  <div><a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png' /></a></div>
+  <div id='attribution'>
+<span>Developed by Ben McMurry</span><span>English Language Center, BYU </span></div>
   </div>
   <div id="invisible-background"></div>
   <div id="email_results_popup" class="popup">
