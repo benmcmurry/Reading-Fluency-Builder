@@ -2,12 +2,12 @@
 session_start();
 include_once('../../connectFiles/connect_sr.php');
 
-$email_query = $sr_db->prepare("SELECT * from Scores INNER JOIN Users on Scores.user_id=Users.user_id INNER JOIN Passages on Scores.passage_id=Passages.passage_id where Scores.user_id=? and Scores.passage_id=?");
-$email_query->bind_param("ss", $_POST['user_id'], $_POST['passage_id']);
+$email_query = $sr_db->prepare("SELECT * from Scores INNER JOIN Users on Scores.netid=Users.netid INNER JOIN Passages on Scores.passage_id=Passages.passage_id where Scores.netid=? and Scores.passage_id=?");
+$email_query->bind_param("ss", $_POST['netid'], $_POST['passage_id']);
 $email_query->execute();
 $result = $email_query->get_result();
 while ($data = $result->fetch_assoc()) {
-  $full_name = $data['full_name'];
+  $name = $data['name'];
   $email = $data['email'];
   $timed_reading_wpm = $data['timed_reading_wpm'];
   $timed_reading_time = $data['timed_reading_time'];
@@ -26,10 +26,10 @@ while ($data = $result->fetch_assoc()) {
 $to1 = $_POST['email'];
 $to2 = $email;
 if ($to1 === $to2) {$different = FALSE;} else {$different = TRUE;}
-$subject = "Reading Fluency Builder: $title - Results for $full_name";
+$subject = "Reading Fluency Builder: $title - Results for $name";
 $message = <<<EOT
 <html><body>
-<h1>Reading Fluency Builder: $title - Results for $full_name </h1>
+<h1>Reading Fluency Builder: $title - Results for $name </h1>
 <h2>Passage Info: </h2>
 <p style='font-size:1.3em'>
 <strong>Title:</strong> $title <br />
@@ -39,7 +39,7 @@ $message = <<<EOT
 <strong>Flesch Reading Ease:</strong> $flesch_reading_ease <br />
 <strong>Flesch Kincaid Level:</strong> $flesch_kincaid_level <br />
 </p>
-<h2>Student Results for $full_name </h2>
+<h2>Student Results for $name </h2>
 <p style='font-size:1.3em'>
 <strong>Date Last Accessed:</strong> $date_modified <br />
 <strong>Timed Reading WPM:</strong> $timed_reading_wpm <br />

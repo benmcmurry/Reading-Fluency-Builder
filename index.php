@@ -1,16 +1,15 @@
 <?php
 session_start();
-if($_SESSION['logged_in'] == 'yes'){
-  //  echo "logged in";
-  // echo $_SESSION['cas'];
-} else {
-  //echo "not logged in";
-  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php'>";
-  return;
-}
-$google_id = $_SESSION['google_id'];
-$user_id = $_SESSION['user_id'];
-$netid = $_SESSION['cas'];
+// if($_SESSION['logged_in'] == 'yes'){
+//   //  echo "logged in";
+//   // echo $_SESSION['cas'];
+// } else {
+//   //echo "not logged in";
+//   echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php'>";
+//   return;
+// }
+include_once("cas-go.php");
+
 include_once('../../connectFiles/connect_sr.php');
 
 
@@ -35,22 +34,22 @@ if(isset($_GET['passage_id'])) {
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
 
-$scores_query = $sr_db->prepare("Select * from Scores where user_id=? and passage_id=?");
-$scores_query->bind_param("ss", $_SESSION['user_id'], $passage_id);
+$scores_query = $sr_db->prepare("Select * from Scores where netid=? and passage_id=?");
+$scores_query->bind_param("ss", $_SESSION['netid'], $passage_id);
 $scores_query->execute();
 $scores_results = $scores_query->get_result();
 if (!$scores_results->fetch_assoc())
   {
     $scores_results->free();
-    $scores_query = $sr_db->prepare("Insert into Scores (user_id, google_id, passage_id, date_modified) values (?, ?, ?, now())");
-    $scores_query->bind_param("sss", $_SESSION['user_id'], $_SESSION['google_id' ], $_SESSION['passage_id']);
+    $scores_query = $sr_db->prepare("Insert into Scores (netid, passage_id, date_modified) values (?, ?, now())");
+    $scores_query->bind_param("ss", $_SESSION['netid'], $_SESSION['passage_id']);
     $scores_query->execute();
     $scores_results = $scores_query->get_result();
   } else {
     $scores_results->free();
     }
-    $scores_query = $sr_db->prepare("Select * from Scores where user_id=? and passage_id=?");
-    $scores_query->bind_param("ss", $_SESSION['user_id'], $_SESSION['passage_id']);
+    $scores_query = $sr_db->prepare("Select * from Scores where netid=? and passage_id=?");
+    $scores_query->bind_param("ss", $_SESSION['netid'], $_SESSION['passage_id']);
     $scores_query->execute();
     $scores_results = $scores_query->get_result();
 
@@ -77,7 +76,7 @@ $passage=FALSE;
 }
 
 
-if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
+if($_SESSION['editor'] = "1"){$editor = true;} else {$editor = false;}
 
 
 ?>
@@ -132,22 +131,23 @@ if($_SESSION['editor'] == "1"){$editor = true;} else {$editor = false;}
     </div>
     <div id="user-btn">
       <?php
-      echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
+      echo $id;
+      // echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
       <div id="drop-down">
       <?php
-echo "Welcome, ".$_SESSION['given_name']."!";
+echo "Welcome, ".$_SESSION['name']."!";
 
     ?>
-      <a href="#" class="popup_link" id="settings"><img class='icon' src='images/settings.png' />Settings</a>
+      
       <?php
-      if($_SESSION['editor'] == "1") {
+      if($editor) {
         echo "<a href='editors/new_passage.php'><img class='icon' src='images/new.png' />New Passage</a>";
         if(isset($passage_id)) {
           echo "<a href='editors/edit.php?passage_id=".$passage_id."'><img class='icon' src='images/edit.png' />Edit Passage</a>";
         }
       }
        ?>
-       <a href="logout.php"><img class='icon' src='images/signout.png' />Sign Out</a>
+      
        <?php
        if ($passage) {
        echo "<div id='stats'>
@@ -309,7 +309,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
     <?php echo "<h2>Email Results</h2><br />
     <form id='email_results_form'>
       Please enter the email address you wish to send the results to.
-      <input type='hidden' name='user_id' value='$user_id' />
+      <input type='hidden' name='netid' value='$netid' />
       <input type='hidden' name='passage_id' value='$passage_id' />
       <input type='text' id='email' name='email' style='width:100%; font-size: 1.3em; margin-top: 1em;margin-bottom: 1em;'/>
       </form>

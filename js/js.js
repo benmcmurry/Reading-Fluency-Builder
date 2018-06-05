@@ -7,7 +7,7 @@ $(document).ready(function() {
     var largeWindow = emSize * 40;
     searchBoxSize(largeWindow);
     moveBtnBar();
-    $("#user-btn img").on("click", function() {
+    $("#user").on("click", function() {
         console.log("clicked");
         $("#drop-down").slideToggle();
         $("#invisible-background").toggle();
@@ -157,24 +157,24 @@ $(document).ready(function() {
     });
     $("#send_email").on("click", function() {
         formData = $("#email_results_form").serializeArray();
-        user_id = formData[0].value;
+        netid = formData[0].value;
         passage_id = formData[1].value;
         email = formData[2].value;
         if (validateEmail(email)) {
-            sendEmail(user_id, passage_id, email);
+            sendEmail(netid, passage_id, email);
         };
 
 
     });
-    $("#attach_netid").on("click", function() {
-        formData = $("#attach_netid_form").serializeArray();
-        user_id = formData[0].value;
-        netid = formData[1].value;
-        if (validateNetid(netid)) {
-            attachNetid(user_id, netid);
-        };
+    // $("#attach_netid").on("click", function() {
+    //     formData = $("#attach_netid_form").serializeArray();
+    //     netid = formData[0].value;
+    //     netid = formData[1].value;
+    //     if (validateNetid(netid)) {
+    //         attachNetid(netid, netid);
+    //     };
 
-    });
+    // });
     $("#search").easyAutocomplete({
         url: function(phrase) {
             return "search.php?phrase=" + phrase + "&format=json";
@@ -319,12 +319,12 @@ function moveBtnBar() {
 }
 // end Functions for timing passages
 
-function sendEmail(user_id, passage_id, email) {
+function sendEmail(netid, passage_id, email) {
     $.ajax({
         type: "POST",
         url: "email.php",
         data: {
-            user_id: user_id,
+            netid: netid,
             passage_id: passage_id,
             email: email
         },
@@ -386,27 +386,27 @@ function openPopup(id) {
     });
 }
 
-function attachNetid(user_id, netid) {
-    $.ajax({
-        type: "POST",
-        url: "netid.php",
-        data: {
-            user_id: user_id,
-            netid: netid
-        },
-        success: function(phpfile) {
-            restart = phpfile.includes("successfully");
-            if (restart) {
-                $("#attached").html(phpfile).show();
+// function attachNetid(netid, netid) {
+//     $.ajax({
+//         type: "POST",
+//         url: "netid.php",
+//         data: {
+//             netid: netid,
+//             netid: netid
+//         },
+//         success: function(phpfile) {
+//             restart = phpfile.includes("successfully");
+//             if (restart) {
+//                 $("#attached").html(phpfile).show();
 
-            } else {
-                $("#attached").html(phpfile).show().delay(2000).fadeOut(function() {
+//             } else {
+//                 $("#attached").html(phpfile).show().delay(2000).fadeOut(function() {
 
-                });
-            }
-        }
-    });
-}
+//                 });
+//             }
+//         }
+//     });
+// }
 
 function searchBoxSize(largeWindow) {
     if ($(window).width() > largeWindow) {

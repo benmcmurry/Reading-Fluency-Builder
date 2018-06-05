@@ -13,7 +13,7 @@
       $results = $query->get_result();
 
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
 
       $results->free(); //free results
@@ -31,7 +31,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
     ?>
@@ -60,7 +60,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
    ?>
@@ -88,7 +88,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
    ?>
@@ -102,7 +102,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
    ?>
@@ -116,7 +116,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
     ?>
@@ -130,7 +130,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
     ?>
@@ -144,7 +144,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
     ?>
@@ -172,7 +172,7 @@
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
-          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+          echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
       }
       $results->free(); //free results
     ?>
@@ -200,10 +200,10 @@
                  $list = $list."<li class=".$results_row['share_status']."><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
                  $i++;
              } else {
-                 if ($results_row['share_status'] == "private" && $_SESSION['cas'] !="") {
+                 
                      $list = $list."<li class=".$results_row['share_status']."><a class='reading_menu_options' href='index.php?passage_id=".$results_row['passage_id']."&page=reading'>".$results_row['title']."<br /> <span class='lexile'>Lexile: ".$results_row['lexile']."L </span></a></li>";
                      $i++;
-                 }
+                 
              }
          }
          $results->free(); //free results
@@ -216,17 +216,11 @@
 <?php
 
 
-function checkStatus($status, $passage_id, $title, $lexile, $cas, $list, $i)
+function checkStatus($status, $passage_id, $title, $lexile, $list, $i)
 {
-    if ($status == "public") {
-        $list = $list."<li class='$status'><a class='reading_menu_options' href='index.php?passage_id=$passage_id&page=reading'>$title<br /> <span class='lexile'>Lexile: ".$lexile."L </span></a></li>";
-        $i++;
-    } else {
-        if ($status == "private" && $cas !="") {
-            $list = $list."<li class='$status'><a class='reading_menu_options' href='index.php?passage_id=$passage_id&page=reading'>$title<br /> <span class='lexile'>Lexile: ".$lexile."L </span></a></li>";
-            $i++;
-        }
-    }
+    
+    $list = $list."<li class='$status'><a class='reading_menu_options' href='index.php?passage_id=$passage_id&page=reading'>$title<br /> <span class='lexile'>Lexile: ".$lexile."L </span></a></li>";
+    $i++;
     return $list;
 }
 
