@@ -30,7 +30,8 @@ if (isset($passage_id)) {
 
 if ($auth) {
   $netid = phpCAS::getUser();
-  $id = "<span id='user'>$netid</span> | <a href='?logout='>Logout</a>";
+  $name = phpCAS::getAttributes()['preferredFirstName'];
+  $id = "<span id='user'>$netid | </span><a id='logout' href='?logout='>Logout</a>";
 } else {    
   phpCAS::forceAuthentication();
   $id = '';
@@ -50,17 +51,17 @@ $result = $search_for_id->get_result();
 
 if (mysqli_num_rows($result)==0) {
 
-  $add_user = $sr_db->prepare("Insert into Users (netid, full_name, email)
-  values (?, ?, ?)");
-  $add_user->bind_param("sss", $netid, $_SESSION['name'], $_SESSION['email']);
+  $add_user = $sr_db->prepare("Insert into Users (netid, full_name, given_name, family_name, email)
+  values (?, ?, ?, ?, ?)");
+  $add_user->bind_param("sssss", $netid, $_SESSION['name'],$_SESSION['preferredFirstName'],$_SESSION['surname'],  $_SESSION['email']);
   $add_user->execute();
   $result = $add_user->get_result();
   $user_id = $sr_db->insert_id;
 
 
 } else {
-  $update_user = $sr_db->prepare("UPDATE Users SET full_name = ?, email = ? WHERE netid = ? ");
-  $update_user->bind_param("sss", $_SESSION['name'], $_SESSION['emailAddress'], $netid);
+  $update_user = $sr_db->prepare("UPDATE Users SET full_name = ?, email = ?, given_name = ?, family_name = ? WHERE netid = ? ");
+  $update_user->bind_param("sssss", $_SESSION['name'], $_SESSION['emailAddress'],$_SESSION['preferredFirstName'],$_SESSION['surname'], $netid);
   $update_user->execute();
   $update_user_result = $update_user->get_result();
 }

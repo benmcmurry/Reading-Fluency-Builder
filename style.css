@@ -58,10 +58,26 @@ p {
 #user-btn {
     padding: 0em 0em;
     position: absolute;
-    right: 0;
+    right: 1em;
+    top: 0;
     text-align: right;
-    /*width: 2em;*/
     z-index: 100;
+}
+
+#user-btn span#user {
+    cursor: pointer;
+    background-color: #16357a;
+    color: white;
+    padding: 6px 0px 5px 15px;
+    border-bottom-left-radius: 5px;
+}
+
+#user-btn a#logout {
+    background-color: #16357a;
+    text-decoration: none;
+    color: white;
+    padding: 6px 15px 5px 0px;
+    border-bottom-right-radius: 5px;
 }
 
 #user-btn img {
@@ -69,10 +85,6 @@ p {
     height: 1.8em;
     border-radius: .9em;
     margin: .15em;
-}
-
-#user-btn img#user-image {
-    float: right;
 }
 
 #user-btn img.icon {
@@ -116,7 +128,7 @@ p {
     max-width: 1024px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 2em;
+    margin-bottom: 2.5em;
 }
 
 #content {
@@ -358,7 +370,7 @@ a.nav-btn:hover {
 
 .btn-bar {
     position: fixed;
-    bottom: 1.4em;
+    bottom: 2em;
     left: 0em;
     right: 0em;
     text-align: center;
@@ -448,7 +460,7 @@ p.vocab {
     background-color: White;
     /*border-bottom: rgb(62, 149, 240) solid .3em;*/
     border-top: gray solid 1px;
-    line-height: 2em;
+    line-height: 2.5em;
     font-size: .8em;
     text-align: center;
     font-family: "Open Sans", sans-serif;
@@ -528,14 +540,19 @@ a.close_popup {
 .response {
     position: fixed;
     text-align: center;
+    display: inline-block;
+    vertical-align: middle;
     display: none;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
     background-color: white;
-    padding: 1em;
+    border: .5em black solid;
+    padding: .5em;
     z-index: 200;
     color: black;
 }
-
-.response h2 {}
 
 
 /*Editor Styles*/
@@ -568,7 +585,7 @@ div.passage-details {
         padding-left: .5em;
     }
     .btn-bar {
-        bottom: 2em;
+        bottom: 2.5em;
     }
     #footer {
         font-size: 1em;
