@@ -37,7 +37,9 @@ if ($auth) {
 }
 $_SESSION['netid'] = $netid;
 $_SESSION['name'] = phpCAS::getAttributes()['name'];
-$_SESSION['email'] = phpCAS::getAttributes()['email'];
+$_SESSION['emailAddress'] = phpCAS::getAttributes()['emailAddress'];
+$_SESSION['preferredFirstName'] = phpCAS::getAttributes()['preferredFirstName'];
+$_SESSION['surname'] = phpCAS::getAttributes()['surname'];
 
 include_once('../../connectFiles/connect_sr.php');
 
@@ -58,7 +60,7 @@ if (mysqli_num_rows($result)==0) {
 
 } else {
   $update_user = $sr_db->prepare("UPDATE Users SET full_name = ?, email = ? WHERE netid = ? ");
-  $update_user->bind_param("sss", $_SESSION['name'], $_SESSION['email'], $netid);
+  $update_user->bind_param("sss", $_SESSION['name'], $_SESSION['emailAddress'], $netid);
   $update_user->execute();
   $update_user_result = $update_user->get_result();
 }
@@ -71,18 +73,4 @@ $result = $get_user_query->get_result();
 $user = $result->fetch_assoc();
 $_SESSION['editor'] = $user['editor'];
 
-?>
-
-<?php
-foreach (phpCAS::getAttributes() as $key => $value) {
-if (is_array($value)) {
-echo '<li>', $key, ':<ol>';
-foreach($value as $item) {
-      echo '<li><strong>', $item, '</strong></li>';
-    }
-echo '</ol></li>';
-} else {
-    echo '<li>', $key, ': <strong>', $value, '</strong></li>';
-  }
-}
 ?>
