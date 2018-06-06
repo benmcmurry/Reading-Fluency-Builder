@@ -31,7 +31,7 @@ if (isset($passage_id)) {
 if ($auth) {
   $netid = phpCAS::getUser();
   $name = phpCAS::getAttributes()['preferredFirstName'];
-  $id = "<span id='user'>$netid | </span><a id='logout' href='?logout='>Logout</a>";
+  $id = "<span id='user'>$name | </span><a id='logout' href='?logout='>Logout</a>";
 } else {    
   phpCAS::forceAuthentication();
   $id = '';

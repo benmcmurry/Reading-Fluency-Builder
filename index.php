@@ -135,7 +135,7 @@ if($_SESSION['editor'] = "1"){$editor = true;} else {$editor = false;}
       // echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
       <div id="drop-down">
       <?php
-echo "Welcome, ".$_SESSION['name']."!";
+echo "Welcome, ".$_SESSION['preferredFirstName']."!";
 
     ?>
       
