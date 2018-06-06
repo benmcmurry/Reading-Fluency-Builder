@@ -72,3 +72,17 @@ $user = $result->fetch_assoc();
 $_SESSION['editor'] = $user['editor'];
 
 ?>
+
+<?php
+foreach (phpCAS::getAttributes() as $key => $value) {
+if (is_array($value)) {
+echo '<li>', $key, ':<ol>';
+foreach($value as $item) {
+      echo '<li><strong>', $item, '</strong></li>';
+    }
+echo '</ol></li>';
+} else {
+    echo '<li>', $key, ': <strong>', $value, '</strong></li>';
+  }
+}
+?>
