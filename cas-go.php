@@ -42,36 +42,37 @@ $_SESSION['emailAddress'] = phpCAS::getAttributes()['emailAddress'];
 $_SESSION['preferredFirstName'] = phpCAS::getAttributes()['preferredFirstName'];
 $_SESSION['surname'] = phpCAS::getAttributes()['surname'];
 
-include_once('../../connectFiles/connect_sr.php');
+include_once('../../connectFiles/connect_fb.php');
 
-$search_for_id = $sr_db->prepare("Select * from Users where netid= ? ");
+$search_for_id = $fb_db->prepare("Select * from Users where netid= ? ");
 $search_for_id->bind_param("s", $netid);
 $search_for_id->execute();
 $result = $search_for_id->get_result();
 
 if (mysqli_num_rows($result)==0) {
 
-  $add_user = $sr_db->prepare("Insert into Users (netid, full_name, given_name, family_name, email)
+  $add_user = $fb_db->prepare("Insert into Users (netid, full_name, given_name, family_name, email)
   values (?, ?, ?, ?, ?)");
   $add_user->bind_param("sssss", $netid, $_SESSION['name'],$_SESSION['preferredFirstName'],$_SESSION['surname'],  $_SESSION['email']);
   $add_user->execute();
   $result = $add_user->get_result();
-  $user_id = $sr_db->insert_id;
+  $user_id = $fb_db->insert_id;
 
 
 } else {
-  $update_user = $sr_db->prepare("UPDATE Users SET full_name = ?, email = ?, given_name = ?, family_name = ? WHERE netid = ? ");
+  $update_user = $fb_db->prepare("UPDATE Users SET full_name = ?, email = ?, given_name = ?, family_name = ? WHERE netid = ? ");
   $update_user->bind_param("sssss", $_SESSION['name'], $_SESSION['emailAddress'],$_SESSION['preferredFirstName'],$_SESSION['surname'], $netid);
   $update_user->execute();
   $update_user_result = $update_user->get_result();
 }
 
-$get_user_query = $sr_db->prepare("Select editor from Users where netid = ? ");
-$get_user_query->bind_param("s", $google_id);
-$get_user_query->execute();
-$result = $get_user_query->get_result();
+// This was used for google login which isn't available anymore.
+// $get_user_query = $fb_db->prepare("Select editor from Users where netid = ? ");
+// $get_user_query->bind_param("s", $google_id);
+// $get_user_query->execute();
+// $result = $get_user_query->get_result();
 
-$user = $result->fetch_assoc();
-$_SESSION['editor'] = $user['editor'];
+// $user = $result->fetch_assoc();
+// if($_SESSION['editor']) {$_SESSION['editor'] = $user['editor'];}
 
 ?>

@@ -186,17 +186,19 @@ $(document).ready(function() {
                 link: "link"
             }
         },
+        
         list: {
-            maxNumberOfElements: 10,
             match: {
                 enabled: true
             },
+            maxNumberOfElements: 10,
             onKeyEnterEvent: function() {
                 var value = $("#search").getSelectedItemData().link;
                 window.location = value;
 
             }
-        }
+        },
+        theme: 'plate'
     });
 
 }); //end document ready

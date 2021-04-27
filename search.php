@@ -3,7 +3,7 @@ include_once('../../connectFiles/connect_sr.php');
 if(isset($_GET['phrase'])) {
 $phrase = $_GET['phrase'];
 
-$passage_query = $sr_db->prepare("SELECT * FROM Passages WHERE title LIKE '%{$phrase}%'");
+$passage_query = $fb_db->prepare("SELECT * FROM Passages WHERE title LIKE '%{$phrase}%'");
 // $passage_query->bind_param("s", $phrase);
 $passage_query->execute();
 $passage_results = $passage_query->get_result();

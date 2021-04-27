@@ -8,7 +8,7 @@
 
     <?php
     $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where date_created >= '2017-07-31'");
+      $query = $fb_db->prepare("Select * from Passages where date_created >= '2017-07-31'");
       $query->execute();
       $results = $query->get_result();
 
@@ -27,7 +27,7 @@
 
     <?php
     $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile <'101' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile <'101' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -42,7 +42,7 @@
 
    <?php
    $list="";$i=0;
-     $query = $sr_db->prepare("Select * from Passages where lexile <'201' AND lexile > '99' order by lexile ASC");
+     $query = $fb_db->prepare("Select * from Passages where lexile <'201' AND lexile > '99' order by lexile ASC");
      $query->execute();
      $results = $query->get_result();
      while ($results_row = $results->fetch_assoc()) {
@@ -56,7 +56,7 @@
 
     <?php
       $list=""; $i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile <'301' AND lexile > '199' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile <'301' AND lexile > '199' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -70,7 +70,7 @@
 
    <?php
    $list="";$i=0;
-     $query = $sr_db->prepare("Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC");
+     $query = $fb_db->prepare("Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC");
      $query->execute();
      $results = $query->get_result();
      while ($results_row = $results->fetch_assoc()) {
@@ -84,7 +84,7 @@
 
     <?php
     $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile <'401' AND lexile > '299' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -98,7 +98,7 @@
 
     <?php
     $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile <'601' AND lexile > '499' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile <'601' AND lexile > '499' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -112,7 +112,7 @@
 
     <?php
       $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile <'701' AND lexile > '599' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile <'701' AND lexile > '599' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -126,7 +126,7 @@
 
     <?php
     $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile <'801' AND lexile > '699' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile <'801' AND lexile > '699' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -140,7 +140,7 @@
 
     <?php
     $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile <'901' AND lexile > '799' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile <'901' AND lexile > '799' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -154,7 +154,7 @@
 
    <?php
    $list="";$i=0;
-     $query = $sr_db->prepare("Select * from Passages where lexile <'1001' AND lexile > '899' order by lexile ASC");
+     $query = $fb_db->prepare("Select * from Passages where lexile <'1001' AND lexile > '899' order by lexile ASC");
      $query->execute();
      $results = $query->get_result();
      while ($results_row = $results->fetch_assoc()) {
@@ -168,7 +168,7 @@
 
     <?php
     $list="";$i=0;
-      $query = $sr_db->prepare("Select * from Passages where lexile > '999' order by lexile ASC");
+      $query = $fb_db->prepare("Select * from Passages where lexile > '999' order by lexile ASC");
       $query->execute();
       $results = $query->get_result();
       while ($results_row = $results->fetch_assoc()) {
@@ -183,7 +183,7 @@
   <h3>Library > </h3>
   <ul class='sublist'>
 <?php
- $libraries = $sr_db->prepare("Select Distinct library_id from Passages");
+ $libraries = $fb_db->prepare("Select Distinct library_id from Passages");
  $libraries->execute();
  $libraries_results = $libraries->get_result();
  while ($libraries_results_rows = $libraries_results->fetch_assoc()) {
@@ -192,7 +192,7 @@
  <ul>";
          $i=0;
 
-         $query = $sr_db->prepare("Select * from Passages where library_id = '{$libraries_results_rows['library_id']}'order by title");
+         $query = $fb_db->prepare("Select * from Passages where library_id = '{$libraries_results_rows['library_id']}'order by title");
          $query->execute();
          $results = $query->get_result();
          while ($results_row = $results->fetch_assoc()) {

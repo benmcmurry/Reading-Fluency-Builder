@@ -2,7 +2,7 @@
 session_start();
 include_once('../../connectFiles/connect_sr.php');
 
-$email_query = $sr_db->prepare("SELECT * from Scores INNER JOIN Users on Scores.netid=Users.netid INNER JOIN Passages on Scores.passage_id=Passages.passage_id where Scores.netid=? and Scores.passage_id=?");
+$email_query = $fb_db->prepare("SELECT * from Scores INNER JOIN Users on Scores.netid=Users.netid INNER JOIN Passages on Scores.passage_id=Passages.passage_id where Scores.netid=? and Scores.passage_id=?");
 $email_query->bind_param("ss", $_POST['netid'], $_POST['passage_id']);
 $email_query->execute();
 $result = $email_query->get_result();

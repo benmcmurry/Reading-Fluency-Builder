@@ -18,7 +18,7 @@ if(isset($_GET['passage_id'])) {
   $passage=TRUE;
   $_SESSION['passage_id'] = $_GET['passage_id'];
   $current_passage = $_GET['passage_id'];
-  $passage_query = $sr_db->prepare("Select * from Passages where passage_id=?");
+  $passage_query = $fb_db->prepare("Select * from Passages where passage_id=?");
   $passage_query->bind_param("s", $current_passage);
   $passage_query->execute();
   $passage_results = $passage_query->get_result();
@@ -34,21 +34,21 @@ if(isset($_GET['passage_id'])) {
   $passage_results->free(); //free results
 $passage_id = $_GET['passage_id'];
 
-$scores_query = $sr_db->prepare("Select * from Scores where netid=? and passage_id=?");
+$scores_query = $fb_db->prepare("Select * from Scores where netid=? and passage_id=?");
 $scores_query->bind_param("ss", $_SESSION['netid'], $passage_id);
 $scores_query->execute();
 $scores_results = $scores_query->get_result();
 if (!$scores_results->fetch_assoc())
   {
     $scores_results->free();
-    $scores_query = $sr_db->prepare("Insert into Scores (netid, passage_id, date_modified) values (?, ?, now())");
+    $scores_query = $fb_db->prepare("Insert into Scores (netid, passage_id, date_modified) values (?, ?, now())");
     $scores_query->bind_param("ss", $_SESSION['netid'], $_SESSION['passage_id']);
     $scores_query->execute();
     $scores_results = $scores_query->get_result();
   } else {
     $scores_results->free();
     }
-    $scores_query = $sr_db->prepare("Select * from Scores where netid=? and passage_id=?");
+    $scores_query = $fb_db->prepare("Select * from Scores where netid=? and passage_id=?");
     $scores_query->bind_param("ss", $_SESSION['netid'], $_SESSION['passage_id']);
     $scores_query->execute();
     $scores_results = $scores_query->get_result();
@@ -235,7 +235,7 @@ echo "Welcome, ".$_SESSION['preferredFirstName']."!";
         <!-- quiz page -->
         <div class="page" id="quiz">
           <?php
-            $query_quiz = $sr_db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
+            $query_quiz = $fb_db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
             $query_quiz->bind_param("s", $passage_id);
             $query_quiz->execute();
             $quiz_results = $query_quiz->get_result();
@@ -277,7 +277,7 @@ echo "Welcome, ".$_SESSION['preferredFirstName']."!";
         <div class="page" id="vocab">
           <?php
           if($vocabulary == ""){
-            $query_vocab = $sr_db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
+            $query_vocab = $fb_db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
             $query_vocab->bind_param("s", $passage_id);
             $query_vocab->execute();
             $vocab_results = $query_vocab->get_result();
