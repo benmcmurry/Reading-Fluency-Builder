@@ -186,7 +186,7 @@ $(document).ready(function() {
                 link: "link"
             }
         },
-        
+        theme: 'plate',
         list: {
             match: {
                 enabled: true
@@ -197,8 +197,7 @@ $(document).ready(function() {
                 window.location = value;
 
             }
-        },
-        theme: 'plate'
+        }
     });
 
 }); //end document ready

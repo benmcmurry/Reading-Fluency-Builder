@@ -1,5 +1,5 @@
 <?php
-include_once('../../connectFiles/connect_sr.php');
+include_once('../../connectFiles/connect_fb.php');
 if(isset($_GET['phrase'])) {
 $phrase = $_GET['phrase'];
 
