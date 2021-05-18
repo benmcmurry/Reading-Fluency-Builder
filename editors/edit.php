@@ -1,17 +1,17 @@
 <?php
 session_start();
-if($_SESSION['logged_in'] == 'yes' && $_SESSION['editor'] == "1" && isset($_GET['passage_id'])){
+$passage_id = $_GET['passage_id'];
+if($_SESSION['editor'] == "1" && isset($_GET['passage_id'])){
   // echo "logged in";
 } else {
   $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=../start.php?current_url=$current_url'>";
+  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=../index.php?passage_id=$passage_id'>";
 
 }
-$google_id = $_SESSION['google_id'];
-$passage_id = $_GET['passage_id'];
-include_once('../../../connectFiles/connect_sr.php');
+include_once("cas-go.php");
+include_once('../../../connectFiles/connect_fb.php');
 
-$query = $sr_db->prepare("Select * from Passages where passage_id= ? ");
+$query = $fb_db->prepare("Select * from Passages where passage_id= ? ");
 $query->bind_param("s", $passage_id);
 $query->execute();
 $passage = $query->get_result();
@@ -43,11 +43,11 @@ while($passage_row = $passage->fetch_assoc()){
 <link rel="stylesheet" href="style.css">
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
+<script lang="javascript">
 var nocontent=false;
 page=false;
 passage_id = <?php echo $passage_id; ?>;
-google_id = "<?php echo $google_id; ?>";
+netid = "<?php echo $_SESSION['netid']; ?>";
 </script>
 <!-- <script src="../js/js.js">
 </script> -->
@@ -57,12 +57,13 @@ google_id = "<?php echo $google_id; ?>";
 </head>
 <body>
   <div id="header">
-    <div id="user-btn">
+      <div id="user-btn">
       <?php
-      echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
+      echo $id;
+      ?>
       <div id="drop-down">
       <?php
-echo "Welcome, ".$_SESSION['given_name']."!";
+echo "Welcome, ".$_SESSION['preferredFirstName']."!";
 
        echo "<a href='../index.php?passage_id=$passage_id'><img class='icon' src='../images/return.png' />Return<a>";
        ?>
@@ -133,7 +134,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <div id='vocabulary' class='editable-passage' contenteditable='true'>
     <?php
       if ($vocabulary == ""){
-        $query_vocab = $sr_db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
+        $query_vocab = $fb_db->prepare("Select * from Vocabulary where passage_id= ? order by word asc");
         $query_vocab->bind_param("s", $passage_id);
         $query_vocab->execute();
         $vocab_results = $query_vocab->get_result();
@@ -157,7 +158,7 @@ echo "Welcome, ".$_SESSION['given_name']."!";
   <ul id="questions">
 
   <?php
-    $query_quiz = $sr_db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
+    $query_quiz = $fb_db->prepare("Select * from Questions where passage_id= ? order by question_order asc");
     $query_quiz->bind_param("s", $passage_id);
     $query_quiz->execute();
     $quiz_result = $query_quiz->get_result();

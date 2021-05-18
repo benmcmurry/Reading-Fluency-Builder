@@ -1,8 +1,8 @@
 <?php
 // Load the settings from the central config file
-require_once 'config.php';
+require_once '../config.php';
 // Load the CAS lib
-require_once 'CAS.php';
+require_once '../CAS.php';
 // Enable debugging
 phpCAS::setDebug();
 // Enable verbose error messages. Disable in production!
@@ -42,7 +42,7 @@ $_SESSION['emailAddress'] = phpCAS::getAttributes()['emailAddress'];
 $_SESSION['preferredFirstName'] = phpCAS::getAttributes()['preferredFirstName'];
 $_SESSION['surname'] = phpCAS::getAttributes()['surname'];
 
-include_once('../../connectFiles/connect_fb.php');
+include_once('../../../connectFiles/connect_fb.php');
 
 $search_for_id = $fb_db->prepare("Select * from Users where netid= ? ");
 $search_for_id->bind_param("s", $netid);

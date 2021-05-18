@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once('../../connectFiles/connect_sr.php');
+include_once('../../connectFiles/connect_fb.php');
 
 if(isset($_POST['time'])){
   echo "Time: ".$_POST['time']." , WPM: ".$_POST['wpm'];

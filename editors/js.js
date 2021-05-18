@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $("#user-btn img").on("click", function() {
+    $("#user-btn").on("click", function() {
         console.log("clicked");
         $("#drop-down").slideToggle();
         $("#invisible-background").toggle();
@@ -111,7 +111,7 @@ $(document).ready(function() {
                 distractor_1: distractor_1,
                 distractor_2: distractor_2,
                 distractor_3: distractor_3,
-                modified_by: google_id
+                modified_by: netid
             },
             success: function(phpfile) {
                 $("#save_dialog").html(phpfile).fadeIn();
@@ -167,7 +167,7 @@ function save_passage() {
             flesch_kincaid_level: $("#flesch_kincaid_level").text(),
             library_id: $("#library_id").text(),
             vocabulary: $("#vocabulary").html(),
-            modified_by: google_id
+            modified_by: netid
         },
         success: function(phpfile) {
             console.log(phpfile);

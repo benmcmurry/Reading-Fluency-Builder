@@ -3,14 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
-// if($_SESSION['logged_in'] == 'yes'){
-//   //  echo "logged in";
-//   // echo $_SESSION['cas'];
-// } else {
-//   //echo "not logged in";
-//   echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=start.php'>";
-//   return;
-// }
 include_once("cas-go.php");
 
 include_once('../../connectFiles/connect_fb.php');
@@ -135,7 +127,7 @@ if($_SESSION['editor'] = "1"){$editor = true;} else {$editor = false;}
     <div id="user-btn">
       <?php
       echo $id;
-      // echo "<img id='user-image' src='".$_SESSION['image_url']."' />";?>
+      ?>
       <div id="drop-down">
       <?php
 echo "Welcome, ".$_SESSION['preferredFirstName']."!";

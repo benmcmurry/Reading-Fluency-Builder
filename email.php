@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once('../../connectFiles/connect_sr.php');
+include_once('../../connectFiles/connect_fb.php');
 
 $email_query = $fb_db->prepare("SELECT * from Scores INNER JOIN Users on Scores.netid=Users.netid INNER JOIN Passages on Scores.passage_id=Passages.passage_id where Scores.netid=? and Scores.passage_id=?");
 $email_query->bind_param("ss", $_POST['netid'], $_POST['passage_id']);
