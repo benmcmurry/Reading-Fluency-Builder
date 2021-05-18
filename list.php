@@ -158,7 +158,7 @@
      $query->execute();
      $results = $query->get_result();
      while ($results_row = $results->fetch_assoc()) {
-         echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $_SESSION['cas'], $list, $i);
+         echo checkStatus($results_row['share_status'], $results_row['passage_id'], $results_row['title'], $results_row['lexile'], $list, $i);
      }
      $results->free(); //free results
    ?>
