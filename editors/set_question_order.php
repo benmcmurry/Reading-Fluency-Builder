@@ -1,26 +1,21 @@
 <?php
 session_start();
-if($_SESSION['editor'] == "1"){
-  // echo "logged in";
-} else {
-  $current_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-  echo  "<meta HTTP-EQUIV='REFRESH' content='0; url=../index.php?passage_id=$passage_id'>";
-
+if (!isset($_SESSION['editor']) || (int) $_SESSION['editor'] !== 1) {
+    http_response_code(403);
+    echo 'Unauthorized';
+    exit;
 }
+
 include_once('../../../connectFiles/connect_fb.php');
+$orders = isset($_POST['orders']) && is_array($_POST['orders']) ? $_POST['orders'] : [];
 
-$i=1;
-foreach ($_POST as $question_id => &$value) {
- 
-    $update_order_query = $fb_db->prepare("Update Questions set question_order = ? where question_id = ?");
-    $update_order_query->bind_param("ss", $i, $question_id);
-    $update_order_query->execute();
-    $result = $update_order_query->get_result();
-
-    $i++;
-
+$position = 1;
+foreach ($orders as $question_id) {
+    $q_id = (int) $question_id;
+    $update_order = $fb_db->prepare('UPDATE Questions SET question_order = ? WHERE question_id = ?');
+    $update_order->bind_param('ii', $position, $q_id);
+    $update_order->execute();
+    $position++;
 }
-echo "Question order saved.";
 
-
- ?>
+echo 'Question order saved.';

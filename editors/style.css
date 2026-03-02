@@ -1,236 +1,103 @@
-body {
-  background-color: rgb(62, 149, 240);
-}
-h1 {
-  font-family: "Open Sans", sans-serif;
-
+.editor-topbar {
+    background: linear-gradient(180deg, #eff6ff 0%, #e0ecfb 100%);
 }
 
-#header {
-
+.editor-layout {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
 }
 
-#header .editable-passage {
-  padding: 0em .5em;
-}
-#main {
-  padding: 1em;
-}
-
-#edit-menu {
-  float: left;
-  width: 9em;
-  background-color: rgb(246, 248, 250);
-  position: fixed;
-  Padding: .5em;
-  /*border: 1px solid black;
-  border-right: 0px;*/
-
-}
-.navigator {
-  display:block;
-  font-family: "Open Sans", sans-serif;
-}
-#inside-wrapper {
-  margin-left: 10em;
+.editor-menu {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
 }
 
-.editable-chunk {
-
-}
-.label {
-
-  font-size: 1.3em;
-  font-family: "Open Sans", sans-serif;
-  margin-top: .3em;
-  /*font-variant: small-caps;*/
-
+.editor-content {
+    min-width: 0;
 }
 
-.indent {
-  margin-left:2em;
+.hint {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
 }
 
-.editable, .editable-passage {
-
-  font-family: "Martel Sans", sans-serif;
-  background-color: white;
-  border: dotted grey 2px;
-  padding: .5em;
-  /*cursor:cell;*/
-}
-#header .editable-passage {
-  display: inline-block;
-  line-height: 1.3em;
-  padding-top:.5em;
-}
 .editable-box {
-padding: 1em;
-  margin-bottom: 1.5em;
-  background-color: rgb(245,245,245);
-  box-shadow: 2px 2px 15px rgba(0,0,0,0.5);
-
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
-.ui-state-highlight {
-  background-color: rgb(230,230,230);
-}
-ul#questions {
-  list-style-type: none; margin: 0; padding: 0;
-
-}
-.handle {
-  cursor:move;
-
+.label {
+    display: block;
+    margin-top: 0.8rem;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
 }
 
-.handle img {
-  width: 1.5em;
-  float: right;
+.editable,
+.editable-passage {
+    border: 1px dashed #95adc4;
+    border-radius: 0.45rem;
+    background: #f9fcff;
+    min-height: 2.25rem;
+    padding: 0.55rem;
 }
-.delete img{
-  width: 1.5em;
-  float: right;
-  cursor: pointer;
+
+.questions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
+
 .question-box {
-  list-style-type: none;
-  padding: 1em;
-  border: 3px solid rgb(62, 149, 240);
-background-color: rgb(245,245,245);
-/*cursor:move;*/
+    border: 1px solid #bfd3e6;
+    border-radius: 0.6rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    background: #fcfeff;
 }
-.quiz-item {
-  clear: both;
+
+.question-actions {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
 }
+
+.button-lite {
+    border: 1px solid var(--border);
+    border-radius: 0.4rem;
+    background: #f5f8fb;
+    padding: 0.35rem 0.55rem;
+    cursor: pointer;
+}
+
+.button-lite.delete {
+    color: #b91c1c;
+    border-color: #ef4444;
+    background: #fff5f5;
+}
+
 #save_dialog {
-  position: fixed;
-  bottom: 0px;
-  right: 0px;
-  min-width:17em;
-  background-color: yellow;
-  padding: 1em;
-  display: none;
-  text-align: center;
-  line-height: 1em;
-  font-size:1em;
-  font-family: "Open Sans", sans-serif;
-}
-.button {
-  display: block;
-  margin: .5em 0em;
-  color: white;
-  background-color: rgb(62, 149, 240);
-  box-shadow: 1px 1px 10px rgba(0,0,0,0.5);
-  cursor: pointer;
-  font-size: 1em;
-  line-height:1.5em;
-  font-family: "Open Sans", san-serif;
-  padding: 0em .5em;
-  border-radius: 1px;
-  position: relative;
-  top: .3em;
-  text-align: center;
-}
-.button:hover {
-  background-color:white;
-  color: rgb(62, 149, 240);
-
-}
-/*#save {
-
-
-}
-#save:hover {
-  color:white;
-  background-color: rgb(240, 30, 62);
+    margin-top: 0.75rem;
+    min-height: 1.3rem;
 }
 
-#new_question {
+@media (min-width: 62rem) {
+    .editor-layout {
+        grid-template-columns: 13rem minmax(0, 1fr);
+        align-items: start;
+    }
 
-}*/
-@media ( min-width: 640px) {
-
+    .editor-menu {
+        position: sticky;
+        top: 4.5rem;
+    }
 }
-/* #header #menu-btn {
-  float: left;
-}
-
-#menu-btn a {
-  float: left;
-  display: inline block;
-  padding: 0px;
-  width: 1.8em;
-  margin: .1em;
-  border-radius: 5px;
-}
-
-#menu-btn a  {
-  background-color: #efefef;
-}
-
-#user-btn {
-  padding: 0em 0em;
-  position: absolute;
-  right: 1em;
-  top: 0;
-  text-align: right;
-  z-index: 100;
-}
-
-#user-btn span#user {
-  cursor: pointer;
-  background-color: #16357a;
-  color: white;
-  padding: 6px 0px 5px 15px;
-  border-bottom-left-radius: 5px;
-}
-
-#user-btn a#logout {
-  background-color: #16357a;
-  text-decoration: none;
-  color: white;
-  padding: 6px 15px 5px 0px;
-  border-bottom-right-radius: 5px;
-}
-
-#user-btn img {
-  width: 1.8em;
-  height: 1.8em;
-  border-radius: .9em;
-  margin: .15em;
-}
-
-#user-btn img.icon {
-  float: left;
-  margin-right: 1em;
-}
-
-#user-btn #drop-down {
-  display: none;
-  clear: both;
-  text-align: left;
-  padding: .3em;
-  margin: 0em;
-  background-color: white;
-  outline: 1px solid gray;
-  z-index: 100;
-}
-
-#user-btn #drop-down #stats {
-  font-size: .8em;
-  border-top: 1px grey solid;
-  border-bottom: 1px grey solid;
-}
-
-#user-btn #drop-down a {
-  display: block;
-  font-size: .8em;
-  text-decoration: none;
-  color: rgb(62, 149, 240);
-}
-
-#user-btn #drop-down a:hover {
-  color: white;
-  background-color: rgb(62, 149, 240);
-} */
