@@ -24,17 +24,41 @@ function app_base_path_for_editor(): string
 
 function remove_auth_params(array $params): array
 {
-    unset($params['code'], $params['state'], $params['logout']);
+    unset($params['code'], $params['state'], $params['logout'], $params['auth'], $params['ticket']);
     return $params;
+}
+
+function current_request_path(): string
+{
+    return strtok($_SERVER['REQUEST_URI'] ?? '/editors/edit.php', '?') ?: '/editors/edit.php';
 }
 
 function current_url_without_auth_params(): string
 {
-    $path = strtok($_SERVER['REQUEST_URI'] ?? '/index.php', '?') ?: '/index.php';
+    $path = current_request_path();
     $params = remove_auth_params($_GET);
     $query = http_build_query($params);
 
     return build_base_url() . $path . ($query ? ('?' . $query) : '');
+}
+
+function current_relative_url_with_auth(string $provider): string
+{
+    $params = remove_auth_params($_GET);
+    $params['auth'] = $provider;
+    $query = http_build_query($params);
+
+    return current_request_path() . ($query ? ('?' . $query) : '');
+}
+
+function clear_local_session(): void
+{
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    }
+    session_destroy();
 }
 
 function google_post(string $url, array $fields): ?array
@@ -153,15 +177,67 @@ function claim_is_true($value): bool
     return strtolower((string) $value) === 'true' || (string) $value === '1';
 }
 
-if (isset($_GET['logout'])) {
-    $_SESSION = [];
-    if (ini_get('session.use_cookies')) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    }
-    session_destroy();
+function cas_is_configured(): bool
+{
+    global $cas_host, $cas_port, $cas_context;
 
-    header('Location: ' . current_url_without_auth_params());
+    return isset($cas_host, $cas_port, $cas_context) && $cas_host !== '' && $cas_context !== '';
+}
+
+function cas_init_client(): void
+{
+    global $cas_host, $cas_port, $cas_context;
+
+    require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/CAS.php';
+    phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+    phpCAS::setNoCasServerValidation();
+}
+
+function sync_session_from_cas(): void
+{
+    $netid = (string) phpCAS::getUser();
+    $attrs = phpCAS::getAttributes();
+
+    $email = (string) ($attrs['emailAddress'] ?? $attrs['mail'] ?? '');
+    $name = (string) ($attrs['name'] ?? $attrs['displayName'] ?? $netid);
+    $given = (string) ($attrs['preferredFirstName'] ?? $attrs['given_name'] ?? $attrs['givenName'] ?? $name);
+    $surname = (string) ($attrs['surname'] ?? $attrs['family_name'] ?? $attrs['sn'] ?? '');
+
+    $_SESSION['netid'] = $netid;
+    $_SESSION['name'] = $name;
+    $_SESSION['emailAddress'] = $email;
+    $_SESSION['preferredFirstName'] = $given;
+    $_SESSION['surname'] = $surname;
+    $_SESSION['cas_authenticated'] = 1;
+    $_SESSION['google_authenticated'] = 0;
+    $_SESSION['auth_provider'] = 'cas';
+}
+
+function render_login_choice(bool $cas_enabled, bool $google_enabled): void
+{
+    http_response_code(401);
+    $cas_url = htmlspecialchars(current_relative_url_with_auth('cas'), ENT_QUOTES, 'UTF-8');
+    $google_url = htmlspecialchars(current_relative_url_with_auth('google'), ENT_QUOTES, 'UTF-8');
+
+    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">';
+    echo '<title>Sign in - Fluency Builder Editor</title>';
+    echo '<style>body{font-family:Arial,sans-serif;background:#f6f8fb;margin:0}.wrap{max-width:540px;margin:72px auto;background:#fff;border:1px solid #d9e0ea;border-radius:10px;padding:28px}h1{margin:0 0 8px;color:#002e5d}p{margin:0 0 16px;color:#334155}.btn{display:block;text-decoration:none;padding:12px 16px;border-radius:8px;margin:10px 0;text-align:center;font-weight:600}.btn-cas{background:#002e5d;color:#fff}.btn-google{background:#fff;color:#1f2937;border:1px solid #d1d5db}.disabled{background:#e5e7eb;color:#6b7280;cursor:not-allowed}small{color:#64748b;display:block;margin-top:8px}</style>';
+    echo '</head><body><div class="wrap"><h1>Sign in</h1><p>Choose how you want to continue.</p>';
+
+    if ($cas_enabled) {
+        echo '<a class="btn btn-cas" href="' . $cas_url . '">Continue with CAS</a>';
+    } else {
+        echo '<span class="btn btn-cas disabled">CAS unavailable</span>';
+    }
+
+    if ($google_enabled) {
+        echo '<a class="btn btn-google" href="' . $google_url . '">Continue with Google</a>';
+    } else {
+        echo '<span class="btn btn-google disabled">Google unavailable</span>';
+    }
+
+    echo '<small>If one option is unavailable, check server auth configuration.</small>';
+    echo '</div></body></html>';
     exit;
 }
 
@@ -175,105 +251,152 @@ if ($redirect_uri === '') {
     $redirect_uri = build_base_url() . $app_base . '/index.php';
 }
 
-if ($client_id === '' || $client_secret === '') {
-    http_response_code(500);
-    echo 'Google authentication is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.';
-    exit;
-}
+$google_enabled = $client_id !== '' && $client_secret !== '';
+$cas_enabled = cas_is_configured();
 
-$is_authenticated = isset($_SESSION['google_authenticated']) && $_SESSION['google_authenticated'] === 1;
+if (isset($_GET['logout'])) {
+    $provider = (string) ($_SESSION['auth_provider'] ?? '');
 
-if (!$is_authenticated) {
-    if (isset($_GET['code'])) {
-        $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
-        $stored_state = isset($_SESSION['oauth_state']) ? (string) $_SESSION['oauth_state'] : '';
-
-        if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
-            http_response_code(400);
-            echo 'Invalid OAuth state.';
-            exit;
-        }
-
-        unset($_SESSION['oauth_state']);
-
-        $token = google_post('https://oauth2.googleapis.com/token', [
-            'code' => $_GET['code'],
-            'client_id' => $client_id,
-            'client_secret' => $client_secret,
-            'redirect_uri' => $redirect_uri,
-            'grant_type' => 'authorization_code',
-        ]);
-
-        $id_token = is_array($token) && isset($token['id_token']) ? (string) $token['id_token'] : '';
-        if ($id_token === '') {
-            http_response_code(401);
-            echo 'Unable to complete Google sign-in.';
-            exit;
-        }
-
-        $claims = google_get_json('https://oauth2.googleapis.com/tokeninfo?id_token=' . rawurlencode($id_token));
-        if (!is_array($claims)) {
-            http_response_code(401);
-            echo 'Unable to validate Google sign-in token.';
-            exit;
-        }
-
-        $aud = isset($claims['aud']) ? (string) $claims['aud'] : '';
-        $email = isset($claims['email']) ? (string) $claims['email'] : '';
-        $email_verified = isset($claims['email_verified']) ? $claims['email_verified'] : false;
-        $sub = isset($claims['sub']) ? (string) $claims['sub'] : '';
-
-        if ($aud !== $client_id || $email === '' || $sub === '' || !claim_is_true($email_verified)) {
-            http_response_code(401);
-            echo 'Google sign-in validation failed.';
-            exit;
-        }
-
-        if ($hosted_domain !== '') {
-            $hd = isset($claims['hd']) ? (string) $claims['hd'] : '';
-            if (strtolower($hd) !== strtolower($hosted_domain)) {
-                http_response_code(403);
-                echo 'This account is not allowed.';
-                exit;
-            }
-        }
-
-        $userinfo = google_get_json('https://openidconnect.googleapis.com/v1/userinfo?access_token=' . rawurlencode((string) ($token['access_token'] ?? '')));
-
-        $name = is_array($userinfo) && isset($userinfo['name']) ? (string) $userinfo['name'] : $email;
-        $given_name = is_array($userinfo) && isset($userinfo['given_name']) ? (string) $userinfo['given_name'] : $name;
-        $family_name = is_array($userinfo) && isset($userinfo['family_name']) ? (string) $userinfo['family_name'] : '';
-
-        $_SESSION['netid'] = derive_netid($email, $sub);
-        $_SESSION['name'] = $name;
-        $_SESSION['emailAddress'] = $email;
-        $_SESSION['preferredFirstName'] = $given_name;
-        $_SESSION['surname'] = $family_name;
-        $_SESSION['google_authenticated'] = 1;
-
-        $redirect_after_auth = isset($_SESSION['post_auth_redirect']) ? (string) $_SESSION['post_auth_redirect'] : '';
-        unset($_SESSION['post_auth_redirect']);
-
-        $target = $redirect_after_auth !== '' ? $redirect_after_auth : current_url_without_auth_params();
-        header('Location: ' . $target);
+    if ($provider === 'cas' && $cas_enabled) {
+        cas_init_client();
+        phpCAS::logout();
         exit;
     }
 
-    $state = bin2hex(random_bytes(16));
-    $_SESSION['oauth_state'] = $state;
-    $_SESSION['post_auth_redirect'] = current_url_without_auth_params();
-
-    $auth_query = http_build_query([
-        'client_id' => $client_id,
-        'redirect_uri' => $redirect_uri,
-        'response_type' => 'code',
-        'scope' => 'openid email profile',
-        'state' => $state,
-        'prompt' => 'select_account',
-    ]);
-
-    header('Location: https://accounts.google.com/o/oauth2/v2/auth?' . $auth_query);
+    clear_local_session();
+    header('Location: ' . current_url_without_auth_params());
     exit;
+}
+
+$is_authenticated = isset($_SESSION['netid']) && (
+    (isset($_SESSION['google_authenticated']) && $_SESSION['google_authenticated'] === 1) ||
+    (isset($_SESSION['cas_authenticated']) && $_SESSION['cas_authenticated'] === 1)
+);
+
+$auth_request = isset($_GET['auth']) ? (string) $_GET['auth'] : '';
+$is_google_callback = isset($_GET['code']);
+$is_cas_callback = isset($_GET['ticket']);
+
+if (!$is_authenticated) {
+    if ($auth_request === 'cas' || $is_cas_callback) {
+        if (!$cas_enabled) {
+            http_response_code(500);
+            echo 'CAS authentication is not configured.';
+            exit;
+        }
+
+        cas_init_client();
+        if (!phpCAS::checkAuthentication()) {
+            phpCAS::forceAuthentication();
+        }
+
+        sync_session_from_cas();
+        header('Location: ' . current_url_without_auth_params());
+        exit;
+    }
+
+    if ($auth_request === 'google' || $is_google_callback) {
+        if (!$google_enabled) {
+            http_response_code(500);
+            echo 'Google authentication is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.';
+            exit;
+        }
+
+        if ($is_google_callback) {
+            $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
+            $stored_state = isset($_SESSION['oauth_state']) ? (string) $_SESSION['oauth_state'] : '';
+
+            if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
+                http_response_code(400);
+                echo 'Invalid OAuth state.';
+                exit;
+            }
+
+            unset($_SESSION['oauth_state']);
+
+            $token = google_post('https://oauth2.googleapis.com/token', [
+                'code' => $_GET['code'],
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'redirect_uri' => $redirect_uri,
+                'grant_type' => 'authorization_code',
+            ]);
+
+            $id_token = is_array($token) && isset($token['id_token']) ? (string) $token['id_token'] : '';
+            if ($id_token === '') {
+                http_response_code(401);
+                echo 'Unable to complete Google sign-in.';
+                exit;
+            }
+
+            $claims = google_get_json('https://oauth2.googleapis.com/tokeninfo?id_token=' . rawurlencode($id_token));
+            if (!is_array($claims)) {
+                http_response_code(401);
+                echo 'Unable to validate Google sign-in token.';
+                exit;
+            }
+
+            $aud = isset($claims['aud']) ? (string) $claims['aud'] : '';
+            $email = isset($claims['email']) ? (string) $claims['email'] : '';
+            $email_verified = isset($claims['email_verified']) ? $claims['email_verified'] : false;
+            $sub = isset($claims['sub']) ? (string) $claims['sub'] : '';
+
+            if ($aud !== $client_id || $email === '' || $sub === '' || !claim_is_true($email_verified)) {
+                http_response_code(401);
+                echo 'Google sign-in validation failed.';
+                exit;
+            }
+
+            if ($hosted_domain !== '') {
+                $hd = isset($claims['hd']) ? (string) $claims['hd'] : '';
+                if (strtolower($hd) !== strtolower($hosted_domain)) {
+                    http_response_code(403);
+                    echo 'This account is not allowed.';
+                    exit;
+                }
+            }
+
+            $userinfo = google_get_json('https://openidconnect.googleapis.com/v1/userinfo?access_token=' . rawurlencode((string) ($token['access_token'] ?? '')));
+
+            $name = is_array($userinfo) && isset($userinfo['name']) ? (string) $userinfo['name'] : $email;
+            $given_name = is_array($userinfo) && isset($userinfo['given_name']) ? (string) $userinfo['given_name'] : $name;
+            $family_name = is_array($userinfo) && isset($userinfo['family_name']) ? (string) $userinfo['family_name'] : '';
+
+            $_SESSION['netid'] = derive_netid($email, $sub);
+            $_SESSION['name'] = $name;
+            $_SESSION['emailAddress'] = $email;
+            $_SESSION['preferredFirstName'] = $given_name;
+            $_SESSION['surname'] = $family_name;
+            $_SESSION['google_authenticated'] = 1;
+            $_SESSION['cas_authenticated'] = 0;
+            $_SESSION['auth_provider'] = 'google';
+
+            $redirect_after_auth = isset($_SESSION['post_auth_redirect']) ? (string) $_SESSION['post_auth_redirect'] : '';
+            unset($_SESSION['post_auth_redirect']);
+
+            $target = $redirect_after_auth !== '' ? $redirect_after_auth : current_url_without_auth_params();
+            header('Location: ' . $target);
+            exit;
+        }
+
+        $state = bin2hex(random_bytes(16));
+        $_SESSION['oauth_state'] = $state;
+        $_SESSION['post_auth_redirect'] = current_url_without_auth_params();
+
+        $auth_query = http_build_query([
+            'client_id' => $client_id,
+            'redirect_uri' => $redirect_uri,
+            'response_type' => 'code',
+            'scope' => 'openid email profile',
+            'state' => $state,
+            'prompt' => 'select_account',
+        ]);
+
+        header('Location: https://accounts.google.com/o/oauth2/v2/auth?' . $auth_query);
+        exit;
+    }
+
+    render_login_choice($cas_enabled, $google_enabled);
 }
 
 $netid = (string) ($_SESSION['netid'] ?? '');
