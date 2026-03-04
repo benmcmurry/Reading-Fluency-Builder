@@ -166,7 +166,7 @@ $client_secret = env_value('GOOGLE_CLIENT_SECRET');
 $hosted_domain = env_value('GOOGLE_HOSTED_DOMAIN');
 
 $app_base = app_base_path_for_root();
-$redirect_uri = env_value('GOOGLE_REDIRECT_URI');
+$redirect_uri = env_value('GOOGLE_REDIRECT_URI_FB');
 if ($redirect_uri === '') {
     $redirect_uri = build_base_url() . $app_base . '/index.php';
 }

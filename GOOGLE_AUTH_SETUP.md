@@ -23,7 +23,7 @@ Set these values in your web server/PHP environment:
 
 - `GOOGLE_CLIENT_ID` (required)
 - `GOOGLE_CLIENT_SECRET` (required)
-- `GOOGLE_REDIRECT_URI` (optional, defaults to `.../index.php`)
+- `GOOGLE_REDIRECT_URI_FB` (optional, defaults to `.../index.php`)
 - `GOOGLE_HOSTED_DOMAIN` (optional, e.g. `byu.edu`, to restrict sign-ins)
 
 ## 3) Restart PHP/web server
