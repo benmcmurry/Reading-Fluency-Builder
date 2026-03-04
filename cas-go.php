@@ -122,6 +122,24 @@ function derive_netid(string $email, string $sub): string
     return $sub;
 }
 
+function env_value(string $key): string
+{
+    $value = getenv($key);
+    if ($value !== false && $value !== '') {
+        return (string) $value;
+    }
+
+    if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
+        return (string) $_SERVER[$key];
+    }
+
+    if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+        return (string) $_ENV[$key];
+    }
+
+    return '';
+}
+
 function claim_is_true($value): bool
 {
     if (is_bool($value)) {
@@ -143,12 +161,15 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
-$client_id = getenv('GOOGLE_CLIENT_ID') ?: '';
-$client_secret = getenv('GOOGLE_CLIENT_SECRET') ?: '';
-$hosted_domain = getenv('GOOGLE_HOSTED_DOMAIN') ?: '';
+$client_id = env_value('GOOGLE_CLIENT_ID');
+$client_secret = env_value('GOOGLE_CLIENT_SECRET');
+$hosted_domain = env_value('GOOGLE_HOSTED_DOMAIN');
 
 $app_base = app_base_path_for_root();
-$redirect_uri = getenv('GOOGLE_REDIRECT_URI') ?: (build_base_url() . $app_base . '/index.php');
+$redirect_uri = env_value('GOOGLE_REDIRECT_URI');
+if ($redirect_uri === '') {
+    $redirect_uri = build_base_url() . $app_base . '/index.php';
+}
 
 if ($client_id === '' || $client_secret === '') {
     http_response_code(500);
