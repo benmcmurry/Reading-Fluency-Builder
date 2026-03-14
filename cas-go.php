@@ -164,6 +164,178 @@ function env_value(string $key): string
     return '';
 }
 
+function shared_auth_config(): array
+{
+    static $config = null;
+
+    if ($config !== null) {
+        return $config;
+    }
+
+    $config = [];
+    $path = dirname($_SERVER['DOCUMENT_ROOT']) . '/google_auth_config.php';
+    if (is_readable($path)) {
+        $loaded = include $path;
+        if (is_array($loaded)) {
+            $config = $loaded;
+        }
+    }
+
+    return $config;
+}
+
+function shared_auth_config_value(string $config_key, string $env_key, string $default = ''): string
+{
+    $env = env_value($env_key);
+    if ($env !== '') {
+        return trim($env);
+    }
+
+    $config = shared_auth_config();
+    if (isset($config[$config_key]) && $config[$config_key] !== '') {
+        return trim((string) $config[$config_key]);
+    }
+
+    return $default;
+}
+
+function shared_google_app_id(): string
+{
+    $env = env_value('FLUENCYBUILDER_GOOGLE_APP_ID');
+    if ($env !== '') {
+        return trim($env);
+    }
+
+    $config = shared_auth_config();
+    if (isset($config['shared_auth_apps']) && is_array($config['shared_auth_apps']) && isset($config['shared_auth_apps']['fluencybuilder'])) {
+        return trim((string) $config['shared_auth_apps']['fluencybuilder']);
+    }
+
+    return 'fluencybuilder';
+}
+
+function shared_google_root(): string
+{
+    return shared_auth_config_value('shared_auth_web_root', 'SHARED_AUTH_WEB_ROOT', build_base_url() . '/sharedAuth');
+}
+
+function shared_google_expected_issuer(): string
+{
+    return rtrim(shared_auth_config_value('shared_auth_issuer', 'SHARED_AUTH_ISSUER', shared_google_root()), '/');
+}
+
+function shared_google_public_key_path(): string
+{
+    return shared_auth_config_value(
+        'google_shared_public_key_path',
+        'GOOGLE_SHARED_PUBLIC_KEY_PATH',
+        dirname($_SERVER['DOCUMENT_ROOT']) . '/keys/google_jwt_public.pem'
+    );
+}
+
+function shared_google_enabled(): bool
+{
+    return is_readable(shared_google_public_key_path());
+}
+
+function build_absolute_url(string $relative_or_absolute): string
+{
+    if (preg_match('#^https?://#i', $relative_or_absolute)) {
+        return $relative_or_absolute;
+    }
+
+    return build_base_url() . $relative_or_absolute;
+}
+
+function build_url_with_query(string $url, array $params): string
+{
+    $parts = parse_url($url);
+    $query = [];
+    if (isset($parts['query'])) {
+        parse_str($parts['query'], $query);
+    }
+
+    foreach ($params as $key => $value) {
+        if ($value === null) {
+            unset($query[$key]);
+        } else {
+            $query[$key] = $value;
+        }
+    }
+
+    $scheme = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+    $host = $parts['host'] ?? '';
+    $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+    $user = $parts['user'] ?? '';
+    $pass = isset($parts['pass']) ? ':' . $parts['pass'] : '';
+    $pass = ($user !== '' || $pass !== '') ? $pass . '@' : '';
+    $path = $parts['path'] ?? '';
+    $fragment = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
+    $query_string = $query ? '?' . http_build_query($query) : '';
+
+    return $scheme . $user . $pass . $host . $port . $path . $query_string . $fragment;
+}
+
+function base64url_decode_str(string $input)
+{
+    $remainder = strlen($input) % 4;
+    if ($remainder) {
+        $input .= str_repeat('=', 4 - $remainder);
+    }
+
+    return base64_decode(strtr($input, '-_', '+/'));
+}
+
+function verify_shared_google_token(string $token): ?array
+{
+    $parts = explode('.', $token);
+    if (count($parts) !== 3) {
+        return null;
+    }
+
+    $header_json = base64url_decode_str($parts[0]);
+    $payload_json = base64url_decode_str($parts[1]);
+    $signature = base64url_decode_str($parts[2]);
+    if ($header_json === false || $payload_json === false || $signature === false) {
+        return null;
+    }
+
+    $header = json_decode($header_json, true);
+    $payload = json_decode($payload_json, true);
+    if (!is_array($header) || !is_array($payload) || ($header['alg'] ?? '') !== 'RS256') {
+        return null;
+    }
+
+    $public_key_path = shared_google_public_key_path();
+    if (!is_readable($public_key_path)) {
+        return null;
+    }
+
+    $public_key = openssl_pkey_get_public(file_get_contents($public_key_path));
+    if (!$public_key) {
+        return null;
+    }
+
+    $verified = openssl_verify($parts[0] . '.' . $parts[1], $signature, $public_key, OPENSSL_ALGO_SHA256);
+    if ($verified !== 1) {
+        return null;
+    }
+
+    if (!isset($payload['exp']) || (int) $payload['exp'] < time()) {
+        return null;
+    }
+
+    if (($payload['aud'] ?? '') !== shared_google_app_id()) {
+        return null;
+    }
+
+    if (rtrim((string) ($payload['iss'] ?? ''), '/') !== shared_google_expected_issuer()) {
+        return null;
+    }
+
+    return $payload;
+}
+
 function claim_is_true($value): bool
 {
     if (is_bool($value)) {
@@ -237,17 +409,7 @@ function render_login_choice(bool $cas_enabled, bool $google_enabled): void
     exit;
 }
 
-$client_id = env_value('GOOGLE_CLIENT_ID');
-$client_secret = env_value('GOOGLE_CLIENT_SECRET');
-$hosted_domain = env_value('GOOGLE_HOSTED_DOMAIN');
-
-$app_base = app_base_path_for_root();
-$redirect_uri = env_value('GOOGLE_REDIRECT_URI_FB');
-if ($redirect_uri === '') {
-    $redirect_uri = build_base_url() . $app_base . '/index.php';
-}
-
-$google_enabled = $client_id !== '' && $client_secret !== '';
+$google_enabled = shared_google_enabled();
 $cas_enabled = cas_is_configured();
 
 if (isset($_GET['logout'])) {
@@ -270,7 +432,6 @@ $is_authenticated = isset($_SESSION['netid']) && (
 );
 
 $auth_request = isset($_GET['auth']) ? (string) $_GET['auth'] : '';
-$is_google_callback = isset($_GET['code']);
 $is_cas_callback = isset($_GET['ticket']);
 
 if (!$is_authenticated) {
@@ -291,87 +452,57 @@ if (!$is_authenticated) {
         exit;
     }
 
-    if ($auth_request === 'google' || $is_google_callback) {
+    if ($auth_request === 'google_consume') {
         if (!$google_enabled) {
             http_response_code(500);
-            echo 'Google authentication is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.';
+            echo 'Google authentication is not configured. Shared auth public key is missing.';
             exit;
         }
 
-        if ($is_google_callback) {
-            $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
-            $stored_state = isset($_SESSION['oauth_state']) ? (string) $_SESSION['oauth_state'] : '';
+        $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
+        $stored_state = isset($_SESSION['oauth_state']) ? (string) $_SESSION['oauth_state'] : '';
+        if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
+            http_response_code(400);
+            echo 'Invalid Google state.';
+            exit;
+        }
 
-            if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
-                http_response_code(400);
-                echo 'Invalid OAuth state.';
-                exit;
-            }
+        unset($_SESSION['oauth_state']);
 
-            unset($_SESSION['oauth_state']);
+        $claims = verify_shared_google_token((string) ($_GET['token'] ?? ''));
+        if (!is_array($claims)) {
+            http_response_code(401);
+            echo 'Unable to verify Google sign-in.';
+            exit;
+        }
 
-            $token = google_post('https://oauth2.googleapis.com/token', [
-                'code' => $_GET['code'],
-                'client_id' => $client_id,
-                'client_secret' => $client_secret,
-                'redirect_uri' => $redirect_uri,
-                'grant_type' => 'authorization_code',
-            ]);
+        $email = (string) ($claims['email'] ?? '');
+        $sub = (string) ($claims['sub'] ?? '');
+        $name = (string) ($claims['name'] ?? $email);
+        $given_name = (string) ($claims['given_name'] ?? $name);
+        $family_name = (string) ($claims['family_name'] ?? '');
 
-            $id_token = is_array($token) && isset($token['id_token']) ? (string) $token['id_token'] : '';
-            if ($id_token === '') {
-                http_response_code(401);
-                echo 'Unable to complete Google sign-in.';
-                exit;
-            }
+        $_SESSION['netid'] = derive_netid($email, $sub);
+        $_SESSION['name'] = $name;
+        $_SESSION['emailAddress'] = $email;
+        $_SESSION['preferredFirstName'] = $given_name;
+        $_SESSION['surname'] = $family_name;
+        $_SESSION['google_authenticated'] = 1;
+        $_SESSION['cas_authenticated'] = 0;
+        $_SESSION['auth_provider'] = 'google';
 
-            $claims = google_get_json('https://oauth2.googleapis.com/tokeninfo?id_token=' . rawurlencode($id_token));
-            if (!is_array($claims)) {
-                http_response_code(401);
-                echo 'Unable to validate Google sign-in token.';
-                exit;
-            }
+        $redirect_after_auth = isset($_SESSION['post_auth_redirect']) ? (string) $_SESSION['post_auth_redirect'] : '';
+        unset($_SESSION['post_auth_redirect']);
 
-            $aud = isset($claims['aud']) ? (string) $claims['aud'] : '';
-            $email = isset($claims['email']) ? (string) $claims['email'] : '';
-            $email_verified = isset($claims['email_verified']) ? $claims['email_verified'] : false;
-            $sub = isset($claims['sub']) ? (string) $claims['sub'] : '';
+        $target = $redirect_after_auth !== '' ? $redirect_after_auth : current_url_without_auth_params();
+        header('Location: ' . $target);
+        exit;
+    }
 
-            if ($aud !== $client_id || $email === '' || $sub === '' || !claim_is_true($email_verified)) {
-                http_response_code(401);
-                echo 'Google sign-in validation failed.';
-                exit;
-            }
-
-            if ($hosted_domain !== '') {
-                $hd = isset($claims['hd']) ? (string) $claims['hd'] : '';
-                if (strtolower($hd) !== strtolower($hosted_domain)) {
-                    http_response_code(403);
-                    echo 'This account is not allowed.';
-                    exit;
-                }
-            }
-
-            $userinfo = google_get_json('https://openidconnect.googleapis.com/v1/userinfo?access_token=' . rawurlencode((string) ($token['access_token'] ?? '')));
-
-            $name = is_array($userinfo) && isset($userinfo['name']) ? (string) $userinfo['name'] : $email;
-            $given_name = is_array($userinfo) && isset($userinfo['given_name']) ? (string) $userinfo['given_name'] : $name;
-            $family_name = is_array($userinfo) && isset($userinfo['family_name']) ? (string) $userinfo['family_name'] : '';
-
-            $_SESSION['netid'] = derive_netid($email, $sub);
-            $_SESSION['name'] = $name;
-            $_SESSION['emailAddress'] = $email;
-            $_SESSION['preferredFirstName'] = $given_name;
-            $_SESSION['surname'] = $family_name;
-            $_SESSION['google_authenticated'] = 1;
-            $_SESSION['cas_authenticated'] = 0;
-            $_SESSION['auth_provider'] = 'google';
-
-            $redirect_after_auth = isset($_SESSION['post_auth_redirect']) ? (string) $_SESSION['post_auth_redirect'] : '';
-            unset($_SESSION['post_auth_redirect']);
-
-            $target = $redirect_after_auth !== '' ? $redirect_after_auth : current_url_without_auth_params();
-            header('Location: ' . $target);
+    if ($auth_request === 'google') {
+        if (!$google_enabled) {
+            http_response_code(500);
+            echo 'Google authentication is not configured. Shared auth public key is missing.';
             exit;
         }
 
@@ -379,16 +510,15 @@ if (!$is_authenticated) {
         $_SESSION['oauth_state'] = $state;
         $_SESSION['post_auth_redirect'] = current_url_without_auth_params();
 
-        $auth_query = http_build_query([
-            'client_id' => $client_id,
-            'redirect_uri' => $redirect_uri,
-            'response_type' => 'code',
-            'scope' => 'openid email profile',
+        $return_to = build_absolute_url(current_relative_url_with_auth('google_consume'));
+        $shared_start = rtrim(shared_google_root(), '/') . '/google_start.php';
+        $target = build_url_with_query($shared_start, [
+            'app' => shared_google_app_id(),
+            'return_to' => $return_to,
             'state' => $state,
-            'prompt' => 'select_account',
         ]);
 
-        header('Location: https://accounts.google.com/o/oauth2/v2/auth?' . $auth_query);
+        header('Location: ' . $target);
         exit;
     }
 
