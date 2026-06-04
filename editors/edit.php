@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once dirname(__DIR__) . '/bootstrap.php';
 $passage_id = isset($_GET['passage_id']) ? (int) $_GET['passage_id'] : 0;
 
 if (!isset($_SESSION['editor']) || (int) $_SESSION['editor'] !== 1 || $passage_id <= 0) {

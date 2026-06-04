@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 include_once('../../connectFiles/connect_fb.php');
 
 $netid = isset($_POST['netid']) ? $_POST['netid'] : '';

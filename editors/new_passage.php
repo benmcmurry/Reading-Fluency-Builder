@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once dirname(__DIR__) . '/bootstrap.php';
 include_once('../../../connectFiles/connect_fb.php');
 
 $title = 'New Passage by ' . $_SESSION['preferredFirstName'];

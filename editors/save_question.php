@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once dirname(__DIR__) . '/bootstrap.php';
 if (!isset($_SESSION['editor']) || (int) $_SESSION['editor'] !== 1) {
     http_response_code(403);
     echo 'Unauthorized';

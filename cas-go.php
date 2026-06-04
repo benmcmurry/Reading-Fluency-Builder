@@ -1,13 +1,54 @@
 <?php
+require_once __DIR__ . '/bootstrap.php';
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config.php';
+
+function build_request_scheme(): string
+{
+    if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+        $values = explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO']);
+        return strtolower(trim($values[0])) === 'https' ? 'https' : 'http';
+    }
+
+    if (!empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) {
+        $values = explode(',', $_SERVER['HTTP_X_FORWARDED_PROTOCOL']);
+        return strtolower(trim($values[0])) === 'https' ? 'https' : 'http';
+    }
+
+    if (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower((string) $_SERVER['HTTP_X_FORWARDED_SSL']) === 'on') {
+        return 'https';
+    }
+
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        return 'https';
+    }
+
+    return 'http';
+}
+
+function build_request_host(): string
+{
+    if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+        $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+        $host = trim($hosts[0]);
+        if ($host !== '') {
+            return $host;
+        }
+    }
+
+    if (!empty($_SERVER['HTTP_HOST'])) {
+        return $_SERVER['HTTP_HOST'];
+    }
+
+    if (!empty($_SERVER['SERVER_NAME'])) {
+        return $_SERVER['SERVER_NAME'];
+    }
+
+    return 'localhost';
+}
 
 function build_base_url(): string
 {
-    $is_https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
-    $scheme = $is_https ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-
-    return $scheme . '://' . $host;
+    return build_request_scheme() . '://' . build_request_host();
 }
 
 function app_base_path_for_root(): string
