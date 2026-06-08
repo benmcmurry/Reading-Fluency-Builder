@@ -51,6 +51,16 @@ function build_base_url(): string
     return build_request_scheme() . '://' . build_request_host();
 }
 
+function public_origin(): string
+{
+    $envOrigin = env_value('AR_PUBLIC_ORIGIN');
+    if ($envOrigin !== '') {
+        return rtrim(trim($envOrigin), '/');
+    }
+
+    return build_base_url();
+}
+
 function app_base_path_for_root(): string
 {
     $script_name = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
@@ -76,7 +86,7 @@ function current_url_without_auth_params(): string
     $params = remove_auth_params($_GET);
     $query = http_build_query($params);
 
-    return build_base_url() . $path . ($query ? ('?' . $query) : '');
+    return public_origin() . $path . ($query ? ('?' . $query) : '');
 }
 
 function current_relative_url_with_auth(string $provider): string
@@ -257,7 +267,7 @@ function shared_google_app_id(): string
 
 function shared_google_root(): string
 {
-    return shared_auth_config_value('shared_auth_web_root', 'SHARED_AUTH_WEB_ROOT', build_base_url() . '/sharedAuth');
+    return shared_auth_config_value('shared_auth_web_root', 'SHARED_AUTH_WEB_ROOT', public_origin() . '/sharedAuth');
 }
 
 function shared_google_expected_issuer(): string
@@ -285,7 +295,7 @@ function build_absolute_url(string $relative_or_absolute): string
         return $relative_or_absolute;
     }
 
-    return build_base_url() . $relative_or_absolute;
+    return public_origin() . $relative_or_absolute;
 }
 
 function build_url_with_query(string $url, array $params): string
@@ -399,6 +409,7 @@ function cas_init_client(): void
 
     require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/CAS.php';
     phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
+    phpCAS::setFixedServiceURL(public_origin() . current_url_without_auth_params());
     phpCAS::setNoCasServerValidation();
 }
 
