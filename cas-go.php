@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
-require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config.php';
+require_once dirname(__DIR__, 2) . '/config.php';
+require_once dirname(__DIR__) . '/sharedAuth/broker.php';
 
 function build_request_scheme(): string
 {
@@ -215,7 +216,7 @@ function env_value(string $key): string
     return '';
 }
 
-function shared_auth_config(): array
+function fluencybuilder_shared_auth_config(): array
 {
     static $config = null;
 
@@ -224,8 +225,11 @@ function shared_auth_config(): array
     }
 
     $config = [];
-    $path = dirname($_SERVER['DOCUMENT_ROOT']) . '/google_auth_config.php';
-    if (is_readable($path)) {
+    $path = shared_auth_first_readable_path(array(
+        getenv('SHARED_AUTH_CONFIG_PATH') ?: '',
+        dirname(__DIR__, 3) . '/google_auth_config.php',
+    ));
+    if ($path !== '') {
         $loaded = include $path;
         if (is_array($loaded)) {
             $config = $loaded;
@@ -235,14 +239,14 @@ function shared_auth_config(): array
     return $config;
 }
 
-function shared_auth_config_value(string $config_key, string $env_key, string $default = ''): string
+function fluencybuilder_shared_auth_config_value(string $config_key, string $env_key, string $default = ''): string
 {
     $env = env_value($env_key);
     if ($env !== '') {
         return trim($env);
     }
 
-    $config = shared_auth_config();
+    $config = fluencybuilder_shared_auth_config();
     if (isset($config[$config_key]) && $config[$config_key] !== '') {
         return trim((string) $config[$config_key]);
     }
@@ -257,7 +261,7 @@ function shared_google_app_id(): string
         return trim($env);
     }
 
-    $config = shared_auth_config();
+    $config = fluencybuilder_shared_auth_config();
     if (isset($config['shared_auth_apps']) && is_array($config['shared_auth_apps']) && isset($config['shared_auth_apps']['fluencybuilder'])) {
         return trim((string) $config['shared_auth_apps']['fluencybuilder']);
     }
@@ -267,20 +271,22 @@ function shared_google_app_id(): string
 
 function shared_google_root(): string
 {
-    return shared_auth_config_value('shared_auth_web_root', 'SHARED_AUTH_WEB_ROOT', public_origin() . '/sharedAuth');
+    return fluencybuilder_shared_auth_config_value('shared_auth_web_root', 'SHARED_AUTH_WEB_ROOT', public_origin() . '/sharedAuth');
 }
 
 function shared_google_expected_issuer(): string
 {
-    return rtrim(shared_auth_config_value('shared_auth_issuer', 'SHARED_AUTH_ISSUER', shared_google_root()), '/');
+    return rtrim(fluencybuilder_shared_auth_config_value('shared_auth_issuer', 'SHARED_AUTH_ISSUER', shared_google_root()), '/');
 }
 
 function shared_google_public_key_path(): string
 {
-    return shared_auth_config_value(
+    return fluencybuilder_shared_auth_config_value(
         'google_shared_public_key_path',
         'GOOGLE_SHARED_PUBLIC_KEY_PATH',
-        dirname($_SERVER['DOCUMENT_ROOT']) . '/keys/google_jwt_public.pem'
+        shared_auth_first_readable_path(array(
+            dirname(__DIR__, 3) . '/keys/google_jwt_public.pem',
+        ))
     );
 }
 
@@ -405,23 +411,18 @@ function cas_is_configured(): bool
 
 function cas_init_client(): void
 {
-    global $cas_host, $cas_port, $cas_context;
-
-    require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/CAS.php';
-    phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
-    phpCAS::setFixedServiceURL(current_url_without_auth_params());
-    phpCAS::setNoCasServerValidation();
+    shared_auth_cas_bootstrap(current_url_without_auth_params());
 }
 
 function sync_session_from_cas(): void
 {
-    $netid = (string) phpCAS::getUser();
-    $attrs = phpCAS::getAttributes();
-
-    $email = (string) ($attrs['emailAddress'] ?? $attrs['mail'] ?? '');
-    $name = (string) ($attrs['name'] ?? $attrs['displayName'] ?? $netid);
-    $given = (string) ($attrs['preferredFirstName'] ?? $attrs['given_name'] ?? $attrs['givenName'] ?? $name);
-    $surname = (string) ($attrs['surname'] ?? $attrs['family_name'] ?? $attrs['sn'] ?? '');
+    $identity = shared_auth_cas_current_identity();
+    $netid = (string) ($identity['netid'] ?? '');
+    $email = (string) ($identity['emailAddress'] ?? '');
+    $name = (string) ($identity['name'] ?? $netid);
+    $attrs = isset($identity['attributes']) && is_array($identity['attributes']) ? $identity['attributes'] : array();
+    $given = (string) ($attrs['givenName'] ?? $attrs['preferredFirstName'] ?? $name);
+    $surname = (string) ($attrs['surname'] ?? '');
 
     $_SESSION['netid'] = $netid;
     $_SESSION['name'] = $name;
@@ -433,36 +434,9 @@ function sync_session_from_cas(): void
     $_SESSION['auth_provider'] = 'cas';
 }
 
-function render_login_choice(bool $cas_enabled, bool $google_enabled): void
-{
-    http_response_code(401);
-    $cas_url = htmlspecialchars(current_relative_url_with_auth('cas'), ENT_QUOTES, 'UTF-8');
-    $google_url = htmlspecialchars(current_relative_url_with_auth('google'), ENT_QUOTES, 'UTF-8');
-
-    echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">';
-    echo '<title>Sign in - Reading Fluency Builder</title>';
-    echo '<style>body{font-family:Arial,sans-serif;background:#f6f8fb;margin:0}.wrap{max-width:540px;margin:72px auto;background:#fff;border:1px solid #d9e0ea;border-radius:10px;padding:28px}h1{margin:0 0 8px;color:#002e5d}p{margin:0 0 16px;color:#334155}.btn{display:block;text-decoration:none;padding:12px 16px;border-radius:8px;margin:10px 0;text-align:center;font-weight:600}.btn-cas{background:#002e5d;color:#fff}.btn-google{background:#fff;color:#1f2937;border:1px solid #d1d5db}.disabled{background:#e5e7eb;color:#6b7280;cursor:not-allowed}small{color:#64748b;display:block;margin-top:8px}</style>';
-    echo '</head><body><div class="wrap"><h1>Sign in</h1><p>Choose how you want to continue.</p>';
-
-    if ($cas_enabled) {
-        echo '<a class="btn btn-cas" href="' . $cas_url . '">Continue with CAS</a>';
-    } else {
-        echo '<span class="btn btn-cas disabled">CAS unavailable</span>';
-    }
-
-    if ($google_enabled) {
-        echo '<a class="btn btn-google" href="' . $google_url . '">Continue with Google</a>';
-    } else {
-        echo '<span class="btn btn-google disabled">Google unavailable</span>';
-    }
-
-    echo '<small>If one option is unavailable, check server auth configuration.</small>';
-    echo '</div></body></html>';
-    exit;
-}
-
 $google_enabled = shared_google_enabled();
 $cas_enabled = cas_is_configured();
+$okta_enabled = shared_auth_okta_enabled();
 
 if (isset($_GET['logout'])) {
     $provider = (string) ($_SESSION['auth_provider'] ?? '');
@@ -487,94 +461,126 @@ $auth_request = isset($_GET['auth']) ? (string) $_GET['auth'] : '';
 $is_cas_callback = isset($_GET['ticket']);
 
 if (!$is_authenticated) {
-    if ($auth_request === 'cas' || $is_cas_callback) {
-        if (!$cas_enabled) {
-            http_response_code(500);
-            echo 'CAS authentication is not configured.';
+    $handled = shared_auth_dispatch_provider_request(array(
+        'cas' => function () use ($cas_enabled) {
+            if (!$cas_enabled) {
+                http_response_code(500);
+                echo 'Authentication is not configured.';
+                exit;
+            }
+
+            cas_init_client();
+            if (!phpCAS::checkAuthentication()) {
+                phpCAS::forceAuthentication();
+            }
+
+            sync_session_from_cas();
+            header('Location: ' . current_url_without_auth_params());
             exit;
-        }
+        },
+        'google_consume' => function () use ($google_enabled) {
+            if (!$google_enabled) {
+                http_response_code(500);
+                echo 'Google authentication is not configured. Shared auth public key is missing.';
+                exit;
+            }
 
-        cas_init_client();
-        if (!phpCAS::checkAuthentication()) {
-            phpCAS::forceAuthentication();
-        }
+            $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
+            $stored_state = isset($_SESSION['oauth_state']) ? (string) $_SESSION['oauth_state'] : '';
+            if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
+                http_response_code(400);
+                echo 'Invalid Google state.';
+                exit;
+            }
 
-        sync_session_from_cas();
-        header('Location: ' . current_url_without_auth_params());
-        exit;
+            unset($_SESSION['oauth_state']);
+
+            $claims = verify_shared_google_token((string) ($_GET['token'] ?? ''));
+            if (!is_array($claims)) {
+                http_response_code(401);
+                echo 'Unable to verify Google sign-in.';
+                exit;
+            }
+
+            $email = (string) ($claims['email'] ?? '');
+            $sub = (string) ($claims['sub'] ?? '');
+            $name = (string) ($claims['name'] ?? $email);
+            $given_name = (string) ($claims['given_name'] ?? $name);
+            $family_name = (string) ($claims['family_name'] ?? '');
+
+            $_SESSION['netid'] = derive_netid($email, $sub);
+            $_SESSION['name'] = $name;
+            $_SESSION['emailAddress'] = $email;
+            $_SESSION['preferredFirstName'] = $given_name;
+            $_SESSION['surname'] = $family_name;
+            $_SESSION['google_authenticated'] = 1;
+            $_SESSION['cas_authenticated'] = 0;
+            $_SESSION['auth_provider'] = 'google';
+
+            $redirect_after_auth = isset($_SESSION['post_auth_redirect']) ? (string) $_SESSION['post_auth_redirect'] : '';
+            unset($_SESSION['post_auth_redirect']);
+
+            $target = $redirect_after_auth !== '' ? $redirect_after_auth : current_url_without_auth_params();
+            header('Location: ' . $target);
+            exit;
+        },
+        'google' => function () use ($google_enabled) {
+            if (!$google_enabled) {
+                http_response_code(500);
+                echo 'Google authentication is not configured. Shared auth public key is missing.';
+                exit;
+            }
+
+            $state = bin2hex(random_bytes(16));
+            $_SESSION['oauth_state'] = $state;
+            $_SESSION['post_auth_redirect'] = current_url_without_auth_params();
+
+            $return_to = build_absolute_url(current_relative_url_with_auth('google_consume'));
+            $shared_start = rtrim(shared_google_root(), '/') . '/google_start.php';
+            $target = build_url_with_query($shared_start, [
+                'app' => shared_google_app_id(),
+                'return_to' => $return_to,
+                'state' => $state,
+            ]);
+
+            header('Location: ' . $target);
+            exit;
+        },
+        'okta' => function () {
+            shared_auth_fail('Okta authentication is not configured yet.');
+        }
+    ), 'auth', null, $is_cas_callback ? 'cas' : $auth_request);
+
+    if ($handled === null) {
+        shared_auth_render_login_choice(
+            'Reading Fluency Builder',
+            'Sign in',
+            'Choose how you want to continue.',
+            array(
+                array(
+                    'provider' => 'cas',
+                    'label' => 'Continue with CAS',
+                    'enabled' => $cas_enabled,
+                    'url' => current_relative_url_with_auth('cas'),
+                    'disabled_label' => 'Authentication unavailable',
+                ),
+                array(
+                    'provider' => 'google',
+                    'label' => 'Continue with Google',
+                    'enabled' => $google_enabled,
+                    'url' => current_relative_url_with_auth('google'),
+                    'disabled_label' => 'Google unavailable',
+                ),
+                array(
+                    'provider' => 'okta',
+                    'label' => 'Continue with Okta',
+                    'enabled' => $okta_enabled,
+                    'url' => current_relative_url_with_auth('okta'),
+                    'disabled_label' => 'Okta unavailable',
+                ),
+            )
+        );
     }
-
-    if ($auth_request === 'google_consume') {
-        if (!$google_enabled) {
-            http_response_code(500);
-            echo 'Google authentication is not configured. Shared auth public key is missing.';
-            exit;
-        }
-
-        $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
-        $stored_state = isset($_SESSION['oauth_state']) ? (string) $_SESSION['oauth_state'] : '';
-        if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
-            http_response_code(400);
-            echo 'Invalid Google state.';
-            exit;
-        }
-
-        unset($_SESSION['oauth_state']);
-
-        $claims = verify_shared_google_token((string) ($_GET['token'] ?? ''));
-        if (!is_array($claims)) {
-            http_response_code(401);
-            echo 'Unable to verify Google sign-in.';
-            exit;
-        }
-
-        $email = (string) ($claims['email'] ?? '');
-        $sub = (string) ($claims['sub'] ?? '');
-        $name = (string) ($claims['name'] ?? $email);
-        $given_name = (string) ($claims['given_name'] ?? $name);
-        $family_name = (string) ($claims['family_name'] ?? '');
-
-        $_SESSION['netid'] = derive_netid($email, $sub);
-        $_SESSION['name'] = $name;
-        $_SESSION['emailAddress'] = $email;
-        $_SESSION['preferredFirstName'] = $given_name;
-        $_SESSION['surname'] = $family_name;
-        $_SESSION['google_authenticated'] = 1;
-        $_SESSION['cas_authenticated'] = 0;
-        $_SESSION['auth_provider'] = 'google';
-
-        $redirect_after_auth = isset($_SESSION['post_auth_redirect']) ? (string) $_SESSION['post_auth_redirect'] : '';
-        unset($_SESSION['post_auth_redirect']);
-
-        $target = $redirect_after_auth !== '' ? $redirect_after_auth : current_url_without_auth_params();
-        header('Location: ' . $target);
-        exit;
-    }
-
-    if ($auth_request === 'google') {
-        if (!$google_enabled) {
-            http_response_code(500);
-            echo 'Google authentication is not configured. Shared auth public key is missing.';
-            exit;
-        }
-
-        $state = bin2hex(random_bytes(16));
-        $_SESSION['oauth_state'] = $state;
-        $_SESSION['post_auth_redirect'] = current_url_without_auth_params();
-
-        $return_to = build_absolute_url(current_relative_url_with_auth('google_consume'));
-        $shared_start = rtrim(shared_google_root(), '/') . '/google_start.php';
-        $target = build_url_with_query($shared_start, [
-            'app' => shared_google_app_id(),
-            'return_to' => $return_to,
-            'state' => $state,
-        ]);
-
-        header('Location: ' . $target);
-        exit;
-    }
-
-    render_login_choice($cas_enabled, $google_enabled);
 }
 
 $netid = (string) ($_SESSION['netid'] ?? '');
