@@ -413,7 +413,7 @@ function cas_init_client(): void
 
     require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/CAS.php';
     phpCAS::client(CAS_VERSION_2_0, $cas_host, $cas_port, $cas_context);
-    phpCAS::setFixedServiceURL(public_origin() . current_url_without_auth_params());
+    phpCAS::setFixedServiceURL(current_url_without_auth_params());
     phpCAS::setNoCasServerValidation();
 }
 
