@@ -435,9 +435,39 @@ function sync_session_from_cas(): void
     $_SESSION['auth_provider'] = 'cas';
 }
 
+function sync_session_from_shared_auth(): void
+{
+    $identity = shared_auth_current_session_user();
+    if (!$identity || !is_array($identity)) {
+        return;
+    }
+
+    $netid = isset($identity['netid']) ? (string) $identity['netid'] : '';
+    if ($netid === '') {
+        return;
+    }
+
+    $attrs = isset($identity['attributes']) && is_array($identity['attributes']) ? $identity['attributes'] : array();
+    $given = (string) ($attrs['givenName'] ?? $attrs['preferredFirstName'] ?? '');
+    $surname = (string) ($attrs['surname'] ?? '');
+
+    $_SESSION['netid'] = $netid;
+    $_SESSION['name'] = (string) ($identity['name'] ?? $netid);
+    $_SESSION['emailAddress'] = (string) ($identity['emailAddress'] ?? '');
+    $_SESSION['preferredFirstName'] = $given !== '' ? $given : (string) ($identity['name'] ?? $netid);
+    $_SESSION['surname'] = $surname;
+    $_SESSION['cas_authenticated'] = isset($identity['provider']) && (string) $identity['provider'] === 'cas' ? 1 : 0;
+    $_SESSION['google_authenticated'] = isset($identity['provider']) && (string) $identity['provider'] === 'google' ? 1 : 0;
+    $_SESSION['auth_provider'] = isset($identity['provider']) ? (string) $identity['provider'] : '';
+}
+
 $google_enabled = shared_google_enabled();
 $cas_enabled = cas_is_configured();
 $okta_enabled = shared_auth_okta_enabled();
+
+if (!isset($_SESSION['netid']) && shared_auth_current_session_user()) {
+    sync_session_from_shared_auth();
+}
 
 if (isset($_GET['logout'])) {
     $provider = (string) ($_SESSION['auth_provider'] ?? '');
@@ -548,7 +578,10 @@ if (!$is_authenticated) {
             exit;
         },
         'okta' => function () {
-            shared_auth_fail('Okta authentication is not configured yet.');
+            $returnTo = build_absolute_url(current_relative_url_with_auth('okta'));
+            shared_auth_redirect(shared_auth_build_url_with_query(shared_auth_base_url() . '/okta_start.php', array(
+                'return_to' => $returnTo,
+            )));
         }
     ), 'auth', null, $is_cas_callback ? 'cas' : $auth_request);
 
