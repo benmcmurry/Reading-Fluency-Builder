@@ -56,7 +56,9 @@ function public_origin(): string
 {
     $envOrigin = env_value('AR_PUBLIC_ORIGIN');
     if ($envOrigin !== '') {
-        return rtrim(trim($envOrigin), '/');
+        return function_exists('shared_auth_normalize_origin')
+            ? shared_auth_normalize_origin($envOrigin)
+            : rtrim(trim($envOrigin), '/');
     }
 
     return build_base_url();
@@ -82,7 +84,9 @@ function remove_auth_params(array $params): array
 
 function current_request_path(): string
 {
-    return strtok($_SERVER['REQUEST_URI'] ?? '/editors/edit.php', '?') ?: '/editors/edit.php';
+    return isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] !== ''
+        ? $_SERVER['SCRIPT_NAME']
+        : (strtok($_SERVER['REQUEST_URI'] ?? '/editors/edit.php', '?') ?: '/editors/edit.php');
 }
 
 function current_url_without_auth_params(): string
