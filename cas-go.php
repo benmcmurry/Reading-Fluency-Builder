@@ -469,6 +469,10 @@ if (!isset($_SESSION['netid']) && shared_auth_current_session_user()) {
     sync_session_from_shared_auth();
 }
 
+if (shared_auth_dev_enabled() && !isset($_SESSION['netid']) && !shared_auth_current_session_user()) {
+    shared_auth_redirect(shared_auth_login_url(current_url_without_auth_params()));
+}
+
 if (isset($_GET['logout'])) {
     $provider = (string) ($_SESSION['auth_provider'] ?? '');
 
