@@ -94,6 +94,17 @@ function current_url_without_auth_params(): string
     return public_origin() . $path . ($query ? ('?' . $query) : '');
 }
 
+function safe_return_to_current_url(): string
+{
+    $current = current_url_without_auth_params();
+    $parts = parse_url($current);
+    if (!$parts || !isset($parts['host']) || !isset($parts['scheme'])) {
+        return current_request_path();
+    }
+
+    return $current;
+}
+
 function current_relative_url_with_auth(string $provider): string
 {
     $params = remove_auth_params($_GET);
@@ -493,7 +504,8 @@ if (isset($_GET['logout'])) {
 
 $is_authenticated = isset($_SESSION['netid']) && (
     (isset($_SESSION['google_authenticated']) && $_SESSION['google_authenticated'] === 1) ||
-    (isset($_SESSION['cas_authenticated']) && $_SESSION['cas_authenticated'] === 1)
+    (isset($_SESSION['cas_authenticated']) && $_SESSION['cas_authenticated'] === 1) ||
+    trim((string) ($_SESSION['auth_provider'] ?? '')) !== ''
 );
 
 $auth_request = isset($_GET['auth']) ? (string) $_GET['auth'] : '';
@@ -586,7 +598,7 @@ if (!$is_authenticated) {
             exit;
         },
         'okta' => function () {
-            $returnTo = build_absolute_url(current_relative_url_with_auth('okta'));
+            $returnTo = safe_return_to_current_url();
             shared_auth_redirect(shared_auth_build_url_with_query(shared_auth_base_url() . '/okta_start.php', array(
                 'return_to' => $returnTo,
             )));
