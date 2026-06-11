@@ -123,7 +123,16 @@ function clear_local_session(): void
     $_SESSION = [];
     if (ini_get('session.use_cookies')) {
         $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+        $cookiePaths = array_unique(array(
+            $params['path'] ?? '/',
+            '/',
+            '/fluencybuilder',
+            '/fluencybuilder/editors',
+            '/sharedAuth',
+        ));
+        foreach ($cookiePaths as $path) {
+            setcookie(session_name(), '', time() - 42000, $path, $params['domain'], $params['secure'], $params['httponly']);
+        }
     }
     session_destroy();
 }
@@ -422,38 +431,6 @@ function claim_is_true($value): bool
     return strtolower((string) $value) === 'true' || (string) $value === '1';
 }
 
-function cas_is_configured(): bool
-{
-    global $cas_host, $cas_port, $cas_context;
-
-    return isset($cas_host, $cas_port, $cas_context) && $cas_host !== '' && $cas_context !== '';
-}
-
-function cas_init_client(): void
-{
-    shared_auth_cas_bootstrap(current_url_without_auth_params());
-}
-
-function sync_session_from_cas(): void
-{
-    $identity = shared_auth_cas_current_identity();
-    $netid = (string) ($identity['netid'] ?? '');
-    $email = (string) ($identity['emailAddress'] ?? '');
-    $name = (string) ($identity['name'] ?? $netid);
-    $attrs = isset($identity['attributes']) && is_array($identity['attributes']) ? $identity['attributes'] : array();
-    $given = (string) ($attrs['givenName'] ?? $attrs['preferredFirstName'] ?? $name);
-    $surname = (string) ($attrs['surname'] ?? '');
-
-    $_SESSION['netid'] = $netid;
-    $_SESSION['name'] = $name;
-    $_SESSION['emailAddress'] = $email;
-    $_SESSION['preferredFirstName'] = $given;
-    $_SESSION['surname'] = $surname;
-    $_SESSION['cas_authenticated'] = 1;
-    $_SESSION['google_authenticated'] = 0;
-    $_SESSION['auth_provider'] = 'cas';
-}
-
 function sync_session_from_shared_auth(): void
 {
     $identity = shared_auth_current_session_user();
@@ -475,30 +452,43 @@ function sync_session_from_shared_auth(): void
     $_SESSION['emailAddress'] = (string) ($identity['emailAddress'] ?? '');
     $_SESSION['preferredFirstName'] = $given !== '' ? $given : (string) ($identity['name'] ?? $netid);
     $_SESSION['surname'] = $surname;
-    $_SESSION['cas_authenticated'] = isset($identity['provider']) && (string) $identity['provider'] === 'cas' ? 1 : 0;
     $_SESSION['google_authenticated'] = isset($identity['provider']) && (string) $identity['provider'] === 'google' ? 1 : 0;
     $_SESSION['auth_provider'] = isset($identity['provider']) ? (string) $identity['provider'] : '';
 }
 
 $google_enabled = shared_google_enabled();
-$cas_enabled = cas_is_configured();
-$okta_enabled = shared_auth_okta_enabled();
+$logoutBlocked = shared_auth_logout_blocked();
 
-if (!isset($_SESSION['netid']) && shared_auth_current_session_user()) {
+if ($logoutBlocked) {
+    clear_local_session();
+}
+
+if (!$logoutBlocked && !isset($_SESSION['netid']) && shared_auth_current_session_user()) {
     sync_session_from_shared_auth();
 }
 
-if (shared_auth_dev_enabled() && !isset($_SESSION['netid']) && !shared_auth_current_session_user()) {
-    shared_auth_redirect(shared_auth_login_url(current_url_without_auth_params()));
+if (shared_auth_dev_enabled() && !isset($_SESSION['netid']) && !shared_auth_current_session_user() && !isset($_GET['auth']) && !isset($_GET['mode']) && !$logoutBlocked) {
+    shared_auth_redirect(build_url_with_query(public_origin() . app_base_path_for_editor() . '/login.php', array(
+        'redirect' => current_url_without_auth_params(),
+    )));
 }
 
 if (isset($_GET['logout'])) {
     $provider = (string) ($_SESSION['auth_provider'] ?? '');
+    $sharedIdentity = shared_auth_current_session_user();
+    $sharedProvider = is_array($sharedIdentity) && isset($sharedIdentity['provider']) ? (string) $sharedIdentity['provider'] : '';
 
-    if ($provider === 'cas' && $cas_enabled) {
-        cas_init_client();
-        phpCAS::logout();
+    if ($provider === 'google' && !$sharedIdentity) {
+        clear_local_session();
+        header('Location: ' . current_url_without_auth_params());
         exit;
+    }
+
+    if ($provider === 'google' || $provider === 'okta' || $provider === 'byu' || $sharedProvider === 'okta' || $sharedProvider === 'byu' || $sharedIdentity) {
+        clear_local_session();
+        shared_auth_redirect(shared_auth_logout_url(build_url_with_query(public_origin() . app_base_path_for_editor() . '/login.php', array(
+            'redirect' => current_url_without_auth_params(),
+        )), 'fluencybuilder'));
     }
 
     clear_local_session();
@@ -506,139 +496,81 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
-$is_authenticated = isset($_SESSION['netid']) && (
-    (isset($_SESSION['google_authenticated']) && $_SESSION['google_authenticated'] === 1) ||
-    (isset($_SESSION['cas_authenticated']) && $_SESSION['cas_authenticated'] === 1) ||
-    trim((string) ($_SESSION['auth_provider'] ?? '')) !== ''
-);
-
+$is_authenticated = isset($_SESSION['netid']) && trim((string) ($_SESSION['auth_provider'] ?? '')) !== '';
 $auth_request = isset($_GET['auth']) ? (string) $_GET['auth'] : '';
-$is_cas_callback = isset($_GET['ticket']);
+$mode_request = isset($_GET['mode']) ? (string) $_GET['mode'] : '';
+$is_google_consume = $auth_request === 'google_consume' || (isset($_GET['token']) && isset($_GET['state']));
 
 if (!$is_authenticated) {
-    $handled = shared_auth_dispatch_provider_request(array(
-        'cas' => function () use ($cas_enabled) {
-            if (!$cas_enabled) {
-                http_response_code(500);
-                echo 'Authentication is not configured.';
-                exit;
-            }
-
-            cas_init_client();
-            if (!phpCAS::checkAuthentication()) {
-                phpCAS::forceAuthentication();
-            }
-
-            sync_session_from_cas();
-            header('Location: ' . current_url_without_auth_params());
-            exit;
-        },
-        'google_consume' => function () use ($google_enabled) {
-            if (!$google_enabled) {
-                http_response_code(500);
-                echo 'Google authentication is not configured. Shared auth public key is missing.';
-                exit;
-            }
-
-            $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
-            $stored_state = isset($_SESSION['oauth_state']) ? (string) $_SESSION['oauth_state'] : '';
-            if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
-                http_response_code(400);
-                echo 'Invalid Google state.';
-                exit;
-            }
-
-            unset($_SESSION['oauth_state']);
-
-            $claims = verify_shared_google_token((string) ($_GET['token'] ?? ''));
-            if (!is_array($claims)) {
-                http_response_code(401);
-                echo 'Unable to verify Google sign-in.';
-                exit;
-            }
-
-            $email = (string) ($claims['email'] ?? '');
-            $sub = (string) ($claims['sub'] ?? '');
-            $name = (string) ($claims['name'] ?? $email);
-            $given_name = (string) ($claims['given_name'] ?? $name);
-            $family_name = (string) ($claims['family_name'] ?? '');
-
-            $_SESSION['netid'] = derive_netid($email, $sub);
-            $_SESSION['name'] = $name;
-            $_SESSION['emailAddress'] = $email;
-            $_SESSION['preferredFirstName'] = $given_name;
-            $_SESSION['surname'] = $family_name;
-            $_SESSION['google_authenticated'] = 1;
-            $_SESSION['cas_authenticated'] = 0;
-            $_SESSION['auth_provider'] = 'google';
-
-            $redirect_after_auth = isset($_SESSION['post_auth_redirect']) ? (string) $_SESSION['post_auth_redirect'] : '';
-            unset($_SESSION['post_auth_redirect']);
-
-            $target = $redirect_after_auth !== '' ? $redirect_after_auth : current_url_without_auth_params();
-            header('Location: ' . $target);
-            exit;
-        },
-        'google' => function () use ($google_enabled) {
-            if (!$google_enabled) {
-                http_response_code(500);
-                echo 'Google authentication is not configured. Shared auth public key is missing.';
-                exit;
-            }
-
-            $state = bin2hex(random_bytes(16));
-            $_SESSION['oauth_state'] = $state;
-            $_SESSION['post_auth_redirect'] = current_url_without_auth_params();
-
-            $return_to = build_absolute_url(current_relative_url_with_auth('google_consume'));
-            $shared_start = rtrim(shared_google_root(), '/') . '/google_start.php';
-            $target = build_url_with_query($shared_start, [
-                'app' => shared_google_app_id(),
-                'return_to' => $return_to,
-                'state' => $state,
-            ]);
-
-            header('Location: ' . $target);
-            exit;
-        },
-        'okta' => function () {
-            $returnTo = safe_return_to_current_url();
-            shared_auth_redirect(shared_auth_build_url_with_query(shared_auth_base_url() . '/okta_start.php', array(
-                'return_to' => $returnTo,
-            )));
-        }
-    ), 'auth', null, $is_cas_callback ? 'cas' : $auth_request);
-
-    if ($handled === null) {
-        shared_auth_render_login_choice(
-            'Fluency Builder Editor',
-            'Sign in',
-            'Choose how you want to continue.',
-            array(
-                array(
-                    'provider' => 'cas',
-                    'label' => 'Continue with CAS',
-                    'enabled' => $cas_enabled,
-                    'url' => current_relative_url_with_auth('cas'),
-                    'disabled_label' => 'Authentication unavailable',
-                ),
-                array(
-                    'provider' => 'google',
-                    'label' => 'Continue with Google',
-                    'enabled' => $google_enabled,
-                    'url' => current_relative_url_with_auth('google'),
-                    'disabled_label' => 'Google unavailable',
-                ),
-                array(
-                    'provider' => 'okta',
-                    'label' => 'Continue with Okta',
-                    'enabled' => $okta_enabled,
-                    'url' => current_relative_url_with_auth('okta'),
-                    'disabled_label' => 'Okta unavailable',
-                ),
-            )
+    if (($auth_request === 'google' || $mode_request === 'login') && $google_enabled) {
+        $state = bin2hex(random_bytes(16));
+        $_SESSION['fb_google_login'] = array(
+            'state' => $state,
+            'redirect' => isset($_GET['redirect']) ? shared_auth_safe_return_to((string) $_GET['redirect']) : current_url_without_auth_params(),
+            'created' => time(),
         );
+
+        $return_to = build_absolute_url(current_relative_url_with_auth('google_consume'));
+        $shared_start = rtrim(shared_google_root(), '/') . '/google_start.php';
+        $target = build_url_with_query($shared_start, array(
+            'app' => shared_google_app_id(),
+            'return_to' => $return_to,
+            'state' => $state,
+        ));
+
+        header('Location: ' . $target);
+        exit;
     }
+
+    if ($is_google_consume) {
+        if (!$google_enabled) {
+            http_response_code(500);
+            echo 'Google authentication is not configured. Shared auth public key is missing.';
+            exit;
+        }
+
+        $oauth_state = isset($_SESSION['fb_google_login']) && is_array($_SESSION['fb_google_login']) ? $_SESSION['fb_google_login'] : array();
+        $returned_state = isset($_GET['state']) ? (string) $_GET['state'] : '';
+        $stored_state = isset($oauth_state['state']) ? (string) $oauth_state['state'] : '';
+        if ($returned_state === '' || !hash_equals($stored_state, $returned_state)) {
+            http_response_code(400);
+            echo 'Invalid Google state.';
+            exit;
+        }
+
+        unset($_SESSION['fb_google_login']);
+
+        $claims = verify_shared_google_token((string) ($_GET['token'] ?? ''));
+        if (!is_array($claims)) {
+            http_response_code(401);
+            echo 'Unable to verify Google sign-in.';
+            exit;
+        }
+
+        $email = (string) ($claims['email'] ?? '');
+        $sub = (string) ($claims['sub'] ?? '');
+        $name = (string) ($claims['name'] ?? $email);
+        $given_name = (string) ($claims['given_name'] ?? $name);
+        $family_name = (string) ($claims['family_name'] ?? '');
+
+        $_SESSION['netid'] = derive_netid($email, $sub);
+        $_SESSION['name'] = $name;
+        $_SESSION['emailAddress'] = $email;
+        $_SESSION['preferredFirstName'] = $given_name;
+        $_SESSION['surname'] = $family_name;
+        $_SESSION['google_authenticated'] = 1;
+        $_SESSION['auth_provider'] = 'google';
+
+        $redirect_after_auth = isset($oauth_state['redirect']) && $oauth_state['redirect'] !== ''
+            ? (string) $oauth_state['redirect']
+            : current_url_without_auth_params();
+        header('Location: ' . $redirect_after_auth);
+        exit;
+    }
+
+    shared_auth_redirect(build_url_with_query(public_origin() . app_base_path_for_editor() . '/login.php', array(
+        'redirect' => current_url_without_auth_params(),
+    )));
 }
 
 $netid = (string) ($_SESSION['netid'] ?? '');
