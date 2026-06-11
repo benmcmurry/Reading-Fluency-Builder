@@ -16,7 +16,6 @@ if (!$logoutBlocked && ($localUser !== '' || is_array($sharedUser))) {
 }
 
 $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
-$otherMethods = shared_auth_app_login_methods('fluencybuilder');
 ?>
 <!doctype html>
 <html lang="en">
@@ -219,20 +218,6 @@ $otherMethods = shared_auth_app_login_methods('fluencybuilder');
             <div class="btn-row">
                 <a class="btn" href="<?php echo htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8'); ?>">Login with BYU</a>
             </div>
-            <?php if (!empty($otherMethods)) { ?>
-                <p class="eyebrow" style="margin-top: 1.25rem;">Other login options</p>
-                <div class="btn-row">
-                    <?php foreach ($otherMethods as $method) {
-                        $provider = isset($method['provider']) ? (string) $method['provider'] : '';
-                        $label = isset($method['label']) && trim((string) $method['label']) !== ''
-                            ? (string) $method['label']
-                            : shared_auth_provider_label($provider);
-                        $providerUrl = shared_auth_build_url_with_query($loginUrl, array('auth' => $provider));
-                    ?>
-                        <a class="btn btn--subtle" href="<?php echo htmlspecialchars($providerUrl, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></a>
-                    <?php } ?>
-                </div>
-            <?php } ?>
             <p class="signin-note">
                 If you already signed in on another page, refreshing should take you straight into the app.
             </p>
