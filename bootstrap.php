@@ -19,7 +19,7 @@ function fluencybuilder_request_scheme(): string
         return 'https';
     }
 
-    return 'http';
+    return 'https';
 }
 
 if (session_status() !== PHP_SESSION_ACTIVE) {

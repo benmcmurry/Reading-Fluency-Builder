@@ -23,7 +23,7 @@ function build_request_scheme(): string
         return 'https';
     }
 
-    return 'http';
+    return 'https';
 }
 
 function build_request_host(): string
