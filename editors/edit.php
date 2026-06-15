@@ -36,6 +36,7 @@ $quiz_result = $query_quiz->get_result();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SoftRead Editor - <?php echo e($passage['title']); ?></title>
+    <link rel="stylesheet" href="../../shared-ui/theme.css">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="style.css">
 </head>

@@ -80,6 +80,7 @@ $editor = isset($_SESSION['editor']) && (int) $_SESSION['editor'] === 1;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared-ui/theme.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>

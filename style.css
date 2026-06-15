@@ -28,7 +28,11 @@ body {
 body {
     font-family: 'Source Sans 3', sans-serif;
     color: var(--text);
-    background: radial-gradient(circle at top left, #f8fcff 0%, var(--bg) 40%, #eaf0f7 100%);
+    padding-top: 0;
+    background:
+        radial-gradient(circle at top left, rgba(236, 244, 252, 0.96), transparent 32%),
+        radial-gradient(circle at top right, rgba(215, 230, 245, 0.62), transparent 28%),
+        linear-gradient(180deg, #f7fbff 0%, #eef6fd 52%, #e5eff9 100%);
     line-height: 1.5;
 }
 
@@ -68,8 +72,10 @@ select {
     gap: 1rem;
     align-items: center;
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(180deg, #fff 0%, #f6f9fc 100%);
+    border-bottom: 0;
+    background: var(--ui-navy);
+    color: #fff;
+    box-shadow: 0 8px 26px rgba(0, 31, 64, 0.18);
 }
 
 .topbar__left {
@@ -82,16 +88,16 @@ select {
 .app-title {
     margin: 0;
     font-size: 1.1rem;
-    font-family: 'Atkinson Hyperlegible', sans-serif;
+    font-family: 'Atkinson Hyperlegible', 'Shared UI Display', sans-serif;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .icon-btn {
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 0.5rem;
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.12);
     width: 2.5rem;
     height: 2.5rem;
     padding: 0.25rem;
@@ -108,10 +114,11 @@ select {
 }
 
 #user {
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 999px;
     padding: 0.4rem 0.8rem;
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
     cursor: pointer;
 }
 
@@ -130,7 +137,7 @@ select {
     background: var(--surface);
     border-radius: 0.5rem;
     padding: 0.75rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 18px 40px rgba(0, 46, 93, 0.22);
     z-index: 25;
 }
 

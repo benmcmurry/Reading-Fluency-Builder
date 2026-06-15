@@ -1,5 +1,10 @@
 .editor-topbar {
-    background: linear-gradient(180deg, #eff6ff 0%, #e0ecfb 100%);
+    color: #fff;
+    box-shadow: 0 8px 26px rgba(0, 31, 64, 0.18);
+}
+
+.editor-topbar {
+    background: var(--ui-navy);
 }
 
 .editor-layout {
@@ -12,10 +17,11 @@
 }
 
 .editor-menu {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid var(--border);
     border-radius: 0.75rem;
     padding: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 46, 93, 0.06);
 }
 
 .editor-content {
@@ -30,9 +36,10 @@
 .editable-box {
     border: 1px solid var(--border);
     border-radius: 0.75rem;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.96);
     padding: 1rem;
     margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 46, 93, 0.06);
 }
 
 .label {
@@ -100,4 +107,8 @@
         position: sticky;
         top: 4.5rem;
     }
+}
+
+body {
+    padding-top: 0;
 }
