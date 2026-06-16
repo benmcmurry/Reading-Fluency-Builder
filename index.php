@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/../shared-ui/layout.php';
 include_once('cas-go.php');
 include_once('../../connectFiles/connect_fb.php');
 
@@ -70,6 +71,26 @@ if ($has_passage) {
 }
 
 $editor = isset($_SESSION['editor']) && (int) $_SESSION['editor'] === 1;
+$sharedLogo = shared_ui_asset_url('assets/img/elc.png');
+$headerNavItems = array(
+    array(
+        'type' => 'button',
+        'label' => 'Passages',
+        'class' => 'nav-toggle-btn',
+        'id' => 'menuToggle',
+        'controls' => 'nav-panel',
+        'expanded' => false,
+        'aria_label' => 'Toggle reading list',
+    ),
+);
+$userMenuItems = array();
+if ($editor) {
+    $userMenuItems[] = array('type' => 'badge', 'label' => 'Editor');
+    $userMenuItems[] = array('label' => 'New Passage', 'href' => 'editors/new_passage.php');
+    if ($has_passage) {
+        $userMenuItems[] = array('label' => 'Edit Passage', 'href' => 'editors/edit.php?passage_id=' . $passage_id);
+    }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -80,41 +101,41 @@ $editor = isset($_SESSION['editor']) && (int) $_SESSION['editor'] === 1;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../shared-ui/theme.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared-ui/theme.css">
+    <script defer src="<?= e(shared_ui_asset_url('ui.js')) ?>"></script>
 </head>
 <body>
-<header class="topbar">
-    <div class="topbar__left">
-        <button id="menuToggle" type="button" class="icon-btn" aria-controls="nav-panel" aria-expanded="false" aria-label="Toggle reading list">
-            <img src="images/open.png" alt="">
-        </button>
-        <h1 class="app-title"><?php echo e($has_passage ? $title : 'Reading Fluency Builder'); ?></h1>
-    </div>
-    <div id="user-btn" class="user-menu">
-        <?php echo $id; ?>
-        <div id="drop-down" class="user-dropdown" hidden>
-            <p class="welcome">Welcome, <?php echo e($_SESSION['preferredFirstName']); ?>!</p>
-            <?php if ($editor): ?>
-                <a href="editors/new_passage.php"><img class="icon" src="images/new.png" alt="">New Passage</a>
-                <?php if ($has_passage): ?>
-                    <a href="editors/edit.php?passage_id=<?php echo e($passage_id); ?>"><img class="icon" src="images/edit.png" alt="">Edit Passage</a>
-                <?php endif; ?>
-            <?php endif; ?>
-            <?php if ($has_passage): ?>
-                <section id="stats" aria-live="polite">
-                    <h2>Your Scores</h2>
-                    <p><strong>Timed Reading:</strong> <span class="timed_reading">Time: <?php echo e($timed_reading_time); ?> WPM: <?php echo e($timed_reading_wpm); ?></span></p>
-                    <p><strong>Scrolled Reading WPM:</strong> <span class="scrolled_reading"><?php echo e($scrolled_reading); ?></span></p>
-                    <p><strong>Quiz Score:</strong> <span class="comprehension_quiz"><?php echo e($comprehension_quiz); ?></span></p>
-                    <button id="email_results" type="button" class="btn popup_link">Email Results</button>
-                </section>
-            <?php endif; ?>
-        </div>
-    </div>
-</header>
+<?php
+shared_ui_render_header(array(
+    'brand_href' => 'index.php',
+    'brand_label' => 'Reading Fluency Builder',
+    'brand_image' => $sharedLogo,
+    'brand_image_alt' => 'English Language Center',
+    'brand_title' => 'Reading Fluency Builder',
+    'nav_items' => $headerNavItems,
+    'user' => array('name' => $_SESSION['name'] ?? $_SESSION['preferredFirstName'] ?? $_SESSION['netid'] ?? 'User'),
+    'display_name' => $_SESSION['preferredFirstName'] ?? $_SESSION['name'] ?? $_SESSION['netid'] ?? 'User',
+    'auth_href' => 'login.php',
+    'logout_href' => '?logout=1',
+    'sign_in_label' => 'Login',
+    'sign_out_label' => 'Logout',
+    'menu_items' => $userMenuItems,
+));
+?>
 
-<main id="main" class="layout">
+<main id="main">
+    <?php if ($has_passage): ?>
+        <section class="card score-card" aria-label="Your scores">
+            <h2>Your Scores</h2>
+            <p><strong>Timed Reading:</strong> <span class="timed_reading">Time: <?php echo e($timed_reading_time); ?> WPM: <?php echo e($timed_reading_wpm); ?></span></p>
+            <p><strong>Scrolled Reading WPM:</strong> <span class="scrolled_reading"><?php echo e($scrolled_reading); ?></span></p>
+            <p><strong>Quiz Score:</strong> <span class="comprehension_quiz"><?php echo e($comprehension_quiz); ?></span></p>
+            <button id="email_results" type="button" class="btn popup_link">Email Results</button>
+        </section>
+    <?php endif; ?>
+
+    <div class="layout">
     <aside id="nav-panel" class="panel" aria-label="Passage navigation">
         <label for="search" class="sr-only">Search passages</label>
         <input id="search" type="search" autocomplete="off" placeholder="Search passages">
@@ -240,19 +261,8 @@ $editor = isset($_SESSION['editor']) && (int) $_SESSION['editor'] === 1;
             </section>
         </div>
     </section>
+    </div>
 </main>
-
-<footer id="footer" class="footer">
-    <div>
-        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
-            <img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
-        </a>
-    </div>
-    <div id="attribution">
-        <span>Developed by Ben McMurry</span>
-        <span>English Language Center, BYU</span>
-    </div>
-</footer>
 
 <div id="invisible-background" class="overlay" hidden></div>
 <section id="email_results_popup" class="popup" role="dialog" aria-modal="true" aria-labelledby="email-results-title" hidden>
@@ -277,5 +287,26 @@ window.APP_CONFIG = {
 };
 </script>
 <script src="js/app.js"></script>
+<?php
+shared_ui_render_footer(array(
+    'columns' => array(
+        array(
+            'title' => 'Reading Fluency Builder',
+            'items' => array(
+                array('label' => 'Passages', 'href' => 'index.php'),
+                array('label' => 'Login', 'href' => 'login.php'),
+            ),
+        ),
+        array(
+            'title' => 'Support',
+            'items' => array(
+                array('label' => 'English Language Center', 'href' => 'https://elc.byu.edu'),
+                array('label' => 'BYU', 'href' => 'https://www.byu.edu'),
+            ),
+        ),
+    ),
+    'note' => 'Developed by Ben McMurry. English Language Center, BYU.',
+));
+?>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../sharedAuth/broker.php';
+require_once __DIR__ . '/../shared-ui/layout.php';
 
 $appRoot = '/fluencybuilder';
 $indexUrl = $appRoot . '/index.php';
@@ -16,6 +17,7 @@ if (!$logoutBlocked && ($localUser !== '' || is_array($sharedUser))) {
 }
 
 $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
+$sharedLogo = shared_ui_asset_url('assets/img/elc.png');
 ?>
 <!doctype html>
 <html lang="en">
@@ -26,8 +28,8 @@ $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../shared-ui/theme.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../shared-ui/theme.css">
     <style>
         body.landing {
             min-height: 100vh;
@@ -83,7 +85,7 @@ $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
             text-transform: uppercase;
         }
 
-        .hero-panel h2 {
+        .hero-panel h1 {
             margin: 0 0 0.75rem;
             font-family: 'Atkinson Hyperlegible', sans-serif;
             font-size: clamp(2rem, 5vw, 3.25rem);
@@ -128,7 +130,7 @@ $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
             padding: 1.5rem;
         }
 
-        .signin-panel h3 {
+        .signin-panel h2 {
             margin: 0 0 0.45rem;
             font-family: 'Atkinson Hyperlegible', sans-serif;
             font-size: 1.5rem;
@@ -179,20 +181,27 @@ $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
     </style>
 </head>
 <body class="landing">
-<header class="topbar">
-    <div class="topbar__left">
-        <h1 class="app-title">Reading Fluency Builder</h1>
-    </div>
-    <div class="user-menu">
-        <span class="btn btn--subtle" style="pointer-events:none;">Public login</span>
-    </div>
-</header>
+<?php
+shared_ui_render_header(array(
+    'brand_href' => $indexUrl,
+    'brand_label' => 'Reading Fluency Builder',
+    'brand_image' => $sharedLogo,
+    'brand_image_alt' => 'English Language Center',
+    'brand_title' => 'Reading Fluency Builder',
+    'nav_items' => array(),
+    'user' => null,
+    'auth_href' => $loginUrl,
+    'logout_href' => '',
+    'sign_in_label' => 'Login',
+    'sign_out_label' => 'Logout',
+));
+?>
 
 <main class="landing-main">
     <div class="landing-grid">
         <section class="hero-panel">
             <p class="eyebrow">Reading tool</p>
-            <h2>Practice passages, measure fluency, and review progress in one place.</h2>
+            <h1>Practice passages, measure fluency, and review progress in one place.</h1>
             <p>
                 Reading Fluency Builder helps students work through passages with timed reading, scrolled reading,
                 quiz checks, and vocabulary support. It keeps the workflow simple for teachers while giving students
@@ -211,13 +220,13 @@ $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
 
         <aside class="signin-panel">
             <p class="eyebrow">Sign in</p>
-            <h3>Continue to Reading Fluency Builder</h3>
+            <h2>Continue to Reading Fluency Builder</h2>
             <p>
                 Use your BYU account to open the app. If you were sent here from a specific passage or editor page,
                 you will be returned there after sign-in.
             </p>
             <div class="btn-row">
-                <a class="btn" href="<?php echo htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8'); ?>">Login with BYU</a>
+                <a class="btn" href="<?php echo htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8'); ?>">Login</a>
             </div>
             <p class="signin-note">
                 If you already signed in on another page, refreshing should take you straight into the app.
@@ -225,5 +234,25 @@ $loginUrl = shared_auth_login_url($requestedRedirect, 'fluencybuilder');
         </aside>
     </div>
 </main>
+<?php
+shared_ui_render_footer(array(
+    'columns' => array(
+        array(
+            'title' => 'Reading Fluency Builder',
+            'items' => array(
+                array('label' => 'Login', 'href' => $loginUrl),
+            ),
+        ),
+        array(
+            'title' => 'Support',
+            'items' => array(
+                array('label' => 'English Language Center', 'href' => 'https://elc.byu.edu'),
+                array('label' => 'BYU', 'href' => 'https://www.byu.edu'),
+            ),
+        ),
+    ),
+    'note' => 'Reading Fluency Builder for BYU English Language Center.',
+));
+?>
 </body>
 </html>

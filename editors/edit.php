@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/bootstrap.php';
+require_once dirname(__DIR__) . '/../shared-ui/layout.php';
 $passage_id = isset($_GET['passage_id']) ? (int) $_GET['passage_id'] : 0;
 
 if (!isset($_SESSION['editor']) || (int) $_SESSION['editor'] !== 1 || $passage_id <= 0) {
@@ -29,6 +30,7 @@ $query_quiz = $fb_db->prepare('SELECT * FROM Questions WHERE passage_id = ? ORDE
 $query_quiz->bind_param('i', $passage_id);
 $query_quiz->execute();
 $quiz_result = $query_quiz->get_result();
+$sharedLogo = shared_ui_asset_url('assets/img/elc.png');
 ?>
 <!doctype html>
 <html lang="en">
@@ -36,24 +38,38 @@ $quiz_result = $query_quiz->get_result();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SoftRead Editor - <?php echo e($passage['title']); ?></title>
-    <link rel="stylesheet" href="../../shared-ui/theme.css">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../shared-ui/theme.css">
+    <script defer src="<?= e(shared_ui_asset_url('ui.js')) ?>"></script>
 </head>
 <body>
-<header class="topbar editor-topbar">
-    <div class="topbar__left">
-        <h1 class="app-title">SoftRead Editor</h1>
-        <a class="btn btn--subtle" href="../index.php?passage_id=<?php echo e($passage_id); ?>">Return</a>
-    </div>
-    <div id="user-btn" class="user-menu">
-        <?php echo $id; ?>
-        <div id="drop-down" class="user-dropdown" hidden>
-            <a href="new_passage.php">New Passage</a>
-            <a href="../index.php?passage_id=<?php echo e($passage_id); ?>">Reader View</a>
-        </div>
-    </div>
-</header>
+<?php
+shared_ui_render_header(array(
+    'brand_href' => '../index.php?passage_id=' . $passage_id,
+    'brand_label' => 'SoftRead Editor',
+    'brand_image' => $sharedLogo,
+    'brand_image_alt' => 'English Language Center',
+    'brand_title' => 'SoftRead Editor',
+    'nav_items' => array(
+        array(
+            'label' => 'Return',
+            'href' => '../index.php?passage_id=' . $passage_id,
+        ),
+    ),
+    'user' => array('name' => $_SESSION['name'] ?? $_SESSION['preferredFirstName'] ?? $_SESSION['netid'] ?? 'User'),
+    'display_name' => $_SESSION['preferredFirstName'] ?? $_SESSION['name'] ?? $_SESSION['netid'] ?? 'User',
+    'auth_href' => '../login.php',
+    'logout_href' => '?logout=1',
+    'sign_in_label' => 'Login',
+    'sign_out_label' => 'Logout',
+    'menu_items' => array(
+        array('type' => 'badge', 'label' => 'Editor'),
+        array('label' => 'New Passage', 'href' => 'new_passage.php'),
+        array('label' => 'Reader View', 'href' => '../index.php?passage_id=' . $passage_id),
+    ),
+));
+?>
 
 <main class="editor-layout">
     <aside class="editor-menu">
@@ -137,5 +153,26 @@ window.EDITOR_CONFIG = {
 };
 </script>
 <script src="js/editor.js"></script>
+<?php
+shared_ui_render_footer(array(
+    'columns' => array(
+        array(
+            'title' => 'SoftRead Editor',
+            'items' => array(
+                array('label' => 'Reader View', 'href' => '../index.php?passage_id=' . $passage_id),
+                array('label' => 'New Passage', 'href' => 'new_passage.php'),
+            ),
+        ),
+        array(
+            'title' => 'Support',
+            'items' => array(
+                array('label' => 'English Language Center', 'href' => 'https://elc.byu.edu'),
+                array('label' => 'BYU', 'href' => 'https://www.byu.edu'),
+            ),
+        ),
+    ),
+    'note' => 'Reading Fluency Builder editor for BYU English Language Center.',
+));
+?>
 </body>
 </html>
