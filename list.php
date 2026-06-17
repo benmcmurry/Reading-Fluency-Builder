@@ -1,10 +1,10 @@
 <?php
 function render_passage_link($row)
 {
-    $status = htmlspecialchars($row['share_status'], ENT_QUOTES, 'UTF-8');
+    $status = htmlspecialchars((string) ($row['share_status'] ?? ''), ENT_QUOTES, 'UTF-8');
     $id = (int) $row['passage_id'];
-    $title = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
-    $lexile = htmlspecialchars((string) $row['lexile'], ENT_QUOTES, 'UTF-8');
+    $title = htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $lexile = htmlspecialchars((string) ($row['lexile'] ?? ''), ENT_QUOTES, 'UTF-8');
     echo "<li class='$status'><a class='reading_menu_options' href='index.php?passage_id=$id&page=reading'>$title <span class='lexile'>(Lexile: {$lexile}L)</span></a></li>";
 }
 ?>
