@@ -1,6 +1,5 @@
 <?php
 require_once dirname(__DIR__) . '/bootstrap.php';
-require_once dirname(__DIR__, 3) . '/config.php';
 require_once dirname(__DIR__, 2) . '/sharedAuth/broker.php';
 
 function build_request_scheme(): string
