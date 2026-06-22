@@ -248,6 +248,22 @@ function fluencybuilder_shared_auth_config(): array
     }
 
     $config = [];
+    $privateRoot = getenv('APP_PRIVATE_ROOT');
+    if ($privateRoot !== false && trim((string) $privateRoot) !== '') {
+        $privateRoot = rtrim(trim((string) $privateRoot), '/');
+        $path = shared_auth_first_readable_path(array(
+            $privateRoot . '/shared_auth_config.php',
+            $privateRoot . '/google_auth_config.php',
+        ));
+        if ($path !== '') {
+            $loaded = include $path;
+            if (is_array($loaded)) {
+                $config = $loaded;
+                return $config;
+            }
+        }
+    }
+
     $path = shared_auth_first_readable_path(array(
         getenv('SHARED_AUTH_CONFIG_PATH') ?: '',
         dirname(__DIR__, 3) . '/shared_auth_config.php',
