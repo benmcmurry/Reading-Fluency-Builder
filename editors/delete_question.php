@@ -6,7 +6,7 @@ if (!isset($_SESSION['editor']) || (int) $_SESSION['editor'] !== 1) {
     exit;
 }
 
-include_once('../../../connectFiles/connect_fb.php');
+include_once((getenv('APP_PRIVATE_ROOT') ? rtrim(trim((string) getenv('APP_PRIVATE_ROOT')), '/') : dirname(__DIR__, 3) . '/private-config') . '/connectFiles/connect_fb.php');
 $question_id = isset($_POST['question_id']) ? (int) $_POST['question_id'] : 0;
 
 $delete_question = $fb_db->prepare('DELETE FROM Questions WHERE question_id = ?');

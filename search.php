@@ -1,5 +1,5 @@
 <?php
-include_once('../../connectFiles/connect_fb.php');
+include_once((getenv('APP_PRIVATE_ROOT') ? rtrim(trim((string) getenv('APP_PRIVATE_ROOT')), '/') : dirname(__DIR__, 2) . '/private-config') . '/connectFiles/connect_fb.php');
 header('Content-Type: application/json; charset=utf-8');
 
 $phrase = isset($_GET['phrase']) ? trim($_GET['phrase']) : '';

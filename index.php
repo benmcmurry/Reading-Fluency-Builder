@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../shared-ui/layout.php';
 include_once('cas-go.php');
-include_once('../../connectFiles/connect_fb.php');
+include_once((getenv('APP_PRIVATE_ROOT') ? rtrim(trim((string) getenv('APP_PRIVATE_ROOT')), '/') : dirname(__DIR__, 2) . '/private-config') . '/connectFiles/connect_fb.php');
 
 function e($value)
 {

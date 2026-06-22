@@ -9,7 +9,7 @@ if (!isset($_SESSION['editor']) || (int) $_SESSION['editor'] !== 1 || $passage_i
 }
 
 include_once('cas-go.php');
-include_once('../../../connectFiles/connect_fb.php');
+include_once((getenv('APP_PRIVATE_ROOT') ? rtrim(trim((string) getenv('APP_PRIVATE_ROOT')), '/') : dirname(__DIR__, 3) . '/private-config') . '/connectFiles/connect_fb.php');
 
 function e($value)
 {

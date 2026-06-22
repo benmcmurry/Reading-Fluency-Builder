@@ -6,7 +6,7 @@ if (!isset($_SESSION['editor']) || (int) $_SESSION['editor'] !== 1) {
     exit;
 }
 
-include_once('../../../connectFiles/connect_fb.php');
+include_once((getenv('APP_PRIVATE_ROOT') ? rtrim(trim((string) getenv('APP_PRIVATE_ROOT')), '/') : dirname(__DIR__, 3) . '/private-config') . '/connectFiles/connect_fb.php');
 $passage_id = isset($_POST['passage_id']) ? (int) $_POST['passage_id'] : 0;
 
 $add_question = $fb_db->prepare('INSERT INTO Questions (passage_id) VALUES (?)');

@@ -251,6 +251,12 @@ function fluencybuilder_shared_auth_config(): array
     $privateRoot = getenv('APP_PRIVATE_ROOT');
     if ($privateRoot !== false && trim((string) $privateRoot) !== '') {
         $privateRoot = rtrim(trim((string) $privateRoot), '/');
+        if (!is_dir($privateRoot)) {
+            $privateRoot = '';
+        }
+    }
+
+    if ($privateRoot !== '') {
         $path = shared_auth_first_readable_path(array(
             $privateRoot . '/shared_auth_config.php',
             $privateRoot . '/google_auth_config.php',
@@ -316,6 +322,14 @@ function shared_google_expected_issuer(): string
 
 function shared_google_public_key_path(): string
 {
+    $privateRoot = shared_auth_private_root();
+    if ($privateRoot !== '') {
+        $candidate = $privateRoot . '/keys/google_jwt_public.pem';
+        if (is_readable($candidate)) {
+            return $candidate;
+        }
+    }
+
     return fluencybuilder_shared_auth_config_value(
         'google_shared_public_key_path',
         'GOOGLE_SHARED_PUBLIC_KEY_PATH',
@@ -578,7 +592,7 @@ $name = (string) ($_SESSION['name'] ?? 'User');
 
 $id = "<button id='user' type='button' aria-expanded='false'>" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</button><a id='logout' href='?logout=1'>Logout</a>";
 
-include_once('../../connectFiles/connect_fb.php');
+include_once((getenv('APP_PRIVATE_ROOT') ? rtrim(trim((string) getenv('APP_PRIVATE_ROOT')), '/') : dirname(__DIR__, 2) . '/private-config') . '/connectFiles/connect_fb.php');
 
 $search_for_id = $fb_db->prepare('SELECT * FROM Users WHERE netid = ?');
 $search_for_id->bind_param('s', $netid);
